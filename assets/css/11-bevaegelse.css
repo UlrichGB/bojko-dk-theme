@@ -1,33 +1,5 @@
-/* ===========================================================================
-   11 — BEVÆGELSE.  Én fil, fordi bevægelse er ét spørgsmål.
-   ===========================================================================
-   Temaet bevæger sig syv steder: den bløde rulning til et anker, og seks
-   overgange på hover (menupunktet, dets understregning, ikonknappen,
-   kopiér-knappen, arkivrækken og delknappen). Hvert af dem er en lille ting,
-   og for en læser med vestibulær ømfindtlighed er summen ikke lille.
-
-   prefers-reduced-motion er systemindstillingen, der siger det. Den skal
-   respekteres, og blokken herunder er hele prisen.
-
-   ---------------------------------------------------------------------------
-   ★ HVORFOR FILEN LIGGER HER OG IKKE I 02-grundlag.css
-   ---------------------------------------------------------------------------
-   Overgangene står i fire forskellige filer — 02, 04, 07 og 08. CSS afgør
-   uafgjorte kampe efter hvem der står SIDST, og en @media-forespørgsel giver
-   ikke ekstra specificitet. En reduced-motion-regel skrevet i 02 ville derfor
-   tabe til .kopi-knap i 04 og til .share i 08 uden at sige et ord. Den skal
-   stå efter dem alle, eller den skal have et !important — og temaet har nul
-   af dem i 2 916 linjer.
-
-   Derfor: sidst, lige før 12-dine-egne.css, som stadig er allersidst.
-
-   Tilføjer du en ny transition eller animation, hører selektoren med i
-   listen herunder. Det er den ene vedligeholdelse, filen koster.
-
-   scroll-behavior: auto står BÅDE på html og i listen: html-reglen i
-   02-grundlag.css er den, der sætter smooth, og den skal slås fra det samme
-   sted, den blev tændt.
-   =========================================================================== */
+/* 11 — BEVÆGELSE
+   prefers-reduced-motion. Står efter alt med en overgang i. */
 
 @media (prefers-reduced-motion: reduce) {
 

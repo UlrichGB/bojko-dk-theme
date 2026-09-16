@@ -1,68 +1,24 @@
 {{- /*
-  Sidens ramme. Alt andet i layouts/ fylder "main" ud.
-
-  Det, der var bevidst fra starten, står stadig — og det er grunden til, at
-  disse skabeloner blev styled i stedet for skiftet ud med et tema:
-
-    - lang kommer fra sprogets indstilling, ikke fra en streng
-    - datoer formateres i skabelonen, aldrig i prosaen. locale = "da-DK" i
-      languages.toml er det, der gør "10. marts 2026" til dansk
-    - "sidst opdateret" kommer fra git (enableGitInfo), ikke fra frontmatter,
-      så den hverken kan drive eller glemmes
-    - draft: og date: er de eneste to udgivelsesporte, og de håndhæves af
-      byggeriet. Se bojko-dk/scripts/check-gates.sh
-
-  To temaer, der blev prøvet, brød den første og den anden af de fire: det ene
-  skrev "10 Mar, 2026" på et dansk site, det andet skrev slet ingen dato.
-
-  ---------------------------------------------------------------------------
-  RAMMEN ER NU LÆRREDETS
-  ---------------------------------------------------------------------------
-  Fire vandrette lag: den klæbende topbar, det orange bånd, arket (som trækkes
-  op over båndet) og bunden (som ligger UDEN for arket). Tegningen med de tre
-  tal står i 02-grundlag.css.
-
-  Der er ingen inline style og ingen <x-dc>, <helmet>, data-screen-label eller
-  data-props tilbage fra lærredet. Det var designværktøjets stillads, ikke
-  opmærkning.
+  Sidens ramme: <head>, topbar, bånd, main og bund.
+  Alt andet i layouts/ fylder "main" ud.
 */ -}}
 <!DOCTYPE html>
 <html lang="{{ site.Language.Lang }}">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  {{- /* ★ Titel, beskrivelse og canonical regnes ét sted, fordi
-       hoved-ekstra.html skal bruge de samme tre til og:title, og:description
-       og og:url. Se _partials/hoved-data.html for hvorfor beskrivelsen ikke
-       bare er .Description, og for hvad "Side 2 — …" handler om. */ -}}
   {{- $hoved := partial "hoved-data.html" . }}
   <title>{{ $hoved.titel }}</title>
   {{ with $hoved.beskrivelse }}<meta name="description" content="{{ . }}">{{ end }}
 
   {{ partial "stil.html" . }}
 
-  {{ with .OutputFormats.Get "rss" }}<link rel="alternate" type="application/rss+xml" title="{{ site.Params.feedTitle }}" href="{{ .Permalink }}">{{ end }}
-
-  {{- /* Canonical, Open Graph, Twitter-kort og BlogPosting-JSON-LD. Favicon
-       og webmanifest hører stadig til SITET — se partialen. */ -}}
-  {{ partial "hoved-ekstra.html" . }}
+  {{ with .OutputFormats.Get "rss" }}<link rel="alternate" type="application/rss+xml" title="{{ site.Params.feedTitle }}" href="{{ .Permalink }}">{{ end }}{{ partial "hoved-ekstra.html" . }}
 </head>
 <body>
-
-{{- /* Den klæbende topbar følger med hele vejen ned gennem en lang artikel,
-     så et springlink er ikke bare en formalitet her. */}}
 <a class="kun-skaerm" href="#indhold">Spring til indholdet</a>
-
-{{- /* ★ HOVEDET. Bomærket til venstre, menuen i midten, ikonerne til højre.
-     Menuen kommer fra config/_default/menus.da.toml, så en ny side i menuen er
-     en linje i en konfigurationsfil og ikke en rettelse her. */}}
 <div class="topbar">
   <nav class="nav" aria-label="Hovedmenu">
-
-    {{- /* Bomærket er det ENESTE Comfortaa på siden. Punktummet står dæmpet,
-         så "bojko" og "dk" læses som to ord. Navnet kommer fra params, fordi
-         site.Title er personens navn og bomærket er adressen — to forskellige
-         ting, som kun tilfældigvis er det samme på nogle sites. */ -}}
     {{- $maerke := site.Params.maerke | default site.Title }}
     {{- $dele := split $maerke "." }}
     <a class="nav-brand" href="{{ "/" | relURL }}" aria-label="{{ $maerke }} – forside">
@@ -79,13 +35,6 @@
     {{- end }}
 
     <span class="nav-sep" aria-hidden="true"></span>
-
-    {{- /* ★ HER STOD ET FORSTØRRELSESGLAS, og det er fjernet med vilje.
-         Det pegede på arkivet, ikke på en søgeflade — altså et ikon, der
-         lovede noget andet end det gjorde, ved siden af menupunktet "Arkiv",
-         der går præcis samme sted hen og siger det med ord.
-         Søgning kommer, når arkivet er stort nok til at trænge til den;
-         hvorfor den ikke er bygget endnu, står stadig i 07-arkiv.css. */}}
     {{- with site.Home.OutputFormats.Get "rss" }}
       <a class="nav-icon" href="{{ .RelPermalink }}" aria-label="RSS-feed">{{ partial "ikon.html" "rss" }}</a>
     {{- end }}

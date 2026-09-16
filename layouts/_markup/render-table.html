@@ -1,23 +1,6 @@
 {{- /*
-  Tabel-render-hook.
-
-  Hugo kalder den her for hver eneste markdown-tabel, så en tabel ALDRIG kan
-  nå ud på siden uden sin ramme. Det er forskellen på at have skrevet en
-  .tabel-ramme-regel i sit stylesheet og på faktisk at bruge den: uden denne
-  fil er reglen pynt, og en bred tabel skubber hele siden vandret på en
-  telefon. Det er præcis den fejl, de to tidligere rapporter målte til 34px på
-  Paper og 41px på hugo-coder.
-
-  Seks linjer. Det er hele prisen for at den fejl ikke kan opstå.
-
-  Rammen får også klassen "wide" — lærredets udbrudsklasse. Det er ikke en
-  detalje, det er svaret på klagen: dit eget tema på docupoint.eu gør præcis
-  det samme — der står
-  .content > table { width: calc(100% + 19rem) } i main.min.css, altså 304px
-  bredere end læsespalten, allerede skrevet og allerede virksomt. Den ene
-  tabel, du peger på, har bare fået en inline style med width: 90% klistret
-  på, og inline vinder. Her kan det ikke ske: bredden hører til skabelonen og
-  ikke til den enkelte tabel.
+  TABEL-RENDER-HOOK. Kaldes for hver markdown-tabel og lægger den i
+  .tabel-ramme, så den altid kan rulles vandret.
 */ -}}
 <div class="tabel-ramme wide">
   <table>

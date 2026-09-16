@@ -1,141 +1,37 @@
-/* ===========================================================================
-   01 — VARIABLERNE.  ★ DEN FIL, DU DESIGNER I.
-   ===========================================================================
-   Alt, der er et VALG — farve, skriftstørrelse, linjelængde, rytme, radius —
-   står her og kun her. Resten af stylesheettet nævner ikke en eneste hex-kode
-   og ikke en eneste px-værdi, den kan undvære: det læser herfra.
-
-   Finder du en hardcodet farve nede i en komponent, er det en fejl — flyt den
-   herop. Designsystemet Organic håndhæver den regel mekanisk på sin egen side:
-   _adherence.oxlintrc.json advarer på ethvert rå hex-literal med beskeden
-   "Raw hex color — use a design-system color token via var()". De regler er
-   skrevet til React og kører ikke mod Hugo-skabeloner, men de er systemets
-   egen udmelding om, hvad det betragter som en overtrædelse, og temaet her
-   holder dem.
-
-   VÆRDIERNE ER IKKE LÆNGERE EN ARBEJDSUDGAVE. De er aflæst af lærredet fra
-   Claude Design, "bojko.dk Blog.dc.html". Den forrige palet (Literata, varmt
-   papir, mørkerødt link) er skiftet UD, ikke blandet ind.
-
-   ---------------------------------------------------------------------------
-   HVOR LÆRREDET OG DESIGNSYSTEMET ER UENIGE, VINDER LÆRREDET
-   ---------------------------------------------------------------------------
-   Organic-systemets styles.css og readme.md beskriver én ting; lærredet gør
-   noget andet i sin egen <style>-blok. Lærredet er det, han faktisk kiggede
-   på, så det er lærredet, der er gengivet her. De tre uenigheder er:
-
-   1. PALETTEN. Systemet: cremet #f5ead8 med terrakotta #c67139. Lærredet
-      skriver hele rampen om i sin egen :root og kalder den ved navn i en
-      kommentar: "Oatmilk Latte #EBEBDF · Atomic Orange #E9631A — ramps
-      regenerated in OKLCH around the two hues". Den er køligere i bunden og
-      varmere i accenten. Lærredets palet står herunder.
-
-   2. RADIUS. Systemet: "over-round", 16px der vokser til 999px piller, "do
-      not draw sharp corners". Lærredet nulstiller stort set det hele til 3px
-      — .btn, .tag, .letter, .share, .node, .input og det fremhævede billede.
-      Et skærmbillede fra 21:00 viser hans egne PERMALINK/DEL-knapper med
-      netop den skarpe kant, så det er ikke en forglemmelse. 3px vandt.
-      Rundingen overlever ÉT sted i brødteksten: kodeblokken, som lærredet
-      lader beholde var(--radius-md). Og i cirklerne — ikonknapper, citatets
-      mærke, portrættet, prikken i bunden.
-
-   3. LAYOUT. Systemet: "left-aligned, asymmetric layouts, content hugs the
-      left edge with whitespace on the right". Lærredet er et centreret ark på
-      1120px med en centreret læsespalte på 680px. Symmetrisk. Lærredet vandt.
-
-   To ting fra systemet står stadig, fordi lærredet ikke modsiger dem:
-   .washed på alle indholdsfotografier, og reglen om at brødtekst i accenten
-   skal bruge --color-accent-700 og ikke accenten selv (accent mod bund er kun
-   målt til 3:1 — nok til ikoner og store bogstaver, ikke til en sætning).
-
-   ---------------------------------------------------------------------------
-   ★ ENHEDERNE: REM, EM ELLER PX — DER ER EN REGEL, OG DEN ER KORT
-   ---------------------------------------------------------------------------
-   Lærredet skriver alt i px, fordi et designværktøj tegner på ét lærred i én
-   størrelse. En browser gør ikke. Reglen her er:
-
-     rem  SKRIFTSTØRRELSER, og alt hvad der er en beholder om tekst — spalten,
-          rytmen X, den klæbende bjælke, afstandsskalaen, brudpunkterne.
-          Grunden er én: har læseren sat sin standardstørrelse op, skal
-          teksten faktisk blive større. I px sker der ingenting, og det er en
-          reel tilgængelighedsomkostning på et site med lange essays.
-
-     em   Alt, der skal følge SIN EGEN tekst: polstring inde i en knap eller
-          et menupunkt, spatiering på en versaletiket, et mellemrum, der hører
-          til typografien og ikke til siden. em på kaldestedet, ikke i et
-          token — se --space-* længere nede for hvorfor.
-
-     px   Alt, der IKKE må skalere: hårstreger og rammer (en 1px streg, der
-          bliver til 1,06px, er ikke finere, den er sløret), de 3px radier,
-          arkets format, --wide-inset og skyggernes forskydninger. Alt, der er
-          bundet til det virkelige pixelgitter.
-
-   Værdierne er uændrede. Ved browserens standardindstilling er siden pixel
-   for pixel den, den var — det er målt på tværs af alle sidetyper, ikke
-   antaget. Det, der er ændret, er hvad der sker, når den indstilling IKKE er
-   standard.
-   =========================================================================== */
+/* 01 — VARIABLERNE
+   Farver, skriftskala, mål, rytme og radius. Resten af stylesheettet
+   læser herfra. */
 
 :root {
 
-  /* --- FARVER: ROLLERNE ---------------------------------------------------
-     Fire roller og en streg. Alt andet i paletten er et trin på en rampe.
+  --color-bg:      #EBEBDF;
+  --color-surface: #E2E2D3;
+  --color-text:    #1F1D1A;
+  --color-accent:  #E9631A;
 
-     Bemærk at ARKET ikke er --color-bg. Lærredet lægger siden på
-     --color-neutral-200 og arket ovenpå i --color-neutral-100, så arket er
-     lysere end det, det ligger på. Det er den ene detalje, der får layoutet
-     til at læse som et ark papir og ikke som en baggrundsfarve.          */
-
-  --color-bg:      #EBEBDF;   /* Oatmilk Latte — sidens bund                */
-  --color-surface: #E2E2D3;   /* flader, der skal træde et hak tilbage      */
-  --color-text:    #1F1D1A;   /* brødtekst                    14,9:1 på ark */
-  --color-accent:  #E9631A;   /* Atomic Orange — båndet, mærker, markører   */
-
-  /* Stregen. Lærredet skriver color-mix(in srgb, #1F1D1A 16%, transparent)
-     med hex'en gentaget; her læses den af --color-text i stedet, så der ikke
-     er to steder at rette den ene farve. Samme resultat, ét sted at ændre. */
   --color-divider: color-mix(in srgb, var(--color-text) 16%, transparent);
 
 
-  /* --- FARVER: RAMPERNE ---------------------------------------------------
-     100 er lysest, 900 mørkest, og samme trin på to ramper har samme visuelle
-     vægt — de er genereret i OKLCH på én fælles lyshedsskala.
-
-     Brug 100–300 til tonede flader, hover og diskrete kanter. 500 er rollens
-     grundtone. 700–900 er tekst PÅ en tonet flade, og trykket tilstand.
-     Systemets readme er udtrykkelig: foretræk et trin på rampen frem for et
-     color-mix(), du selv regner ud.                                        */
-
-  --color-neutral-100: #F6F6EE;   /* arket                                  */
-  --color-neutral-200: #EBEBDF;   /* siden bag arket, kodeblok, vandmærket  */
-  --color-neutral-300: #D9D9CA;   /* streger og rammer                      */
-  --color-neutral-400: #BDBDAC;   /* skillestreger i meta, kanter på noder  */
+  --color-neutral-100: #F6F6EE;
+  --color-neutral-200: #EBEBDF;
+  --color-neutral-300: #D9D9CA;
+  --color-neutral-400: #BDBDAC;
   --color-neutral-500: #9C9C8B;
-  /* ★ 600 ER IKKE TEKSTFARVE PÅ ARKET. Her stod "datoer, billedtekst 4,6:1",
-     og det tal er målt mod noget andet end arket: #7C7C6D på #F6F6EE er
-     3,90:1 og falder for AA. Metalinjen og billedteksterne bruger derfor 700
-     (5,96:1) — se 08-omslag.css og 03-brodtekst.css. 600 er stadig rigtig til
-     det, der IKKE er tekst: skillestreger, rammer, dæmpet pynt.            */
-  --color-neutral-600: #7C7C6D;   /* pynt, ikke tekst på arket     3,90:1   */
-  --color-neutral-700: #5F5F52;   /* datoer, billedtekst, dæmpet   5,96:1   */
+  --color-neutral-600: #7C7C6D;
+  --color-neutral-700: #5F5F52;
   --color-neutral-800: #43433A;
-  --color-neutral-900: #2B2B25;   /* brødtekst i .body-copy                 */
+  --color-neutral-900: #2B2B25;
 
-  --color-accent-100: #FFF1E8;    /* tonet flade bag et mærke               */
+  --color-accent-100: #FFF1E8;
   --color-accent-200: #FFDCC6;
   --color-accent-300: #FFBD95;
-  --color-accent-400: #F9955A;    /* understregning under links             */
-  --color-accent-500: #E9631A;    /* = --color-accent                       */
-  --color-accent-600: #C74F0E;    /* hover                                  */
-  --color-accent-700: #9E3D09;    /* LINKS OG AL BRØDTEKST I ACCENT  5,9:1  */
+  --color-accent-400: #F9955A;
+  --color-accent-500: #E9631A;
+  --color-accent-600: #C74F0E;
+  --color-accent-700: #9E3D09;
   --color-accent-800: #722B06;
   --color-accent-900: #481B04;
 
-  /* Salvie. Organic-systemets anden stemme — og lærredet bruger den ikke én
-     eneste gang. Den står her, fordi den hører til systemet og fordi det er
-     billigere at have den liggende end at skulle regne rampen ud igen; den er
-     dog stemt efter terrakotta og ikke efter Atomic Orange, så hvis den skal
-     i brug, skal den ses efter. Ingen komponent i temaet læser den. */
   --color-accent-2:     #7a8a5e;
   --color-accent-2-100: #f0fae1;  --color-accent-2-200: #e1eecc;
   --color-accent-2-300: #ccdbb2;  --color-accent-2-400: #aebf92;
@@ -144,249 +40,64 @@
   --color-accent-2-900: #272e1b;
 
 
-  /* --- KODEBLOKKENS EGEN PALET --------------------------------------------
-     ★ Kodeblokken er MØRK. Det er den ene flade på siden, der ikke er papir,
-     og det er Ulrichs beslutning ud fra et forlæg, han sendte: mørk skifer,
-     linjenumre i en venstre rende, fuld farvelægning.
+  --kode-bund:   #21262d;
+  --kode-tekst:  #e6edf3;
+  --kode-nr:     #8b949e;
+  --kode-streg:  #30363d;
 
-     DET ER IKKE MØRK TILSTAND. Mørk tilstand er stadig ikke designet — se
-     blokken nederst i filen. Det her er én komponent, der er mørk hele tiden,
-     præcis som en terminal er det på et lyst skrivebord.
-
-     BUNDEN ER MÅLT OG IKKE VALGT. Filen 05-kode-farver.css blev regenereret
-     fra github-dark, fordi det var det eneste mørke skema, hvor hver eneste
-     farve, temaet faktisk tegner, klarer 4,5:1 — det samme krav, den forrige
-     lyse palet blev valgt på. github-darks egen bund er #0d1117, som er
-     nærmest sort og ikke "skifer". Så blev spørgsmålet: hvor LYS må skiferen
-     være, før skemaets farver falder under AA? Målt, 68 syntaksfarver:
-
-         bund       farver under 4,5:1    laveste
-         #0d1117     0                     5,65
-         #1c2128     0                     4,83
-         #21262d     0                     4,54   ← den lyseste, der holder
-         #22272e     1                     4,48
-         #282c34     1                     4,18
-         #2e3440    10                     3,73
-
-     #21262d er altså den lyseste skifer, hele skemaet overlever på. Den er
-     valgt dér og ikke et hak mørkere, fordi blokken skal læse som skifer på
-     papir og ikke som et hul i siden.                                      */
-
-  --kode-bund:   #21262d;    /* skiferen. Se målingen ovenfor              */
-  --kode-tekst:  #e6edf3;    /* github-darks egen brødtekst     12,9:1     */
-  --kode-nr:     #8b949e;    /* linjenumrene                     4,95:1    */
-  --kode-streg:  #30363d;    /* renden og kodens skillelinje               */
-
-
-  /* --- SKRIFTSNIT ---------------------------------------------------------
-     Navnene skal matche @font-face i 00-skrifter.css, som også forklarer,
-     hvorfor der er tre familier og ikke ni.
-
-     Lærredet har tre roller — display, sub og read. I 'editorial', den
-     indstilling lærredet står i, er sub og read den samme familie. De holdes
-     alligevel adskilt her, fordi de betyder noget forskelligt: --font-read er
-     "det, en artikel er sat i", --font-sub er "det, grænsefladen er sat i".
-     Skal de en dag skilles ad igen, er det én linje.                       */
 
   --font-display: "Merriweather", Georgia, "Times New Roman", serif;
   --font-read:    "Source Sans 3", system-ui, -apple-system, "Segoe UI", sans-serif;
   --font-sub:     var(--font-read);
-  --font-body:    var(--font-read);   /* systemets eget navn for den samme  */
+  --font-body:    var(--font-read);
   --font-brand:   "Comfortaa", var(--font-read);
   --font-mono:    ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace;
 
 
-  /* --- RYTMEN: X ----------------------------------------------------------
-     ★ DEN VIGTIGSTE VÆRDI I FILEN, og den er ikke en skriftstørrelse.
-
-     X er én brødtekstlinje. Alle lodrette afstande i en artikel er X, X/2
-     eller X/4 — aldrig et tal, nogen har valgt i øjeblikket. Rubrikker er
-     beskåret til versalhøjde (text-box: trim-both), så afstanden måles fra
-     blæk til blæk og ikke fra usynlig linjeboks til usynlig linjeboks.
-
-     Lærredet har systemet skrevet ud i en kommentar — "X = 30px (one body
-     line). Gaps are X, X/2, X/4; heads are cap-trimmed so gaps measure
-     ink-to-ink" — og et skærmbillede fra 20:43 samme aften viser forlægget:
-     en typografisk plakat med 1/2 X og 1/4 X skrevet ud i margenen.
-
-     Ændrer du --brodtekst, SKAL du ændre --x med, ellers er linjeafstanden
-     ikke længere linjeafstanden. De to hører sammen: 30 / 19 ≈ 1,58.
-
-     X ER I REM AF SAMME GRUND SOM BRØDTEKSTEN. Rytmen er én brødtekstlinje;
-     hvis teksten vokser, fordi læseren har skruet op for browserens
-     standardstørrelse, og X ikke gør, så er linjeafstanden pludselig mindre
-     end linjen. De to følges ad i VÆRDI og nu også i ENHED.                */
-
-  --x: 1.875rem;             /* = 30px ved 16px rod                         */
+  --x: 1.875rem;
 
 
-  /* --- TYPOGRAFISK SKALA --------------------------------------------------
-     Brødteksten er grundlinjen, ikke et trin på skalaen. Størrelserne er
-     lærredets egne, i 'editorial'-indstillingen.
-
-     Rubrikkerne er clamp() og ikke faste tal, fordi lærredet gør det: en
-     forsiderubrik går fra 30px til 42px, en artikelrubrik fra 34px til 52px.
-     Det er derfor, der ikke er en @media-blok for rubrikstørrelser længere —
-     de skalerer selv, hele vejen ned til 390px.
-
-     ---------------------------------------------------------------------
-     ★ ALLE SKRIFTSTØRRELSER ER I REM. DET ER IKKE KOSMETIK.
-     ---------------------------------------------------------------------
-     En skriftstørrelse i px er en ORDRE til browseren om at ignorere, hvad
-     læseren har bedt om. Har nogen sat sin standardstørrelse op fra 16px til
-     20px — fordi de har brug for det — så sker der INTET med en side, hvor
-     teksten står i px. På et site med lange danske essays er det en reel
-     omkostning, og den er usynlig for den, der aldrig rører indstillingen.
-
-     rem regnes af ROD-elementets størrelse, og <html> har med vilje ingen
-     font-size i 02-grundlag.css. Roden ER altså læserens egen indstilling,
-     og hele skalaen herunder følger med den.
-
-     Tallene er de samme som før, regnet om ved 16px rod: 19/16 = 1,1875.
-     Ved standardindstillingen er siden derfor pixel for pixel den samme.
-     Det er målt, ikke antaget — se README.
-
-     vw-leddet i clamp() er MED VILJE ikke rørt: det er en breddeafhængighed
-     og ikke en skriftstørrelse. Min og max er rem, så en rubrik vokser med
-     læserens indstilling; midterleddet bliver ved med at være bredden.    */
-
-  --brodtekst:  1.1875rem;   /* 19px — .body-copy i 'editorial'             */
-  --lede:       clamp(1.375rem, 2.6vw, 1.75rem);    /* 22–28px             */
-  --h-forside:  clamp(1.875rem, 4vw, 2.625rem);     /* 30–42px             */
-  --h-indlaeg:  clamp(2.125rem, 4.8vw, 3.25rem);    /* 34–52px             */
-  --h-arkiv:    clamp(2.125rem, 4.6vw, 3rem);       /* 34–48px             */
-  --h2:         1.6875rem;   /* 27px — mellemrubrik i en artikel            */
-  --h3:         1.5rem;      /* 24px — "Relaterede", og rubrikker under den */
-  --meta:       0.90625rem;  /* 14,5px — af / i / dato / læsetid            */
-  --lille:      0.84375rem;  /* 13,5px — datoer i lister, billedtekst       */
-  --bitte:      0.8125rem;   /* 13px — versaletiketter, mærker, knaptekst   */
-  --kode:       0.84375rem;  /* 13,5px — kodeblok                           */
+  --brodtekst:  1.1875rem;
+  --lede:       clamp(1.375rem, 2.6vw, 1.75rem);
+  --h-forside:  clamp(1.875rem, 4vw, 2.625rem);
+  --h-indlaeg:  clamp(2.125rem, 4.8vw, 3.25rem);
+  --h-arkiv:    clamp(2.125rem, 4.6vw, 3rem);
+  --h2:         1.6875rem;
+  --h3:         1.5rem;
+  --meta:       0.90625rem;
+  --lille:      0.84375rem;
+  --bitte:      0.8125rem;
+  --kode:       0.84375rem;
 
 
-  /* --- MÅL: ARKET, SPALTEN OG UDBRUDDET -----------------------------------
-     Fire tal, og de hænger sammen. Se tegningen i 02-grundlag.css.
+  --measure:      62ch;
+  --col-max:      42.5rem;
+  --sheet-max:    1120px;
+  --sheet-gutter: clamp(20px, 6vw, 100px);
 
-     --measure er linjelængden. 62ch er lærredets. De tre rapporter bag
-     scaffoldet målte 63–67ch som feltet, hvor en lang artikel ikke trætter,
-     så lærredets 62ch ligger inden for det, der allerede var målt.
-
-     ENHEDERNE ER IKKE ENS HER, OG DET ER EN BESLUTNING:
-
-       --measure   ch   — er allerede skriftrelativ. 62 TEGN er hele pointen;
-                          ch følger skriften af sig selv.
-       --col-max   rem  — læsespalten er en TYPOGRAFISK beholder. Den findes
-                          kun for at holde på linjelængden, så den skal følge
-                          skriften. Bliver den stående på 680px, mens teksten
-                          vokser, falder målet fra 62ch til ca. 48ch, og så
-                          er linjerne korte og laset — dårligere at læse end
-                          det, læseren bad om. Ved 16px rod er 42,5rem
-                          nøjagtig 680px.
-       --sheet-max px   — ARKET er ikke typografi, det er sidens format.
-                          Lærredet tegnede et ark på 1120px. Det er også det
-                          tal, container-forespørgslen i 02 regner udbruddene
-                          af, sammen med --wide-inset nedenfor, og de to er
-                          stemt mod hinanden i hele pixels. Bliver arket
-                          skriftrelativt, flytter udbruddets afrunding sig
-                          med. Arket bliver i px.
-       --sheet-gutter px — samme grund: sidens luft, ikke tekstens.        */
-
-  --measure:      62ch;      /* læsespaltens linjelængde                    */
-  --col-max:      42.5rem;   /* 680px — læsespaltens ydre bredde            */
-  --sheet-max:    1120px;    /* arkets bredde: hoved, ark og bund           */
-  --sheet-gutter: clamp(20px, 6vw, 100px);  /* arkets indvendige luft       */
-
-  /* Sikkerhedsafstand på et .wide-udbrud: det stopper 5px fra arkets kant i
-     hver side. Lærredet skriver den som "- 10px" midt i sin beregning. Den er
-     der, fordi en container-forespørgsel regnes i brøkdele af en pixel, og
-     uden fratrækket kan et udbrud lande en halv pixel bredere end arket og
-     lave en vandret rullebjælke på hele siden. Den er ikke pynt. */
   --wide-inset: 10px;
 
 
-  /* --- MÅL: HOVEDET OG BÅNDET ---------------------------------------------
-     Arket trækkes OP over det farvede bånd. De tre tal skal regnes sammen:
-     båndet er 136px, arket løftes 100px, så der bliver 36px farve tilbage
-     under hovedet. Ændrer du ét af dem, ændrer du den stribe.
+  --topbar-h: 4.5rem;
+  --band-h:   8.5rem;
+  --overlap:  6.25rem;
 
-     ALLE TRE ER I REM, OG DE SKAL BLIVE VED MED AT VÆRE DEN SAMME ENHED.
-     Hovedet er en beholder om TEKST — bomærket og menupunkterne. Vokser den
-     tekst med læserens indstilling, og gør bjælken ikke, så bliver teksten
-     klemt eller skåret over. Derfor rem.
-
-     Og når den ene er rem, skal de to andre være det: de 36px farve under
-     hovedet er DIFFERENCEN mellem båndet og løftet. Er båndet i px og løftet
-     i rem, er striben ikke længere 36px ved en anden rodstørrelse — den er
-     et vilkårligt tal, og ved en stor nok indstilling er den negativ.
-     36 / 16 = 2,25rem, og den er stadig 2,25rem ved enhver rodstørrelse. */
-
-  --topbar-h: 4.5rem;        /* 72px — den klæbende linje med navigationen  */
-  --band-h:   8.5rem;        /* 136px — det farvede felt under den          */
-  --overlap:  6.25rem;       /* 100px — hvor langt arket trækkes op         */
-
-  /* Hvor høj den klæbende bjælke FAKTISK er. På en skærm er den én række og
-     altså det samme som --topbar-h; på en telefon ombryder menuen til en
-     række mere, og så er den højere. Tidslinjens klæbende dato læser denne
-     og ikke --topbar-h — ellers klæber datoen op under menuen og forsvinder.
-     --topbar-h bliver stående som ÉN rækkes højde, fordi .nav-item læser den
-     som sin egen højde. To tal, to betydninger. */
   --topbar-total: var(--topbar-h);
 
 
-  /* --- RADIUS -------------------------------------------------------------
-     Designsystemets tre trin står øverst, fordi kodeblokken og dialogen
-     bruger dem. Lærredets to egne står under, og det er dem, der tegner
-     sidens karakter. Se uenighed 2 i hovedet af filen.
-
-     ★ RADIER BLIVER I PX, OG DET ER HELE POINTEN MED DEM.
-     En radius er ikke typografi. Den er en kant, der skal ligge på pixel-
-     gitteret. 3px er lærredets egen beslutning — den skarpe kant, der vandt
-     over designsystemets 999px-piller — og en 3px-kant, der ved en anden
-     rodstørrelse bliver 3,75px eller 4,5px, er ikke en skarpere kant, den er
-     en UTYDELIG kant: browseren kan ikke tegne en brøkdel af en pixel uden
-     at sløre den. Det samme gælder kodeblokkens 16px.
-
-     Regner du engang denne fil om igen: dette er listen, der ikke skal med. */
-
   --radius-sm: 8px;
-  --radius-md: 16px;         /* kodeblokken — rundingens sidste sted        */
+  --radius-md: 16px;
   --radius-lg: 28px;
 
-  --radius-xs:  3px;         /* ★ knapper, mærker, billeder, noder, felter  */
-  --radius-row: 10px;        /* arkivrækkens hover-flade                    */
+  --radius-xs:  3px;
+  --radius-row: 10px;
 
-  /* Kodeblokken. 5px er Ulrichs eget tal, sagt udtrykkeligt, og det er
-     hverken lærredets 3px eller de 16px, blokken havde. Den ligger med vilje
-     mellem dem: blokken er sidens største flade og må gerne have en anelse
-     blødere hjørne end et mærke, men den skal ikke længere være sidens ene
-     runde ting. Den er ikke afledt af noget — den er en beslutning, og den
-     står her, så den kan findes.                                          */
   --radius-kode: 5px;
 
-
-  /* --- AFSTANDE -----------------------------------------------------------
-     Designsystemets skala, 1,10×. Den bruges til grænsefladen — knapper,
-     mærker, felter, tabelceller. Brødteksten bruger --x og ikke disse.
-
-     REM OG IKKE EM, selv om det meste af skalaen bruges som polstring inde i
-     en kontrol, hvor em ellers er den rigtige enhed. Grunden er, at det her
-     er et TOKEN: --space-3 skal betyde det samme i en tabelcelle som på et
-     mærke. I em ville den betyde 13,2px det ene sted og noget helt andet det
-     andet, alt efter hvad elementet tilfældigvis er sat i — og så er den
-     ikke et token længere, men en tilfældighed med et navn.
-
-     em hører hjemme på KALDESTEDET, hvor et tal er bundet til præcis den
-     tekst, det står omkring. Det er sådan, .nav-item og knapperne er sat.  */
 
   --space-1: 0.275rem;  --space-2: 0.55rem;  --space-3: 0.825rem;
   --space-4: 1.1rem;    --space-6: 1.65rem;  --space-8: 2.2rem;
 
-
-  /* --- SKYGGER ------------------------------------------------------------
-     Systemets tre trin, men blandet op af --color-neutral-900 i stedet for
-     den hex, systemet skriver ud. Det er den samme farve; forskellen er, at
-     den følger med, hvis rampen skiftes.
-
-     --shadow-md er den eneste, der bruges i temaet: den under arket. */
 
   --shadow-sm: 0 1px 2px   color-mix(in srgb, var(--color-neutral-900) 14%, transparent);
   --shadow-md: 0 3px 10px  color-mix(in srgb, var(--color-neutral-900) 16%, transparent);
@@ -394,83 +105,12 @@
 }
 
 
-/* --- PÅ EN TELEFON --------------------------------------------------------
-   Meget lidt. Rubrikkerne er clamp() og klarer sig selv; det er hele grunden
-   til, at denne blok er kort, hvor den i den forrige udgave satte fem
-   størrelser ned.
-
-   Kun to ting flytter sig: brødteksten et hak, og X med den — de to SKAL
-   følges ad, ellers holder rytmen op med at være en rytme. Og arkets luft
-   bliver til sidemargen, fordi der ikke er andet tilbage.                   */
-
 @media (max-width: 34rem) {
   :root {
-    --brodtekst: 1.09375rem; /* 17,5px                                      */
-    --x:         1.6875rem;  /* 27px — 27/17,5 ≈ 1,54, samme forhold som 30/19 */
-    --h2:        1.4375rem;  /* 23px                                        */
-    --overlap:   4rem;       /* 64px — mindre bånd at trække op over        */
-    --band-h:    6.5rem;     /* 104px                                       */
+    --brodtekst: 1.09375rem;
+    --x:         1.6875rem;
+    --h2:        1.4375rem;
+    --overlap:   4rem;
+    --band-h:    6.5rem;
   }
 }
-
-
-/* --- MØRK TILSTAND — BEVIDST IKKE DESIGNET -------------------------------
-   ★ Den forrige udgave havde en mørk palet. Den er FJERNET, ikke glemt.
-
-   Lærredet har ingen mørk tilstand. Det har hverken en anden palet, en
-   prefers-color-scheme-blok eller en kontakt til det, og designsystemet
-   Organic beskriver kun én bund. Der er altså ikke noget at implementere.
-
-   At opfinde en ville være at designe, ikke at implementere: en mørk udgave
-   af DETTE design er en række rigtige beslutninger — hvad bliver arket, hvad
-   bliver det orange bånd, holder Atomic Orange mod en mørk bund overhovedet
-   4,5:1 — og de beslutninger er hans.
-
-   Skal den laves, er det de samme navne med andre værdier, og så ved ingen
-   komponent i temaet, at mørk tilstand findes. Skabelonen står her:
-
-       @media (prefers-color-scheme: dark) {
-         :root {
-           --color-bg:      ;
-           --color-surface: ;
-           --color-text:    ;
-           --color-accent:  ;
-           --color-neutral-100: ;   … 900
-           --color-accent-100:  ;   … 900
-         }
-       }
-
-   Husk rampen, ikke kun de fire roller: arket er --color-neutral-100 og
-   siden bag det er --color-neutral-200, så en mørk tilstand, der kun skifter
-   --color-bg, gør ingenting.                                               */
-
-
-/* --- BRUDPUNKTERNE --------------------------------------------------------
-   34rem (544px). Det er den ene breddegrænse, temaet selv ejer, og den står i
-   hver komponents egen @media-blok nederst i filen.
-
-   Den kan IKKE være en variabel — CSS tillader ikke var() i en media query.
-   Skal den ændres, er det en søg-og-erstat efter "34rem" på tværs af
-   assets/css/.
-
-   LÆRREDET HAR TRE ANDRE, som er arvet med, fordi de hører til komponenter,
-   der skifter form og ikke størrelse: 45rem/720px (relaterede indlæg og
-   bunden falder til én spalte, flow-diagrammet stables), 47,5rem/760px
-   (profilen falder til én spalte, arkivrækken stables) og 35rem/560px
-   (navigationen ombryder). De står i 07, 08 og 09 ved de komponenter, de
-   hører til, sammen med 71,25rem/1140px i 02.
-
-   ★ ALLE FEM ER NU I REM, OG DET ER EN RETTELSE, IKKE EN OMSKRIVNING.
-   Et brudpunkt i px spørger "hvor bred er skærmen". Det rigtige spørgsmål er
-   "er der plads til indholdet", og indholdet er tekst. Har læseren skruet
-   standardstørrelsen op til 24px, fylder den samme menu 1,5 gange så meget,
-   og så skal den ombryde ved en BREDERE skærm end 560px — ellers ombryder
-   den ikke, før den allerede er løbet over. I rem flytter grænsen sig med
-   teksten af sig selv.
-
-   Vær opmærksom på ÉN ting, hvis du regner på det: rem i en media query
-   måles mod browserens OPRINDELIGE størrelse — læserens egen indstilling —
-   og ikke mod <html>'s beregnede font-size. Det er præcis den, vi vil have
-   fat i her, så det er den rigtige opførsel; men det er også derfor, at et
-   stylesheet, der sætter font-size på html, ville koble de to fra hinanden.
-   02-grundlag.css lader med vilje være. Se kommentaren der.                */

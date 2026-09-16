@@ -1,14 +1,6 @@
 {{- /*
-  {{< haendelse dato="2024-06-18" titel="Recall annonceret og trukket tilbage" >}}
-  Brødtekst i markdown.
-  {{< /haendelse >}}
-
-  dato er ISO. Den danske gengivelse laves af skabelonen, aldrig af dig:
-  sproget står i languages.toml, og "18. juni 2024" kommer ud af locale = da-DK.
-
-  Datoen og rubrikken står SAMMEN i venstre spalte, og de klæber sammen, mens
-  man læser hændelsen. Det er den ene detalje, der gør komponenten til en
-  tidslinje og ikke til en punktopstilling. Se 09-tidslinje.css.
+  {{< haendelse dato="2024-06-18" titel="…" url="…" >}} ... {{< /haendelse >}}
+  Én hændelse i en tidslinje. dato er ISO; den danske gengivelse laves her.
 */ -}}
 {{- $dato := time.AsTime (.Get "dato") -}}
 <div class="haendelse">
@@ -16,11 +8,6 @@
     <time datetime="{{ $dato.Format "2006-01-02" }}">{{ $dato | time.Format "2. January 2006" }}</time>
     <h3>{{ with .Get "url" }}<a href="{{ . }}">{{ $.Get "titel" }}</a>{{ else }}{{ .Get "titel" }}{{ end }}</h3>
   </div>
-  <div class="haendelse-krop">
-{{- /* RenderString med display: block, ikke markdownify. markdownify gengiver
-     ét enkelt afsnit som inline HTML — uden <p> omkring — så fem af seks
-     hændelser fik deres tekst sat direkte i gitterfeltet og mistede deres
-     afstande. Det ses ikke i kilden; det ses på siden. */ -}}
-{{ .Page.RenderString (dict "display" "block") .Inner }}
+  <div class="haendelse-krop">{{ .Page.RenderString (dict "display" "block") .Inner }}
   </div>
 </div>

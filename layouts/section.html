@@ -1,27 +1,11 @@
 {{ define "main" }}
   {{- /*
-    ARKIVET — lærredets "Arkiv"-skærm i tilstanden "År".
-
-    Forlægget er Stratecherys "Concepts"-side, som ligger blandt hans
-    skærmbilleder fra samme aften: en rubrik, "Udforsk bojko.dk efter:" og
-    tilstandene ved siden af hinanden med lodrette streger imellem.
-
-    Temaet har to af lærredets fire tilstande — År (her) og Emner (/tags/).
-    Hvorfor "Produkter" og "Søg" ikke er bygget, står i 07-arkiv.css. Det er
-    skrevet ned frem for at stå som to knapper, der ikke virker.
-
-    Datoskinnen på 72px er lærredets egen.
+    ARKIVET. Sektionens indlæg grupperet efter år, med arkivvælgeren over.
   */ -}}
   <section class="arkiv-side">
     <h1 class="post-h post-h--arkiv">{{ .Title }}</h1>
 
     {{- with .Content }}<div class="body-copy">{{ . }}</div>{{ end }}
-
-    {{- /* En sektion UDEN undersider er en prosaside, ikke et tomt arkiv.
-         /om/ og /juridisk/ er begge sådan nogle: de har en _index.md og
-         ingen børn. Uden denne betingelse fik de arkivets tilstandsvælger
-         ("Udforsk bojko.dk efter: Emner | År") og derefter ingenting, hvilket
-         ser ud som en fejl, fordi det ér en. */}}
     {{- with .Pages }}
     {{ partial "arkiv-vaelger.html" (dict "side" $ "tilstand" "aar") }}
 

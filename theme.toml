@@ -1,13 +1,5 @@
-# ---------------------------------------------------------------------------
-# bojko-dk-theme — Hugo-temaet til bojko.dk
-# ---------------------------------------------------------------------------
-# Et tema til ét site. Det er ikke et tema, der skal passe til alle sites, og
-# det er derfor, det ikke har fyrre konfigurationsflag: hver gang et valg kan
-# træffes ét sted i stedet for at være en indstilling, er det truffet.
-#
-# name er det, Hugo-temagallerier viser. Mappenavnet må gerne være noget
-# andet: temaet hentes som et Hugo Module af sitet, og modulstien — ikke
-# mappenavnet — er det, der binder de to sammen. Se README.md.
+# bojko-dk-theme — Hugo-temaet til bojko.dk.
+# Temaets metadata til Hugo og til temagallerier. Se README.md.
 
 name = "bojko-dk-theme"
 license = "MIT"
@@ -15,15 +7,8 @@ licenselink = "https://github.com/UlrichGB/bojko-dk-theme/blob/main/LICENSE"
 description = "Læsespalte på 62ch, der kan bryde ud i bredden med en container-forespørgsel. Selvhostet Merriweather og Source Sans 3, danske datoer fra locale, omslagsbånd i 28:9 med skæv kant, tidslinje med klæbende datorække. Mørk kodeblok med ombrydning og kopiknap. Canonical, Open Graph, BlogPosting-JSON-LD, robots.txt og llms.txt uden en linje konfiguration i temaet. Intet byggeskridt, ingen eksterne kald, ét script."
 
 homepage = "https://github.com/UlrichGB/bojko-dk-theme"
-demosite = ""            # Der er ingen offentlig demo, og der ligger ikke en
-                         # exampleSite i repoet: indholdet bor i sitet,
-                         # bojko-dk, og temaet ses ved at køre DET. README.md
-                         # har den ene kommando.
+demosite = ""
 
-# ★ "dark-mode" stod her før og er FJERNET med vilje. Mørk tilstand er ikke
-# designet — 01-variabler.css har den tomme blok og listen over, hvad der skal
-# besluttes. Et tema, der reklamerer med noget, det ikke har, er værre end et
-# tema, der tier om det.
 tags = ["blog", "minimal", "dansk", "serif", "long-form", "long-read"]
 features = [
   "selvhostede skrifter",
@@ -40,30 +25,8 @@ features = [
   "dansk feed med forfatter og fuld tekst",
 ]
 
-min_version = "0.146.0"   # Skabelonerne bruger layouts-opbygningen fra v0.146
-                          # (page.html/section.html i roden, _partials/,
-                          # _shortcodes/, _markup/) og time.Format med locale.
-                          # Udviklet og målt på 0.166.0 extended.
+min_version = "0.146.0"
 
 [author]
   name = "Ulrich Bojko"
   homepage = "https://github.com/UlrichGB"
-
-# ---------------------------------------------------------------------------
-# Skrifterne har deres egen licens
-# ---------------------------------------------------------------------------
-# De TRE familier i static/fonts/ — Merriweather, Source Sans 3 og Comfortaa —
-# er SIL Open Font License 1.1 og IKKE dækket af LICENSE ovenfor. De tre
-# licenstekster ligger ved siden af filerne og SKAL følge med, hvis skrifterne
-# følger med:
-#
-#     static/fonts/OFL-Merriweather.txt
-#     static/fonts/OFL-SourceSans3.txt
-#     static/fonts/OFL-Comfortaa.txt
-#
-# ★ Her stod før et [original]-felt med Literata i. Det er fjernet: Literata
-# blev taget ud af temaet, da skriftvalget blev lagt om, og [original] er
-# desuden Hugos felt til "dette tema er en tilpasning af et andet tema" —
-# hvilket det ikke er. Skrifterne kommer udefra, men de gør ikke temaet til en
-# afledning. Hvorfor netop de tre familier står i README.md og i
-# assets/css/00-skrifter.css.

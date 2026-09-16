@@ -1,21 +1,7 @@
 {{- /*
-  Ikonerne. Ét sted, så de har den samme stregtykkelse og den samme størrelse
-  overalt, og så et ikon skiftes ét sted.
+  Ikonerne, ét sted:
 
       {{ partial "ikon.html" "soeg" }}
-
-  Stregerne er Lucide (lucide.dev), som Organic-systemets readme udpeger ved
-  navn. Systemet beder om stroke-width 2.75 "for a rounder, heavier look";
-  lærredet tegner dem med 2.5 i navigationen og 2.25 i delelinkene. Lærredet
-  vinder, som alle andre steder, så de to tal står herunder.
-
-  De er inline SVG og ikke en ikonskrift eller en sprite-fil: så er der intet
-  ekstra kald, ingen FOUT på et ikon, og currentColor virker.
-
-  Delelinkenes ikoner er lærredets EGNE tegninger og ikke platformenes
-  bomærker — lærredet bruger generiske Lucide-former til LinkedIn, Mastodon og
-  Bluesky. Det er ikke en fejl at rette: et tema, der leverer tredjeparters
-  varemærker, leverer også deres retningslinjer for brug af dem.
 */ -}}
 {{- $n := . -}}
 {{- $s := "17" -}}

@@ -1,28 +1,6 @@
 {{- /*
-  SKRIPTET — og hvorfor der kun er ét.
-
-  Temaet havde ingen JavaScript overhovedet, og det var et valg. Nu er der én
-  fil: kopiér-knappen på en kodeblok, som Ulrich bad om. Begrundelsen og de
-  regler, den er skrevet under, står i toppen af assets/js/kode-kopi.js.
-
-  Den behandles præcis som CSS'en: Hugos egne pipes minificerer og
-  fingeraftrykker den, så browseren kan cache den for evigt og alligevel få
-  den nye med det samme. Ingen npm, ingen bundler, intet byggeskridt.
-
-  DEFER og ikke async: scriptet rører DOM'en, så det skal vente på, at der ER
-  en. defer holder samtidig resten af siden i gang imens — en kopiér-knap må
-  aldrig forsinke, at en artikel kan læses.
-
-  DEN LIGGER PÅ ALLE SIDER, også dem uden kode, og det er med vilje det
-  dumme valg. Den minificerede fil er under 2KB, den er fingeraftrykt og
-  bliver derfor hentet én gang for hele sitet, og den gør ingenting på en side
-  uden kodeblokke — den finder ingen .highlight og stopper på første linje.
-
-  Alternativet var at sætte et flag fra en render-hook på kodeblokke og først
-  indsætte <script>, hvis flaget var sat. Det virker, men det koster en
-  render-hook, der skal gengive fremhævningen SELV, og dermed en ny mulighed
-  for at kodeblokkene kommer til at se anderledes ud end Chromas egne. To
-  kilobyte er billigere end den risiko.
+  SKRIPTET. Minificerer og fingeraftrykker assets/js/kode-kopi.js og
+  sætter det ind med defer.
 */ -}}
 {{- $js := resources.Get "js/kode-kopi.js" -}}
 {{- with $js -}}

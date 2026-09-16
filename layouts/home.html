@@ -1,64 +1,20 @@
 {{ define "main" }}
   {{- /*
-    FORSIDEN. Lærredets "Forside"-skærm.
-
-    ---------------------------------------------------------------------------
-    HELE INDLÆG, IKKE EN LISTE
-    ---------------------------------------------------------------------------
-    Den forrige udgave var en liste med de 20 nyeste titler. Lærredet er noget
-    andet: hele artikler under hinanden, adskilt af en lille centreret streg,
-    og et sidetal nederst — "Side 1 af 6 · Ældre indlæg →". Kontakten i
-    lærredets data-props hedder fullPosts og står med default: true.
-
-    Den er oversat til en Hugo-paginator frem for at blive skrevet fast, så
-    forsiden ikke bliver 28 artikler lang den dag, der er 28 artikler. Antallet
-    pr. side står i hugo.toml (pagination.pagerSize).
-
-    Lærredets tre kontakter er blevet til tre site-parametre, så de bliver ved
-    med at være valg i stedet for at fryse til:
-
-        fullPosts    → params.fuldeIndlaeg   (hele artikler / kun uddrag)
-        watermark    → params.vandmaerke     (se _partials/vandmaerke.html)
-        readingTime  → params.laesetid       (se _partials/meta.html)
-
-    ---------------------------------------------------------------------------
-    .Content ØVERST er forsidens egen tekst — bojko-dk/content/da/_index.md.
-    Den står uden for spalten af artikler, fordi den er en indledning til
-    sitet og ikke et indlæg.
+    FORSIDEN. Forsidens egen tekst, derefter indlæggene — hele eller som
+    resumé, styret af params.fuldeIndlaeg — og sidetallet.
   */ -}}
-
-  {{- /* .col og .body-copy må IKKE sidde på det samme element: .col er 680px
-       og .body-copy er 62ch, og den mindste af de to vinder — med
-       margin-inline: auto oveni, så indledningen blev centreret 33px inde i
-       forhold til rubrikkerne under den. To kasser, ikke én. */}}
   {{- with .Content }}
     <div class="col forside-intro"><div class="body-copy">{{ . }}</div></div>
   {{- end }}
-
-  {{- /* Listen kommer fra _partials/forsidens-indlaeg.html og ikke fra en
-       forespørgsel her, fordi <head> allerede har pagineret den samme liste
-       for at kunne skrive "Side 2 — …" i titlen. Står forespørgslen to
-       steder, kan de to drive fra hinanden, og så stopper bygningen. */}}
   {{- $side := .Paginate (partial "forsidens-indlaeg.html" .) }}
   {{- $hele := site.Params.fuldeIndlaeg | default true }}
 
   {{- range $i, $p := $side.Pages }}
-
-    {{- /* Stregen står MELLEM indlæggene, ikke over det første. */}}
     {{- if $i }}<div class="col skille" aria-hidden="true"><span></span></div>{{ end }}
 
     <article class="col forside-indlaeg">
       {{- partial "omslag.html" $p }}
-
-      {{- /* Søskende til <header>, ikke barn — se page.html. */}}
       {{ partial "vandmaerke.html" $p }}
-
-      {{- /* ★ <h2> OG IKKE <h1>. Forsiden viser fem indlæg, og fem <h1> på én
-           side er fem sideoverskrifter uden en side over dem — målt: hver af
-           de seks forsider havde fem. Her er hvert indlæg et afsnit på
-           forsiden, og på sin EGEN side er titlen stadig <h1> (page.html).
-           Størrelsen ligger i .post-h--forside og ikke i elementet, så det er
-           en mærkatændring og ikke en designændring. */}}
       <header class="post-hoved">
         <h2 class="post-h post-h--forside">
           <a class="title-link" href="{{ $p.RelPermalink }}">{{ $p.Title }}</a>
@@ -76,11 +32,6 @@
       </div>
     </article>
   {{- end }}
-
-  {{- /* --- SIDETALLET ------------------------------------------------------
-       "Side 1 af 6" til venstre, "Ældre indlæg →" til højre. Lærredet har kun
-       den ene retning; "Nyere indlæg" er tilføjet, fordi en paginator uden vej
-       tilbage er en blindgyde, og fordi den kun vises, når man ER inde i den. */}}
   <div class="col skille" aria-hidden="true"><span></span></div>
   <nav class="col sidetal" aria-label="Sider">
     <span>Side {{ $side.PageNumber }} af {{ $side.TotalPages }}</span>

@@ -1,35 +1,6 @@
 {{- /*
-  METALINJEN: "Af Ulrich Bojko / I SharePoint / 12. september 2026 / 6 min. læsning"
-
-  Delene bygges i en liste først og sættes så sammen med skråstreger imellem.
-  Grunden er den kedelige: en artikel uden mærker har ingen "I …"-del, og hvis
-  skråstregerne var skrevet ind mellem delene i hånden, ville den artikel få
-  to skråstreger ved siden af hinanden. Sådan en fejl ses ikke i kilden.
-
-  "I <emne>" bruger artiklens FØRSTE mærke. Lærredet skriver en kategori der,
-  men sitet har ikke kategorier — taksonomierne er tags og series, og det er
-  et bevidst valg i hugo.toml ("ét løst grupperingsord er nok; to er et
-  ordforråd, der rådner"). Det første mærke er det, der findes, og det linker
-  hen, hvor lærredets kategori linkede hen: til arkivet.
-
-  Læsetiden kan slås fra med params.laesetid = false. Det svarer til
-  lærredets egen kontakt, "readingTime", som står med default: true.
-
-  ---------------------------------------------------------------------------
-  ★ "AF <NAVN>" ER FØRSTE DEL, OG DEN ER IKKE PYNT
-  ---------------------------------------------------------------------------
-  Den stod i beskrivelsen ovenfor fra dag ét og blev aldrig bygget. Målt på et
-  rigtigt byg: navnet "Ulrich Bojko" fandtes tre steder på en artikelside — i
-  <title>, i bomærket og i kolofonen — og NUL steder inde i <article>. Det er
-  <article>, en udtrækker klipper efter, så en artikel herfra kunne læses i
-  fuld længde af en svarmaskine uden at kunne tilskrives nogen.
-
-  Navnet kommer fra site.Params.author. Er den ikke sat, står delen ikke —
-  et "Af " uden navn er værre end ingen byline.
-
-  rel="author" på linket til /om/ er den gamle, stadig læste måde at binde en
-  tekst til en person. Den maskinlæsbare udgave står i JSON-LD'en
-  (_partials/hoved-ekstra.html); denne her er den, læseren kan se.
+  METALINJEN: forfatter, første mærke, dato og læsetid, adskilt af
+  skråstreger.
 */ -}}
 {{- $dele := slice -}}
 

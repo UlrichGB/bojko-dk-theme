@@ -1,39 +1,6 @@
 {{- /*
-  llms.txt — sitets indholdsfortegnelse, skrevet til en sprogmodel.
-
-  Den ligger i roden ved siden af robots.txt og sitemap.xml og gør det samme
-  som sitemappet, bare læsbart: markdown, titler, absolutte adresser og en
-  linje om hver artikel. En svarmaskine, der lander på én artikel, kan se
-  derfra, hvad sitet ellers indeholder — og den behøver ikke gætte ud fra
-  navigationen.
-
-  Formatet er llmstxt.org's: én <h1> med sitets navn, et blockquote med
-  sitets egen beskrivelse, og derefter afsnit med lister af links.
-
-  ---------------------------------------------------------------------------
-  TRE TING, DER ER VÆRD AT VIDE
-  ---------------------------------------------------------------------------
-  1. LISTEN KOMMER FRA site.RegularPages, altså kun det, de to
-     udgivelsesporte (draft og date) har sluppet igennem. En kladde kan ikke
-     komme ud her. Det er den samme regel som i "Relaterede" — og det er
-     præcis den slags fil, bojko-dk/scripts/check-gates.sh findes for at
-     gennemsøge. Kør den, når du har rettet her.
-
-  2. ADRESSERNE ER .Permalink og ikke skrevet i hånden. Der står ikke et
-     domæne i dette repo; Hugo får det med --baseURL ved bygning.
-
-  3. BESKRIVELSERNE ER DE SAMME, som siden selv sender ud i <head>. De hentes
-     fra _partials/hoved-data.html, så en mærkeside beskriver sig selv ens de
-     to steder — og en side uden en skrevet beskrivelse får den udledte
-     ("12 artikler om SharePoint på bojko.dk.") i stedet for ingenting.
-
-  ★ TO TING SKAL STÅ I SITETS KONFIGURATION, ellers bygges filen ikke:
-
-        [outputs]
-          home = ["html", "rss", "llms"]
-
-     Selve formatet kommer med temaet (se temaets hugo.toml); det er kun
-     dette ene opslag, Hugo ikke fletter fra et tema.
+  llms.txt — sitets indholdsfortegnelse i markdown, skrevet til en
+  sprogmodel. Ligger i roden ved siden af robots.txt og sitemap.xml.
 */ -}}
 {{- $navn := site.Params.maerke | default site.Title -}}
 # {{ site.Title }}
@@ -52,9 +19,6 @@
 {{ end }}
 {{- end }}
 {{- end }}
-{{- /* Prosasiderne: en sektion UDEN undersider er en side og ikke et arkiv —
-     /om/ og /juridisk/ er begge sådan nogle. Og emneoversigten, fordi den er
-     den eneste vej til alle mærker på én gang. */ -}}
 {{- $andre := slice -}}
 {{- range where site.Pages "Kind" "section" -}}
   {{- if not .RegularPagesRecursive }}{{ $andre = $andre | append . }}{{ end -}}

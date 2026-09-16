@@ -1,54 +1,10 @@
 {{- /*
-  HOVEDETS TRE VÆRDIER — titel, beskrivelse og canonical, regnet ÉT sted.
+  Hovedets værdier — titel, kort titel, beskrivelse og canonical:
 
       {{ $h := partial "hoved-data.html" . }}
-      {{ $h.titel }}  {{ $h.kort }}  {{ $h.beskrivelse }}  {{ $h.kanonisk }}
-
-  Den returnerer en dict og skriver ikke selv noget ud. Grunden er, at de
-  samme tre værdier skal bruges to steder i <head>: baseof.html skriver
-  <title> og <meta name="description">, og hoved-ekstra.html skriver dem igen
-  som og:title, og:description og og:url plus twitter-kortet. Stod de to
-  steder, ville de kunne komme til at sige forskellige ting — og et og:title,
-  der ikke er sidens titel, er præcis den slags fejl, ingen opdager.
-
-  ---------------------------------------------------------------------------
-  BESKRIVELSEN: HVORFOR DEN IKKE BARE ER .Description
-  ---------------------------------------------------------------------------
-  Faldbagen var før `.Description | default site.Params.description`. Målt på
-  et rigtigt byg: 16 af 55 sider gik ud HELT uden beskrivelse. Grunden er
-  kedelig — site.Params.description var aldrig sat (forsidens beskrivelse
-  kommer fra _index.md's frontmatter, ikke fra params), så faldbagen var død
-  kode, og hver eneste mærkeside gik bar ud.
-
-  Nu udledes den af det, siden allerede ER, når artiklen ikke selv har en:
-
-      mærkeside     "12 artikler om SharePoint på bojko.dk."
-      serieside     "4 artikler i serien Supermagterne på bojko.dk."
-      emneoversigt  "Alle emner på bojko.dk. 34 i alt."
-      sektion       "Artikler på bojko.dk. 24 indlæg."
-      et indlæg     artiklens eget uddrag (.Summary), hvis .Description mangler
-
-  site.Params.description er stadig sidste udvej og er stadig sitets at sætte.
-
-  ---------------------------------------------------------------------------
-  SIDETALLET: FORSIDEN ER SEKS SIDER MED DEN SAMME TITEL
-  ---------------------------------------------------------------------------
-  params.fuldeIndlaeg lægger hele artikler på forsiden, og med pagerSize = 5
-  og 24 artikler bliver det seks sider. Målt før denne fil fandtes: /page/2/
-  var tegn for tegn den samme <title> og den samme beskrivelse som /, mens den
-  bar fem ANDRE artiklers fulde tekst, og ingen af dem sagde hvad der var
-  originalen. Hugo lader .Permalink være forsidens på alle seks.
-
-  Derfor: sidetallet hentes fra paginatoren, titlen bliver "Side 2 — …", og
-  canonical peger på paginatorens egen URL. Se forsidens-indlaeg.html for
-  hvorfor listen kommer fra en partial og ikke fra en forespørgsel her.
 */ -}}
 
 {{- $navn := site.Params.maerke | default site.Title -}}
-
-{{- /* --- SIDETALLET ------------------------------------------------------
-     Kun forsiden paginerer i dette tema; arkivet, mærkesiderne og
-     emneoversigten viser alt. Derfor er .IsHome hele betingelsen. */ -}}
 {{- $sidetal := 0 -}}
 {{- $ialt := 0 -}}
 {{- $kanonisk := .Permalink -}}
@@ -59,11 +15,6 @@
   {{- $kanonisk = $p.URL | absURL -}}
 {{- end -}}
 
-{{- /* --- TITLEN ----------------------------------------------------------- */ -}}
-{{- /* "titel" er hele <title> med sitenavnet bagpå. "kort" er den samme uden,
-     fordi og:title og twitter:title står ved siden af og:site_name — og
-     "De tre supermagter — Ulrich Bojko" under et kort, der i forvejen siger
-     "Ulrich Bojko", skriver navnet to gange i det samme kort. */ -}}
 {{- $titel := "" -}}
 {{- $kort := "" -}}
 {{- if .IsHome -}}
@@ -78,8 +29,6 @@
   {{- $titel = printf "%s — %s" .Title site.Title -}}
   {{- $kort = .Title -}}
 {{- end -}}
-
-{{- /* --- BESKRIVELSEN ----------------------------------------------------- */ -}}
 {{- $besk := .Description -}}
 {{- if not $besk -}}
   {{- if eq .Kind "term" -}}
@@ -98,9 +47,6 @@
     {{- end -}}
   {{- end -}}
 {{- end -}}
-{{- /* Et indlæg uden beskrivelse: uddraget. Det er ikke lige så godt som en
-     skrevet beskrivelse, men det er sidens egne ord, og det er bedre end
-     ingenting. 155 tegn er det, Google typisk viser. */ -}}
 {{- if not $besk -}}
   {{- with .Summary -}}
     {{- $besk = . | plainify | htmlUnescape | chomp | truncate 155 -}}
@@ -109,7 +55,6 @@
 {{- if not $besk -}}
   {{- $besk = site.Params.description -}}
 {{- end -}}
-{{- /* Paginatorens sider skal heller ikke have den samme beskrivelse. */ -}}
 {{- if and $besk (gt $sidetal 1) -}}
   {{- $besk = printf "%s (side %d af %d)" $besk $sidetal $ialt -}}
 {{- end -}}

@@ -1,43 +1,7 @@
 {{ define "main" }}
   {{- /*
-    PROFILEN — lærredets "Profil"-skærm.
-
-    Vælges med `layout: profil` i frontmatter. Uden den linje er /om/ bare en
-    almindelig sektionsside, og det er også et gyldigt valg.
-
-    ---------------------------------------------------------------------------
-    FORMEN ER TEMAETS, INDHOLDET ER FRONTMATTER
-    ---------------------------------------------------------------------------
-    Lærredets profilskærm er to spalter: en klæbende venstrespalte med portræt,
-    navn, titel, kontaktliste og en CV-knap, og en højrespalte med en
-    underrubrik, en brødtekst, "Erfaring" som en dateret liste og "Arbejder
-    med" som mærker.
-
-    Et CV er indhold, ikke en skabelon. Posterne kommer derfor fra frontmatter:
-
-        ---
-        title: "Om"
-        layout: profil
-        description: "Den ene sætning, der står øverst."
-        rolle: "SharePoint- og Microsoft 365-arkitekt"
-        sted: "København"
-        portraet: "portraet.jpg"     # ressource i sidens egen mappe
-        cv: "/cv.pdf"                # valgfri; knappen vises kun hvis den er der
-        erfaring:
-          - periode: "2021 – nu"
-            rolle: "Senior SharePoint-arkitekt"
-            sted:  "Konsulenthus, København"
-            tekst: "…"
-        faerdigheder: ["SharePoint Online", "Hugo", …]
-        ---
-
-    Alt undtagen title er valgfrit. Mangler `erfaring`, er der ingen
-    Erfaring-sektion — ikke en tom overskrift.
-
-    ★ CV-LISTEN ER DEN SAMME FIGUR SOM TIDSLINJEN: en skinne til venstre, tekst
-    til højre, en streg mellem posterne. Det er lærredets egen datoskinne, og
-    det er den, tidslinjen i 09-tidslinje.css er bygget på. Ændrer du den ene,
-    så kig på den anden.
+    PROFILEN. Vælges med `layout: profil` i frontmatter: portræt, kontakt,
+    tekst, erfaring og uddannelse.
   */ -}}
   <section class="profil-side profile-grid">
 
@@ -57,9 +21,6 @@
         <h1 class="post-h post-h--profil">{{ site.Params.author | default .Title }}</h1>
         {{- with .Params.rolle }}<p class="profil-rolle">{{ . }}{{ with $.Params.sted }}<br>{{ . }}{{ end }}</p>{{ end }}
       </div>
-
-      {{- /* Kontaktlisten: e-mail fra params, resten fra params.social. Tomme
-           håndtag springes over — de står tomme med vilje. */}}
       {{- $kontakt := slice }}
       {{- with site.Params.email }}{{ $kontakt = $kontakt | append (dict "navn" . "url" (printf "mailto:%s" .)) }}{{ end }}
       {{- with site.Params.social.linkedin }}{{ $kontakt = $kontakt | append (dict "navn" "LinkedIn" "url" (printf "https://www.linkedin.com/in/%s" .)) }}{{ end }}

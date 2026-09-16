@@ -1,21 +1,3 @@
 {{- /*
-  ★ TOM MED VILJE. DEN ER DIN.
-
-  Bunden viser i dag ét navn og en streg. Det, der mangler, og som er en
-  beslutning og ikke en detalje:
-
-    - profillinks. params.social i konfigurationen står med tomme håndtag
-      (linkedin, bluesky, mastodon) netop fordi hvilke der skal stå her — og
-      om de skal — ikke er afgjort. Håndtag, aldrig fulde URL'er, så et
-      platformskifte er én ords rettelse:
-
-          {{ with site.Params.social.linkedin }}
-            <a href="https://www.linkedin.com/in/{{ . }}/">LinkedIn</a>
-          {{ end }}
-
-    - et copyright-år, hvis du vil have et: {{ now.Year }}
-    - et link til /juridisk/ (privatliv og cookies), når den side er skrevet
-    - et RSS-link, hvis det skal være synligt og ikke kun i <head>
-
-  Kaldes fra layouts/baseof.html, inde i <footer>.
+  TOM MED VILJE. DEN ER DIN. Indsættes nederst i bunden.
 */ -}}

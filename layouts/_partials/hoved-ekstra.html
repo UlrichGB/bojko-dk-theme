@@ -1,65 +1,10 @@
 {{- /*
-  HOVEDETS METALAG — canonical, Open Graph, Twitter-kort og JSON-LD.
-
-  Kaldes fra layouts/baseof.html, sidst i <head>.
-
-  ---------------------------------------------------------------------------
-  ★ DEN VAR TOM MED VILJE, OG ER DET IKKE LÆNGERE
-  ---------------------------------------------------------------------------
-  Her stod i lang tid 25 linjers kommentar, der sagde "TOM MED VILJE. DEN ER
-  DIN", fordi ingen af delene var besluttet. De er besluttet nu, og målingen,
-  der udløste det, står i temaets kvalitetsrevision: en udgivet artikel sendte
-  charset, viewport, titel, beskrivelse og ét stylesheet ud — og intet andet.
-  Ingen canonical, intet og-kort, ingen JSON-LD, og forfatterens navn fandtes
-  nul steder inde i <article>.
-
-  DE TO REGLER, DER STOD HER FRA FØRSTE FÆRD, GÆLDER STADIG:
-
-  1. INGEN ADRESSE I REPOET. Sitet har ingen domæne nogen steder — Hugo får
-     adressen på byggetidspunktet med `hugo --baseURL "https://…/"`. Derfor
-     er hver eneste absolutte URL herunder regnet af .Permalink eller absURL,
-     og der står ikke et domæne i denne fil.
-
-  2. ET OG-BILLEDE PR. ARTIKEL KOMMER FRA cover-NØGLEN, artiklen allerede
-     har. Opslaget ligger i _partials/omslag-ressource.html, så billedet i
-     kortet ér det billede, læseren ser øverst i artiklen.
-
-  ---------------------------------------------------------------------------
-  HVAD DER STADIG ER SITETS OG IKKE TEMAETS
-  ---------------------------------------------------------------------------
-      favicon, apple-touch-icon, webmanifest, theme-color
-          Filer, der skal serveres som de er, hører i static/ i DIT site.
-          Temaet kan ikke levere dem uden at gætte på et bomærke.
-
-      params.ogBillede
-          Fællesbilledet til de sider, der ikke har et omslag — forsiden,
-          arkivet, mærkesiderne. En sti i sitets static/, f.eks.
-          "og-standard.png". Er den ikke sat, står og:image ikke på de sider,
-          og det er et gyldigt kort; et gættet billede er ikke.
-
-      site.Params.description
-          Sidste udvej for beskrivelsen. Se _partials/hoved-data.html for de
-          faldbager, temaet selv kan udlede.
-
-  ---------------------------------------------------------------------------
-  HVORFOR JSON-LD'EN BYGGES SOM EN dict OG IKKE SKRIVES I HÅNDEN
-  ---------------------------------------------------------------------------
-  En artikeltitel med et citationstegn i, eller en brødtekst med et lukkende
-  script-mærke i en kodeblok, ville bryde en håndskrevet JSON-blok og
-  efterlade ugyldig opmærkning, som ingen opdager, fordi siden stadig ser
-  rigtig ud. `jsonify` undslipper begge dele — den skriver < som < — så
-  blokken ikke kan brydes af indholdet. Derfor: byg en dict, og lad Hugo
-  skrive JSON'en.
+  HOVEDETS METALAG — canonical, Open Graph, Twitter-kort og
+  BlogPosting-JSON-LD. Kaldes fra baseof.html, sidst i <head>.
 */ -}}
 {{- $h := partial "hoved-data.html" . -}}
 {{- $forfatter := site.Params.author -}}
 {{- $navn := site.Params.maerke | default site.Title -}}
-
-{{- /* --- BILLEDET -----------------------------------------------------------
-     Artiklens eget omslag, ellers sitets fællesbillede, ellers ingenting.
-     1200px er den bredde, kortene bruger; formatet konverteres IKKE til webp
-     her, fordi flere af de tjenester, der henter kortet, stadig ikke læser
-     webp — og et og-billede, der ikke vises, er værre end et større. */ -}}
 {{- $billede := "" -}}
 {{- $billedtekst := "" -}}
 {{- with partial "omslag-ressource.html" . -}}
@@ -68,17 +13,12 @@
 {{- else -}}
   {{- with site.Params.ogBillede }}{{ $billede = . | absURL }}{{ end -}}
 {{- end -}}
-
-{{- /* og:locale vil have da_DK og ikke da-DK. Sproget er sprogets egen
-     indstilling (languages.toml), ikke en streng her. */ -}}
 {{- $lokale := replace (site.Language.Locale | default site.Language.Lang) "-" "_" -}}
 
   <link rel="canonical" href="{{ $h.kanonisk }}">
 {{- with $forfatter }}
   <meta name="author" content="{{ . }}">
 {{- end }}
-
-{{- /* --- OPEN GRAPH --------------------------------------------------------- */}}
   <meta property="og:site_name" content="{{ $navn }}">
   <meta property="og:locale" content="{{ $lokale }}">
   <meta property="og:type" content="{{ if .IsPage }}article{{ else }}website{{ end }}">
@@ -108,12 +48,6 @@
   <meta property="article:tag" content="{{ .LinkTitle }}">
 {{- end }}
 {{- end }}
-
-{{- /* --- TWITTER-KORTET ------------------------------------------------------
-     summary_large_image kun når der FAKTISK er et billede; uden et billede
-     tegner kortet en tom ramme, og så er summary det rigtige. Der står ikke
-     twitter:site eller twitter:creator, fordi sitet ikke har et håndtag der —
-     params.social har LinkedIn, Bluesky og Mastodon. */}}
   <meta name="twitter:card" content="{{ if $billede }}summary_large_image{{ else }}summary{{ end }}">
   <meta name="twitter:title" content="{{ $h.kort }}">
 {{- with $h.beskrivelse }}
@@ -122,21 +56,6 @@
 {{- with $billede }}
   <meta name="twitter:image" content="{{ . }}">
 {{- end }}
-
-{{- /* --- BlogPosting ---------------------------------------------------------
-     Kun på et indlæg. Hvert eneste felt herunder er noget, temaet allerede
-     regnede ud i forvejen — .Title, .Plain, .WordCount, .GetTerms, omslaget,
-     .Date, .Lastmod, params.author, .Permalink — så dette er samling og ikke
-     ny logik.
-
-     articleBody er det, der gør blokken værd at have: <article> indeholder
-     også del-knapper, mærkeliste og to NABOARTIKLERS titler, så en udtrækker,
-     der klipper efter <article>, får mere med end artiklen. articleBody er
-     artiklens tekst og kun den.
-
-     BreadcrumbList er bevidst IKKE med. Sitet har én sektion med indlæg i og
-     et arkiv ved siden af; en brødkrumme med to led ville være opmærkning,
-     der beskriver et hierarki, sitet ikke har. */}}
 {{- if .IsPage }}
 {{- $ld := dict
       "@context" "https://schema.org"
@@ -147,14 +66,6 @@
       "mainEntityOfPage" (dict "@type" "WebPage" "@id" .Permalink)
       "wordCount" .WordCount
 -}}
-{{- /* ★ LINJENUMRENE SKAL UD FØRST. markup.toml har lineNos = true, så Chroma
-     skriver hvert linjenummer som <span class="ln">7</span> INDE i koden. Kørt
-     gennem plainify bliver "7" til en del af sætningen, og articleBody kommer
-     til at sige "1echo hej". Samme grund som kode-kopi.js læser .cl og ikke
-     hele blokken — og den samme rettelse.
-
-     htmlUnescape bagefter, fordi Goldmark skriver typografiske tegn som
-     entiteter (&rsquo;), og en entitet inde i en JSON-streng er tegnstøj. */ -}}
 {{- $krop := replaceRE `<span class="ln">[^<]*</span>` "" .Content | plainify | htmlUnescape | chomp -}}
 {{- $ld = merge $ld (dict "articleBody" $krop) -}}
 {{- with $h.beskrivelse }}{{ $ld = merge $ld (dict "description" .) }}{{ end -}}

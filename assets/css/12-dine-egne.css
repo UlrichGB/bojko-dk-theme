@@ -1,21 +1,2 @@
-/* ===========================================================================
-   12 — DINE EGNE REGLER.  ★ TOM MED VILJE. DEN ER DIN.
-   ===========================================================================
-   Sidste fil i rækken, så alt herinde vinder over alt ovenfor uden !important
-   og uden at du skal tælle specificitet.
-
-   HVAD DEN ER TIL:
-     - at prøve noget af, mens du designer, uden at rode i en komponent
-     - at holde de rettelser, der endnu ikke har fundet deres rigtige fil
-
-   HVAD DEN IKKE ER TIL:
-     - farver og skriftstørrelser. De hører i 01-variabler.css, og hvis du
-       skriver dem her, holder de op med at gælde alle de andre steder, de
-       skulle have gjaldt.
-     - noget, der bliver stående. Når en regel her har virket i en uge, så
-       flyt den ned i den komponent, den hører til, og skriv hvorfor. Et
-       stylesheet, hvor halvdelen står i en "diverse"-fil, er et stylesheet,
-       ingen tør røre om et år.
-
-   Rækkefølgen af alle filerne står i layouts/_partials/stil.html.
-   =========================================================================== */
+/* 12 — DINE EGNE REGLER. TOM MED VILJE.
+   Sidste fil i rækken, så alt herinde vinder over alt ovenfor. */

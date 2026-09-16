@@ -1,36 +1,7 @@
 {{- /*
   {{< bred >}} ... {{< /bred >}}
-
-  Ét element ud af læsespalten og ud i arket. Ikke en bred side — en bred ting
-  på en normal side.
-
-      {{< bred >}}
-      | Kapacitet | Kina | Rusland | USA | EU | Indien |
-      | --- | --- | --- | --- | --- | --- |
-      | ... |
-      {{< /bred >}}
-
-  {{< bred fuld="ja" >}} går hele vejen ud til arkets kant. Til et
-  skærmbillede eller en infografik, der ikke bliver til noget i 680px.
-
-  Der er ingen CSS her og ingen bredde her. Klasserne .wide og .bleed er
-  lærredets egne, og hele mekanismen står i 02-grundlag.css: bredden regnes af
-  ARKETS bredde med en container-forespørgsel, ikke af vinduets. Derfor kan
-  den ikke komme til at skubbe siden vandret — der er ingen negativ margin at
-  regne forkert og ingen 100vw at ramme ved siden af.
-
-  SHORTCODEN HEDDER STADIG bred. Klassen, den skriver ud, hedder wide. Det er
-  med vilje: shortcoden er dét, han skriver i en artikel, og forfatter-API'et
-  er dansk som alt andet i den ende (se AGENTS.md). Klassenavnene er lærredets,
-  fordi de er designets. To sprog, to lag, og et lag imellem der oversætter.
+  Ét element ud af læsespalten og ud i arket. fuld="ja" går helt ud.
 */ -}}
-{{- /* ★ FLAGET TIL BILLED-RENDER-HOOKEN. Et billede herinde vises i arkets
-     bredde og ikke i læsespaltens, og det afgør hvilken kandidat i srcset'en
-     browseren skal hente. Hooken kan ikke se, hvor den bliver kaldt fra, så
-     den får det at vide gennem .Page.Store — Hugos egen kanal mellem en
-     shortcode og en render-hook. Ryddes igen bagefter, ellers ville det
-     næste billede i den almindelige brødtekst arve det.
-     Se layouts/_markup/render-image.html. */ -}}
 {{- .Page.Store.Set "billede-i-bred" true -}}
 <div class="wide{{ if eq (.Get "fuld") "ja" }} bleed{{ end }}">
 {{ .Page.RenderString (dict "display" "block") .Inner }}

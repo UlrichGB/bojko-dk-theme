@@ -1,75 +1,6 @@
-/* ===========================================================================
-   00 — SKRIFTERNE
-   ===========================================================================
-   Tre familier, selvhostet. Intet på dette site henter noget fra Google, og
-   der er derfor heller ikke noget GDPR-spørgsmål at svare på. Det er den ene
-   ting, designet blev lavet om på på vej ind i temaet, og her er hvorfor.
-
-   HVAD DESIGNET GJORDE: lærredet i Claude Design hentede NI familier fra
-   Google Fonts — Outfit, Montserrat, Lora, Michroma, Comfortaa, Merriweather
-   og Source Sans 3 fra sit eget <link>, plus Caprasimo og Figtree fra
-   designsystemets styles.css. Det er rigtigt i et designværktøj, hvor man
-   skal kunne skifte skrift med en rulleliste. Det er forkert på et site.
-
-   HVAD DER FAKTISK VAR TÆNDT: lærredet har en kontakt, data-fonts, med tre
-   indstillinger — 'paired', 'sans' og 'editorial'. Standarden, den han så på,
-   står i lærredets data-props: editorial. Og editorial er
-
-       --font-display : Merriweather   (rubrikker, mellemrubrikker, citat)
-       --font-sub     : Source Sans 3  (meta, navigation, knapper, links)
-       --font-read    : Source Sans 3  (brødtekst)
-
-   De øvrige seks familier tegnede ingenting i den indstilling. Michroma blev
-   hentet, men nævnes ikke én gang i lærredets CSS. Caprasimo — designsystemets
-   eneste display-snit — bliver overskrevet af .post-h og de øvrige rubrikker
-   og når aldrig skærmen.
-
-   Et skærmbillede fra samme aften, 20:57, viser parret valgt fra et
-   opslagsværk: "Merriweather Display + Source Sans 3 — Best for: Editorial,
-   blogs, news, content-rich websites". Det er ikke en standardværdi, nogen
-   glemte at ændre. Det er valget.
-
-   DEN TREDJE FAMILIE: Comfortaa, kun til bomærket "bojko.dk" øverst til
-   venstre. Lærredet sætter den med inline style, og et skærmbillede fra 20:55
-   viser et rundet, små-bogstavet logo-snit (Orborn) som forlæg. Den er det
-   ENESTE sted, Organic-systemets "rundet og legende" overlever i et ellers
-   skarpt redaktionelt design, og den er ét ord på én vægt. Den bliver.
-
-   Figtree er væk: lærredet bruger den kun via inline font-family: var(
-   --font-body) på fire små versalrubrikker i profilen og bunden. De er sat i
-   Source Sans 3 600 i stedet — ved 13px og 0,08em spatiering kan de to ikke
-   skelnes, og en hel familie for fire etiketter er ikke en font-hentning værd.
-   --font-body peger derfor på Source Sans 3, hvilket samtidig gør lærredets
-   'sans'-variant gratis, hvis han vil prøve den.
-
-   SUBSÆT: hver familie ligger i to filer, latin og latin-ext, med
-   unicode-range. Dansk (æ, ø, å) ligger helt inde i latin, så latin-ext
-   hentes ALDRIG på en almindelig dansk artikel — den er der, den dag der
-   skal stå et polsk eller tjekkisk navn i en tekst. Browseren afgør det selv;
-   det koster ikke en forespørgsel at have den liggende.
-
-   HVAD EN SIDE FAKTISK HENTER: Merriweather Bold (49KB) + Source Sans 3
-   (29KB) + Comfortaa Bold (13KB) = 91KB. Kursiverne kommer først, når der
-   står noget kursivt: Merriweather BoldItalic ved et citat i .pull,
-   Source Sans 3 Italic ved et <em>.
-
-   VÆGTE: Source Sans 3 leveres af Google som ÉN variabel fil pr. subsæt —
-   400, 600 og 700 er samme bytes med forskellig akse. Derfor står der
-   font-weight: 400 700 (et interval) og ikke tre ens @font-face-blokke. 600
-   og 700 er ægte snit fra aksen, ikke browserens syntetiske fedme.
-   Merriweather leveres derimod som instanser, så 700 er sin egen fil.
-
-   LICENS: alle tre er SIL OFL 1.1 og er IKKE dækket af repoets LICENSE.
-   static/fonts/OFL-*.txt skal følge med filerne. Se AGENTS.md.
-
-   SKAL DU SKIFTE SKRIFT: det er denne fil plus --font-display / --font-body /
-   --font-brand i 01-variabler.css. Læg de nye .woff2-filer i static/fonts/,
-   skriv deres @font-face her, ret variablerne, og slet det, du ikke bruger.
-   Intet andet sted i stylesheettet nævner et skriftnavn.
-   =========================================================================== */
-
-
-/* --- MERRIWEATHER — display: rubrikker, mellemrubrikker, citatet ---------- */
+/* 00 — SKRIFTERNE
+   @font-face for temaets tre selvhostede familier: Merriweather,
+   Source Sans 3 og Comfortaa. */
 
 @font-face {
   font-family: "Merriweather";
@@ -105,9 +36,6 @@
 }
 
 
-/* --- SOURCE SANS 3 — brødtekst, meta, navigation, knapper -----------------
-   Variabel fil: ét interval, 400 til 700, i stedet for tre @font-face. */
-
 @font-face {
   font-family: "Source Sans 3";
   src: url("/fonts/SourceSans3.woff2") format("woff2");
@@ -141,8 +69,6 @@
     U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
 }
 
-
-/* --- COMFORTAA — kun bomærket ------------------------------------------- */
 
 @font-face {
   font-family: "Comfortaa";
