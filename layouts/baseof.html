@@ -80,13 +80,12 @@
 
     <span class="nav-sep" aria-hidden="true"></span>
 
-    {{- /* Forstørrelsesglasset fører til arkivet og ikke til en søgeflade.
-         Hvorfor der ikke ER en søgning, står i 07-arkiv.css — kort: et
-         JSON-søgeindeks er præcis den slags skabelon, bojko-dk/scripts/check-gates.sh
-         findes for at fange. */}}
-    {{- with site.GetPage "/artikler" }}
-      <a class="nav-icon" href="{{ .RelPermalink }}" aria-label="Find et indlæg i arkivet">{{ partial "ikon.html" "soeg" }}</a>
-    {{- end }}
+    {{- /* ★ HER STOD ET FORSTØRRELSESGLAS, og det er fjernet med vilje.
+         Det pegede på arkivet, ikke på en søgeflade — altså et ikon, der
+         lovede noget andet end det gjorde, ved siden af menupunktet "Arkiv",
+         der går præcis samme sted hen og siger det med ord.
+         Søgning kommer, når arkivet er stort nok til at trænge til den;
+         hvorfor den ikke er bygget endnu, står stadig i 07-arkiv.css. */}}
     {{- with site.Home.OutputFormats.Get "rss" }}
       <a class="nav-icon" href="{{ .RelPermalink }}" aria-label="RSS-feed">{{ partial "ikon.html" "rss" }}</a>
     {{- end }}
