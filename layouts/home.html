@@ -1,0 +1,91 @@
+{{ define "main" }}
+  {{- /*
+    FORSIDEN. Lærredets "Forside"-skærm.
+
+    ---------------------------------------------------------------------------
+    HELE INDLÆG, IKKE EN LISTE
+    ---------------------------------------------------------------------------
+    Den forrige udgave var en liste med de 20 nyeste titler. Lærredet er noget
+    andet: hele artikler under hinanden, adskilt af en lille centreret streg,
+    og et sidetal nederst — "Side 1 af 6 · Ældre indlæg →". Kontakten i
+    lærredets data-props hedder fullPosts og står med default: true.
+
+    Den er oversat til en Hugo-paginator frem for at blive skrevet fast, så
+    forsiden ikke bliver 28 artikler lang den dag, der er 28 artikler. Antallet
+    pr. side står i hugo.toml (pagination.pagerSize).
+
+    Lærredets tre kontakter er blevet til tre site-parametre, så de bliver ved
+    med at være valg i stedet for at fryse til:
+
+        fullPosts    → params.fuldeIndlaeg   (hele artikler / kun uddrag)
+        watermark    → params.vandmaerke     (se _partials/vandmaerke.html)
+        readingTime  → params.laesetid       (se _partials/meta.html)
+
+    ---------------------------------------------------------------------------
+    .Content ØVERST er forsidens egen tekst — bojko-dk/content/da/_index.md.
+    Den står uden for spalten af artikler, fordi den er en indledning til
+    sitet og ikke et indlæg.
+  */ -}}
+
+  {{- /* .col og .body-copy må IKKE sidde på det samme element: .col er 680px
+       og .body-copy er 62ch, og den mindste af de to vinder — med
+       margin-inline: auto oveni, så indledningen blev centreret 33px inde i
+       forhold til rubrikkerne under den. To kasser, ikke én. */}}
+  {{- with .Content }}
+    <div class="col forside-intro"><div class="body-copy">{{ . }}</div></div>
+  {{- end }}
+
+  {{- $artikler := where site.RegularPages "Section" "artikler" }}
+  {{- $side := .Paginate $artikler.ByDate.Reverse }}
+  {{- $hele := site.Params.fuldeIndlaeg | default true }}
+
+  {{- range $i, $p := $side.Pages }}
+
+    {{- /* Stregen står MELLEM indlæggene, ikke over det første. */}}
+    {{- if $i }}<div class="col skille" aria-hidden="true"><span></span></div>{{ end }}
+
+    <article class="col forside-indlaeg">
+      {{- partial "omslag.html" $p }}
+
+      {{- /* Søskende til <header>, ikke barn — se page.html. */}}
+      {{ partial "vandmaerke.html" $p }}
+
+      <header class="post-hoved">
+        <h1 class="post-h post-h--forside">
+          <a class="title-link" href="{{ $p.RelPermalink }}">{{ $p.Title }}</a>
+        </h1>
+        {{ partial "meta.html" $p }}
+      </header>
+
+      <div class="body-copy">
+        {{- if $hele }}
+          {{ $p.Content }}
+        {{- else }}
+          <p>{{ $p.Description | default $p.Summary }}</p>
+          <p><a class="quiet" href="{{ $p.RelPermalink }}"><strong>Læs videre</strong> {{ partial "ikon.html" "pil-hoejre" }}</a></p>
+        {{- end }}
+      </div>
+    </article>
+  {{- end }}
+
+  {{- /* --- SIDETALLET ------------------------------------------------------
+       "Side 1 af 6" til venstre, "Ældre indlæg →" til højre. Lærredet har kun
+       den ene retning; "Nyere indlæg" er tilføjet, fordi en paginator uden vej
+       tilbage er en blindgyde, og fordi den kun vises, når man ER inde i den. */}}
+  <div class="col skille" aria-hidden="true"><span></span></div>
+  <nav class="col sidetal" aria-label="Sider">
+    <span>Side {{ $side.PageNumber }} af {{ $side.TotalPages }}</span>
+    <span class="sidetal-veje">
+      {{- with $side.Prev }}
+      <a class="quiet" href="{{ .URL }}">{{ partial "ikon.html" "pil-venstre" }} Nyere indlæg</a>
+      {{- end }}
+      {{- with $side.Next }}
+      <a class="quiet" href="{{ .URL }}">Ældre indlæg {{ partial "ikon.html" "pil-hoejre" }}</a>
+      {{- else }}
+      {{- with site.GetPage "/artikler" }}
+      <a class="quiet" href="{{ .RelPermalink }}">Hele arkivet {{ partial "ikon.html" "pil-hoejre" }}</a>
+      {{- end }}
+      {{- end }}
+    </span>
+  </nav>
+{{ end }}

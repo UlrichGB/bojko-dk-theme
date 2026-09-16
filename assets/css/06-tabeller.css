@@ -1,0 +1,147 @@
+/* ===========================================================================
+   06 — TABELLER
+   ===========================================================================
+   ★ Krav nummer tre: sammenligningstabeller, og den konkrete klage, at
+   tabellen på docupoint.eu er "for kompakt".
+
+   Den klage er stadig brieffet. Den blev opløst i fem navngivne årsager i den
+   forrige udgave, og de fem er SAMME fem her — designet er skiftet, men
+   fejlen er ikke holdt op med at være en fejl. Hver har sit nummer i
+   margenen længere nede:
+
+     1. skriftstørrelsen er 0,875em af brødteksten — to hak ned, ikke ét
+     2. cellepolstringen er 0,571em AF DEN mindre størrelse, altså ~8px
+     3. white-space: nowrap på hver eneste th og td, så intet må ombryde
+        ved et mellemrum
+     4. table-layout: fixed i en inline style, så alle fire kolonner får
+        præcis 25% — "Kapacitet" får lige så meget plads som en sætning på
+        57 tegn
+     5. word-wrap: break-word, som så knækker de lange celler MIDT I ORDET,
+        fordi punkt 3 har forbudt dem at knække ved mellemrummet
+
+   Og en sjette, som gør mest: hans eget tema HAR et tabeludbrud —
+   .content > table { width: calc(100% + 19rem) } — og den ene tabel, han
+   peger på, har fået en inline style med width: 90% klistret på. Inline
+   vinder. Her kan det ikke ske: bredden hører til skabelonen
+   (layouts/_markup/render-table.html) og ikke til den enkelte tabel.
+
+   ---------------------------------------------------------------------------
+   HVOR LÆRREDET IKKE HJÆLPER
+   ---------------------------------------------------------------------------
+   Lærredet har ingen tabel. Ingen af de fire skærme i "bojko.dk Blog.dc.html"
+   indeholder én, så der er ikke noget at aflæse.
+
+   Formen herunder er derfor Organic-systemets egen .table — versal-etiket
+   foroven, bundstreger mellem rækker, dæmpet hover — med lærredets palet og
+   lærredets skarpe kant. TÆTHEDEN er ikke systemets: systemets .table sætter
+   både th og td til var(--space-2), altså 8,8px, hvilket er nøjagtigt den
+   polstring, klagen handler om. Den er sat op til --space-3/--space-4.
+
+   Det er den ene bevidste uenighed med designsystemet i denne fil, og den er
+   truffet på kravets side: en komponentskitse i et designsystem viser en
+   tabel med fire korte celler, og dette site skriver tabeller med sætninger i.
+   Tokens er systemets; trinnet er kravets.
+   =========================================================================== */
+
+
+/* --- RAMMEN ---------------------------------------------------------------
+   Kommer fra render-hooken, ikke fra artiklen. Hugo kalder den for hver
+   eneste markdown-tabel, så en tabel ALDRIG kan nå ud på siden uden sin ramme.
+
+   Det er forskellen på at have skrevet reglen og på at bruge den: en tidligere
+   demo havde en .tabel-ramme-regel i stylesheettet og INTET, der producerede
+   en .tabel-ramme. Reglen var pynt, og en bred tabel skubbede telefonsiden
+   vandret. To rapporter målte præcis den fejl som 34px på ét tema og 41px på
+   et andet.
+
+   Rammen får også klassen .wide fra hooken, så tabellen bryder ud af
+   læsespalten og ud i arket. Se 02-grundlag.css.                            */
+
+.tabel-ramme {
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+
+  /* Samme grund som for <pre> i 04: uden den vokser beholderen i stedet for
+     at rulle, når den ligger i en flex-kolonne. */
+  min-width: 0;
+}
+
+.tabel-ramme table {
+  width: 100%;
+  border-collapse: collapse;
+
+  /* (1) ÉT hak ned fra brødteksten, ikke to. 16px mod 19px. Systemets .table
+     siger 14px; det er to hak, og to hak er starten på klagen. */
+  font-size: 1rem;           /* 16px                                       */
+  line-height: 1.5;
+
+  /* (4) auto, ikke fixed: kolonnerne får den bredde, indholdet beder om.
+     Etiketkolonnen bliver smal, sætningskolonnerne brede. */
+  table-layout: auto;
+
+  font-variant-numeric: tabular-nums;
+}
+
+.tabel-ramme th,
+.tabel-ramme td {
+  /* (2) ★ SELVE SVARET PÅ KLAGEN. 13,2px lodret og 17,6px vandret, af den
+     STØRRE skrift — mod ~8px af den mindre. Cellen får omtrent dobbelt så
+     meget luft, og det er den, man ser.
+
+     Begge tal er trin på designsystemets egen 1,10×-skala. Der er ikke fundet
+     på et tal her; der er valgt et andet trin. */
+  padding: var(--space-3) var(--space-4);
+
+  /* (3) INGEN nowrap. En celle med en sætning i skal ombryde ved et
+     mellemrum — det er dét, mellemrum er til.
+     (5) og INGEN break-word, som kun er nødvendig, når (3) har forbudt det
+     normale knæk. Lange ord uden mellemrum (et URL, et PowerShell-navn) må
+     gerne rulle; det er, hvad rammen er til. */
+  text-align: left;
+  vertical-align: top;
+
+  border-bottom: 1px solid color-mix(in srgb, var(--color-text) 8%, transparent);
+}
+
+/* Etiketten foroven. Systemets form — versaler, spatieret, dæmpet — men 12px
+   og ikke systemets 11px: disse etiketter bærer produktnavne i en tabel med
+   syv kolonner, ikke etordsstatusser i en komponentskitse. */
+.tabel-ramme thead th {
+  font-family: var(--font-sub);
+  font-size: 0.75rem;        /* 12px                                       */
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-neutral-600);
+  border-bottom: 1px solid var(--color-divider);
+  white-space: nowrap;     /* KUN på etiketten: den er ét til to ord */
+}
+
+/* Første kolonne er rækkens navn og skal læses som en etiket, ikke som data. */
+.tabel-ramme td:first-child {
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+/* Systemets hover. Den gør en bred tabel til at følge med øjnene hen over. */
+.tabel-ramme tbody tr:hover {
+  background: color-mix(in srgb, var(--color-text) 4%, transparent);
+}
+
+.tabel-ramme tbody tr:last-child td { border-bottom: 0; }
+
+
+/* --- PÅ EN TELEFON --------------------------------------------------------
+   Tabellen bliver ikke smallere, og kolonnerne stables ikke. En
+   sammenligningstabel, hvis kolonner stables, er ikke længere en
+   sammenligning — den er en liste, og så kan man ikke se de to ting ved
+   siden af hinanden, som var hele grunden til at lave tabellen.
+
+   Den ruller i stedet, inde i sin ramme, og resten af siden står stille.
+   Polstringen giver et hak, så der er flere kolonner synlige ad gangen.     */
+
+@media (max-width: 34rem) {
+  .tabel-ramme table { font-size: 0.9375rem; }   /* 15px */
+  .tabel-ramme th,
+  .tabel-ramme td { padding: var(--space-2) var(--space-3); }
+}

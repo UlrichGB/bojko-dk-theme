@@ -1,0 +1,25 @@
+{{- /*
+  ★ TOM MED VILJE. DEN ER DIN.
+
+  Alt, der skal ind i <head> og ikke er stylesheettet, hører her: favicon,
+  Open Graph- og Twitter-kort, en canonical, et verifikationsmærke, en
+  webmanifest. Kaldes fra layouts/baseof.html, sidst i <head>.
+
+  Den er tom, fordi ingen af delene er besluttet endnu, og fordi et gæt ville
+  se ud som en beslutning. To ting at vide, når du fylder den:
+
+  1. INGEN ADRESSE I REPOET. Sitet har ingen domæne nogen steder — Hugo får
+     adressen på byggetidspunktet med `hugo --baseURL "https://…/"`. Skriv
+     derfor absolutte URL'er med `absURL` eller `.Permalink`, aldrig i hånden:
+
+         <meta property="og:url" content="{{ .Permalink }}">
+         <link rel="icon" href="{{ "favicon.svg" | relURL }}">
+
+  2. Et og-billede pr. artikel kan komme fra cover-nøglen, artiklen allerede
+     har — se hvordan layouts/page.html henter .Params.cover som en
+     page-bundle-ressource. Så er det samme billede, læseren ser øverst i
+     artiklen.
+
+  Filer, der skal serveres som de er (favicon.svg, og-standard.png), lægger du
+  i static/ i DIT site, ikke i temaet.
+*/ -}}

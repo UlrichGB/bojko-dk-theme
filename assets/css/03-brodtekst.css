@@ -1,0 +1,404 @@
+/* ===========================================================================
+   03 — BRØDTEKSTEN
+   ===========================================================================
+   Artiklen selv: rubrikken, underrubrikken, vandmærket, afsnittene, listerne,
+   citaterne og billederne.
+
+   ---------------------------------------------------------------------------
+   RYTMEN ER EN FLEX-KOLONNE, IKKE MARGINER
+   ---------------------------------------------------------------------------
+   .body-copy er display: flex med gap: var(--x). Det er ikke en stilistisk
+   detalje, det er det, der gør rytmen EKSAKT:
+
+     - Marginer kollapser ikke i en flex-beholder. Afstanden mellem to afsnit
+       er derfor altid præcis X, og aldrig "den største af de to marginer",
+       som den ville være i normal flow.
+     - En mellemrubrik kan derfor bede om mere luft OVER sig (margin-top: X,
+       oveni gap'et = 2X) og mindre UNDER sig (margin-bottom: -X/2, altså
+       gap minus det halve = X/2) med almindelig aritmetik, der holder.
+
+   Alle afstande er X, X/2 eller X/4. Der er ikke ét tal i denne fil, som
+   nogen har valgt i øjeblikket. X er defineret i 01-variabler.css, og der
+   står også, hvorfor den skal følges ad med --brodtekst.
+
+   ---------------------------------------------------------------------------
+   CAP-BESKÆRING: text-box
+   ---------------------------------------------------------------------------
+   Lærredet beskærer rubrikkerne til versalhøjde med `text-box: trim-both cap
+   alphabetic`, så afstandene måles fra BLÆK til BLÆK og ikke fra en usynlig
+   linjeboks til en anden. Det er den eneste måde, X-rytmen kan holde omkring
+   en rubrik i en anden skriftstørrelse end brødteksten.
+
+   Den egenskab er ny og findes endnu ikke i alle browsere (Chrome 133+; ikke
+   Firefox og Safari på skrivetidspunktet). Derfor er den vendt om her i
+   forhold til lærredet:
+
+     - STANDARD er de marginer, en UBESKÅRET rubrik skal have for at se rigtig
+       ud. Det er dem, de fleste browsere får, og de er trukket ned med
+       skriftens egen over- og underlængde (≈0,28em over, ≈0,22em under).
+     - @supports-blokken nederst i filen lægger beskæringen på OG sætter
+       lærredets egne, rene margintal — X og -X/2.
+
+   Den vej rundt betyder, at en browser uden understøttelse får noget, der
+   er rigtigt, og en browser med understøttelse får noget, der er eksakt.
+   Omvendt ville en browser uden understøttelse have fået for meget luft over
+   hver mellemrubrik og for lidt under.
+   =========================================================================== */
+
+
+/* --- RUBRIKKEN ------------------------------------------------------------
+   .post-h er lærredets klasse og bruges på forsiden, på indlægget, på arkivet
+   og på profilen — i fire forskellige størrelser, som alle er clamp() og
+   derfor ikke har brug for et brudpunkt.
+
+   Det negative venstrehæng på 0,04em er optisk: Merriweathers venstre kant på
+   et stort versal-H flugter ellers ikke med brødteksten under den. */
+
+.post-h {
+  font-family: var(--font-display);
+  font-weight: 700;
+  line-height: 1.12;
+  letter-spacing: -0.02em;
+  margin: 0 0 0 -0.04em;
+  color: var(--color-text);
+  text-transform: none;
+
+  /* Dansk sætter lange sammensatte ord — "Opbevaringspolitikker" er 21 tegn —
+     og en rubrik er den største skrift på siden. Hos en læser med stor skrift
+     løb præcis det ord 1px ud over en 390px-skærm og gav hele siden en
+     vandret rullebjælke. Målt.
+
+     break-word er en nødudgang: den træder kun i kraft, når ordet ellers ikke
+     kan være der, så ved standardstørrelse knækkes intet, og rubrikkerne står
+     som de altid har gjort. */
+  overflow-wrap: break-word;
+}
+
+/* De fire steder, rubrikken bruges, i lærredets fire størrelser. De stod som
+   inline style på lærredet; her er de klasser, så der ikke er en
+   skriftstørrelse i en skabelon.
+
+   max-width i ch er lærredets egen og er vigtigere, end den ser ud: den
+   bestemmer, hvor en lang dansk titel knækker. Uden den får en rubrik på
+   42px lov at fylde hele arket, og så står der fire ord på den første linje
+   og ét på den anden. */
+.post-h--forside { font-size: var(--h-forside); max-width: 22ch; }
+.post-h--indlaeg { font-size: var(--h-indlaeg); max-width: 18ch; }
+.post-h--arkiv   { font-size: var(--h-arkiv);   margin-bottom: 1.75rem; }  /* 28px */
+.post-h--profil  { font-size: 1.875rem; margin-bottom: 0.375rem; }        /* 30/6px */
+
+
+/* --- VANDMÆRKET -----------------------------------------------------------
+   ★ Det store bogstav bag rubrikken. Artiklens forbogstav, 220px, i
+   --color-neutral-200 — altså præcis den farve, siden bag arket har, så det
+   læses som et gennemslag og ikke som en dekoration.
+
+   Forlægget er Typology-temaet, som ligger blandt hans skærmbilleder fra
+   samme aften: bogstavet står til VENSTRE for og bag rubrikken, med versalens
+   top nogenlunde i højde med rubrikkens første linje.
+
+   Skriftsnittet er med vilje ikke sat: det arver grænsefladens Source Sans 3
+   fra <main>, hvilket er det, lærredet gør. Et Merriweather-vandmærke ville
+   være en anden beslutning end den, der er tegnet.
+
+   DE OPTISKE NUDGES er ikke pjat. Runde og spidse versaler (O, C, G, Q, S og
+   A, V, W, Y, T) læses som om de står længere inde end en lodret stamme som
+   H eller N, selv når de matematisk står samme sted. Et af hans skærmbilleder
+   fra 20:40 er netop en plakat om det. To trin: 0,03em for de runde, 0,05em
+   for de spidse.
+
+   Elementet er aria-hidden i skabelonen, står uden for tekstflowet og kan
+   ikke markeres eller klikkes. */
+
+.wm {
+  position: absolute;
+  left: -0.36em;
+  top: -0.12em;
+  z-index: 0;
+
+  /* Lærredet skriver 220px fast. Det er rigtigt ved den bredde, det blev
+     tegnet i, og forkert på en telefon: et 220px bogstav med left: -0.36em er
+     bredere end en 390px-skærm og skubbede siden 67px vandret. Målt.
+     clamp() holder lærredets 220px fra ca. 650px og opefter og skalerer
+     under det, så bogstavet altid er godt en tredjedel af spalten.
+
+     ★ DEN ENE SKRIFTSTØRRELSE I TEMAET, DER BEVIDST IKKE ER REM.
+     Vandmærket er ikke tekst. Det er aria-hidden, det kan ikke markeres, det
+     kan ikke klikkes, og ingen læser det — det er en TEGNING, der tilfældigvis
+     er lavet af et bogstav, og den er i forvejen bundet til bredden (34vw) og
+     ikke til skriften. Blev den rem, ville den vokse 50% hos en læser med
+     stor skrift, og fordi bogstavet hænger -0,36em ud til venstre, ville
+     ophænget vokse med: præcis det vandrette overløb, clamp'en her blev
+     indført for at fjerne. Reglen "rem til skriftstørrelser" gælder tekst,
+     læseren skal kunne læse. Denne skal han ikke. */
+  font-size: clamp(110px, 34vw, 220px);
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  color: var(--color-neutral-200);
+  pointer-events: none;
+  user-select: none;
+}
+
+.wm[data-glyph="O"], .wm[data-glyph="C"], .wm[data-glyph="G"],
+.wm[data-glyph="Q"], .wm[data-glyph="S"] { margin-left: -0.03em; }
+
+.wm[data-glyph="A"], .wm[data-glyph="V"], .wm[data-glyph="W"],
+.wm[data-glyph="Y"], .wm[data-glyph="T"] { margin-left: -0.05em; }
+
+
+/* --- UNDERRUBRIKKEN -------------------------------------------------------
+   Lærredets .lede. (Den hed .underrubrik i den forrige udgave; klassen er
+   skiftet, fordi lærredet er den, der beskriver designet nu.)
+
+   Den er sat i grænsefladeskriften og ikke i display-skriften — det er
+   lærredets 'editorial'-regel, og det er derfor, den læser som en indledning
+   og ikke som en anden rubrik. */
+
+.lede {
+  margin: 0 0 1.25rem;       /* 20px                                       */
+  font-family: var(--font-sub);
+  font-weight: 400;
+  font-size: var(--lede);
+  line-height: 1.4;
+  letter-spacing: -0.015em;
+  color: var(--color-text);
+}
+
+
+/* --- SELVE TEKSTEN --------------------------------------------------------
+   Farven er --color-neutral-900 og ikke --color-text. Forskellen er et enkelt
+   trin, og den er bevidst: rubrikken står i --color-text og skal være det
+   mørkeste på siden. */
+
+.body-copy {
+  display: flex;
+  flex-direction: column;
+  gap: var(--x);
+
+  max-width: var(--measure);
+  font-family: var(--font-read);
+  font-size: var(--brodtekst);
+  line-height: var(--x);
+  color: var(--color-neutral-900);
+}
+
+/* Alt i beholderen får sin afstand af gap. Egne marginer ville lægges oveni. */
+.body-copy > * { margin: 0; }
+.body-copy p { margin: 0; }
+
+
+/* --- MELLEMRUBRIKKER ------------------------------------------------------
+   Marginerne herunder er de UBESKÅRNE. Se @supports nederst i filen. */
+
+.body-copy h2 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: var(--h2);
+  line-height: var(--x);
+  letter-spacing: -0.01em;
+  text-transform: none;
+  color: var(--color-text);
+  margin: calc(var(--x) - 0.28em) 0 calc(var(--x) / -2 - 0.22em);
+}
+
+/* h3 og nedefter er ikke tegnet i lærredet — der er ingen artikel i designet,
+   der går dybere end ét niveau. De er sat her, fordi markdown kan producere
+   dem og en uformateret <h3> ville være en fejl, og de er afledt af h2: samme
+   skrift, samme rytme, et hak mindre og uden det negative hæng. */
+.body-copy h3 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.3125rem;      /* 21px                                       */
+  line-height: var(--x);
+  letter-spacing: -0.005em;
+  color: var(--color-text);
+  margin: calc(var(--x) / 2 - 0.28em) 0 calc(var(--x) / -2 - 0.22em);
+}
+.body-copy h4 {
+  font-family: var(--font-sub);
+  font-weight: 600;
+  font-size: var(--bitte);
+  line-height: var(--x);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-accent-700);
+  margin: calc(var(--x) / 2) 0 calc(var(--x) / -2);
+}
+
+
+/* --- LISTER ---------------------------------------------------------------
+   Punkttegnet er accentfarvet. Det er ét af de tre steder, --color-accent
+   bruges ubrudt: det er ikke tekst, så 3:1 er nok. (De to andre er båndet og
+   citatets mærke.) */
+
+.body-copy ol,
+.body-copy ul {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--x) / 4);
+  margin: 0;
+  padding-left: 1.3em;
+}
+.body-copy li::marker {
+  color: var(--color-accent);
+  font-weight: 600;
+}
+.body-copy li > ul,
+.body-copy li > ol { margin-top: calc(var(--x) / 4); }
+
+
+/* --- LINKS, FREMHÆVNING ---------------------------------------------------
+   I brødteksten er links understreget. Det er lærredets valg, og det er det
+   rigtige i en tekst med mange egennavne: farve alene er ikke nok til at
+   skille "Microsoft 365" fra et link til Microsoft 365. */
+
+.body-copy a { text-decoration: underline; }
+.body-copy strong { font-weight: 700; }
+
+
+/* --- CITATER --------------------------------------------------------------
+   To former, og de betyder ikke det samme.
+
+   1. Et almindeligt markdown-citat (>) er en indrykket blok med en accentfarvet
+      streg i venstre kant. Det er et citat INDE i argumentet.
+
+   2. .pull er udhævningen: centreret, i en ramme, med et rundt anførselstegn
+      hængende over den øverste kant. Det er artiklens egen sætning, løftet ud.
+      Den findes i lærredets brødtekst som <figure class="pull"> omkring et
+      <blockquote>, og formen er læst af Typology-temaet blandt hans
+      skærmbilleder.
+
+   Mærket er ét af tre steder med ren --color-accent — det er en 44px cirkel
+   med et glyf i, ikke tekst. Cirklen er samtidig den sidste rest af Organic-
+   systemets runde former i brødteksten. */
+
+.body-copy blockquote {
+  margin: 0;
+  padding: 0 0 0 1.5rem;     /* 24px. Stregen bliver 2px: se 02 om hårstreger */
+  border-left: 2px solid var(--color-accent);
+  font-size: 1.25rem;        /* 20px                                       */
+  line-height: 1.5;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  color: var(--color-text);
+}
+
+.body-copy .pull {
+  position: relative;
+  margin: 1.5rem 0 0.5rem;   /* 24/8px                                     */
+  padding: 3.5rem clamp(1.5rem, 6%, 3.5rem) 3rem;   /* 56/24–56/48px       */
+  border: 1px solid var(--color-neutral-300);
+  text-align: center;
+}
+
+.body-copy .pull::before {
+  content: "”";
+  position: absolute;
+  top: -1.375rem;            /* 22px                                       */
+  left: 50%;
+  transform: translateX(-50%);
+  display: grid;
+  place-items: start center;
+  box-sizing: border-box;
+  /* 44px her er IKKE et trykfelt som .nav-icon i 02 — det er et ornament med
+     et glyf i, og glyffen er sat i rem. Voksede cirklen ikke med, ville
+     anførselstegnet vokse ud af sin egen medaljon. Derfor rem. */
+  width: 2.75rem; height: 2.75rem;   /* 44px                              */
+  padding-top: 1.1875rem;            /* 19px                              */
+  border-radius: 50%;
+  background: var(--color-accent);
+  color: var(--color-neutral-100);
+  font-size: 2.125rem;               /* 34px                              */
+  font-weight: 700;
+  line-height: 1;
+}
+
+/* Inde i .pull er citatet i display-skriften, kursiv — lærredets
+   'editorial'-regel. Rammen og stregen slukkes, fordi .pull selv har rammen. */
+.body-copy .pull blockquote {
+  margin: 0 auto;
+  padding: 0;
+  border: 0;
+  max-width: 44ch;
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 700;
+  font-size: 1.3125rem;      /* 21px                                       */
+  line-height: var(--x);
+  letter-spacing: 0;
+  color: var(--color-neutral-900);
+}
+
+
+/* --- BILLEDER OG FIGURER --------------------------------------------------
+   .washed er designsystemets billedbehandling: afmættet, lavere kontrast,
+   løftet, så fotografiet sidder TILBAGE i den varme side i stedet for oven på
+   den. Systemets readme siger, at ethvert indholdsfotografi skal igennem den.
+
+   DEN ER IKKE LAGT PÅ AUTOMATISK PÅ BILLEDER I BRØDTEKSTEN, og det er et
+   valg: et tema kan ikke se forskel på et fotografi og en infografik, og en
+   afmættet infografik er en ødelagt infografik — demoartiklen "Omslag, og
+   noget der skal være bredt" indeholder netop en. Lærredet selv bruger kun
+   .washed to steder, og begge er fotografier i kraft af deres rolle: det
+   fremhævede billede og portrættet. Dem lægger skabelonen den på.
+
+   Skal et billede i en artikel vaskes, er klassen der at skrive. */
+
+.washed { filter: saturate(0.6) contrast(0.85) brightness(1.1) opacity(0.94); }
+
+.body-copy figure,
+.body-copy pre {
+  margin-top: calc(var(--x) / 2);
+  margin-bottom: calc(var(--x) / 2);
+}
+
+.body-copy img { border-radius: var(--radius-xs); }
+
+/* Billedtekst. To størrelser: 13px og centreret under noget bredt, 11px og
+   venstrestillet under noget i spalten — lærredet har begge. */
+.body-copy figcaption {
+  margin-top: var(--space-1);
+  font-size: 0.6875rem;      /* 11px                                       */
+  color: color-mix(in srgb, var(--color-text) 55%, transparent);
+}
+.body-copy .wide figcaption {
+  margin-top: 0.75rem;       /* 12px                                       */
+  font-size: var(--bitte);
+  text-align: center;
+  color: var(--color-neutral-600);
+}
+
+/* Billedtekst skrevet som markdown-kursiv lige under et billede — den form,
+   scaffoldet brugte, og som stadig virker, så gamle artikler ikke skal rettes:
+
+       ![alternativtekst](fil.jpg)
+       *Det her bliver billedteksten.*                                     */
+.body-copy img + em {
+  display: block;
+  margin-top: var(--space-1);
+  font-size: var(--bitte);
+  font-style: normal;
+  color: var(--color-neutral-600);
+}
+
+.hr,
+.body-copy hr {
+  height: 1px;
+  margin: 0;
+  border: 0;
+  background: var(--color-divider);
+}
+
+
+/* --- CAP-BESKÆRING, HVOR DEN FINDES ---------------------------------------
+   Se forklaringen i hovedet af filen. Her er lærredets egne tal, ubeskårne
+   af skriftens over- og underlængde, fordi browseren nu selv trimmer dem. */
+
+@supports (text-box: trim-both cap alphabetic) {
+  .post-h        { text-box: trim-both cap alphabetic; }
+  .body-copy h2  { text-box: trim-both cap alphabetic;
+                   margin: var(--x) 0 calc(var(--x) / -2); }
+  .body-copy h3  { text-box: trim-both cap alphabetic;
+                   margin: calc(var(--x) / 2) 0 calc(var(--x) / -2); }
+}

@@ -1,0 +1,36 @@
+{{- /*
+  VANDMÆRKET — artiklens forbogstav, 220px, bag rubrikken.
+
+      {{ partial "vandmaerke.html" . }}
+
+  Formen er Typology-temaets, som ligger blandt hans skærmbilleder fra samme
+  aften, og lærredet tegner den med en data-glyph-attribut, fordi runde og
+  spidse versaler skal rykkes optisk til venstre. Trinnene står i
+  03-brodtekst.css.
+
+  TRE TING, DER ER VÆRD AT VIDE:
+
+  1. Bogstavet er aria-hidden. Det er ikke indhold; det er artiklens titel
+     gentaget som dekoration, og en skærmlæser, der siger "H" før overskriften
+     "Hvorfor din SharePoint-arkitektur...", læser en fejl op.
+
+  2. Det er UDELADT, når artiklen har et omslagsbillede. Det er lærredets egen
+     regel — `showWm: wm && !p.featured` — og den er rigtig: vandmærket ER
+     artiklens billede, når der ikke er et.
+
+  3. Det tager kun det første TEGN. Står der et citationstegn eller et ciffer
+     forrest i titlen, bliver det tegnet vist; det er dét, der står. Men er
+     tegnet ikke et bogstav, står vandmærket over, fordi et 220px komma ikke
+     er en dekoration, det er en plet.
+
+  Kan slås fra for hele sitet med params.vandmaerke = false. Det svarer til
+  lærredets egen kontakt, "watermark", som står med default: true.
+*/ -}}
+{{- if site.Params.vandmaerke | default true -}}
+  {{- if not .Params.cover -}}
+    {{- $b := upper (substr .Title 0 1) -}}
+    {{- if findRE `^\pL$` $b -}}
+      <span class="wm" data-glyph="{{ $b }}" aria-hidden="true">{{ $b }}</span>
+    {{- end -}}
+  {{- end -}}
+{{- end -}}

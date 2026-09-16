@@ -1,0 +1,52 @@
+{{- /*
+  DEL-LINKENE.
+
+  Lærredet har fem: LinkedIn, Mastodon, Bluesky, E-mail og "Kopiér link".
+
+  FIRE AF FEM ER BYGGET. "Kopiér link" er en knap, der skriver til
+  udklipsholderen, altså navigator.clipboard, altså JavaScript — og der er
+  ikke en linje JavaScript i dette tema. Den er udeladt frem for at stå der og
+  ikke virke. (Adresselinjen er stadig det sted, en URL kopieres fra.)
+
+  HVILKE af de fire der står på siden, styres af params.social, som står tom
+  med vilje — hvilke profiler der hører til sitet, er en beslutning og ikke en
+  detalje. E-mail kræver ingen profil og er der altid.
+
+  Mastodon har ingen del-URL, der kan skrives på forhånd: man deler til SIN
+  egen instans, og et site kan ikke vide hvilken. Linket peger derfor på hans
+  egen profil — det er dét, lærredets ikon gør brugbart — frem for at gætte på
+  en instans.
+
+  Adresserne bygges af .Permalink, som kommer af --baseURL på byggetidspunktet.
+  Der står derfor stadig ikke et domæne nogen steder i dette repo.
+*/ -}}
+{{- $url := .Permalink }}
+{{- $titel := .Title }}
+{{- $links := slice }}
+
+{{- with site.Params.social.linkedin }}
+  {{- $links = $links | append (dict "navn" "LinkedIn" "ikon" "linkedin"
+      "url" (printf "https://www.linkedin.com/sharing/share-offsite/?url=%s" ($url | urlquery))) }}
+{{- end }}
+
+{{- with site.Params.social.mastodon }}
+  {{- $links = $links | append (dict "navn" "Mastodon" "ikon" "mastodon"
+      "url" (printf "https://%s" .)) }}
+{{- end }}
+
+{{- with site.Params.social.bluesky }}
+  {{- $links = $links | append (dict "navn" "Bluesky" "ikon" "bluesky"
+      "url" (printf "https://bsky.app/intent/compose?text=%s" (printf "%s %s" $titel $url | urlquery))) }}
+{{- end }}
+
+{{- $links = $links | append (dict "navn" "E-mail" "ikon" "mail"
+    "url" (printf "mailto:?subject=%s&body=%s" ($titel | urlquery) ($url | urlquery))) }}
+
+<section class="post-efter" aria-labelledby="del">
+  <h2 id="del">Del</h2>
+  <div class="share-raekke">
+    {{- range $links }}
+    <a class="share" href="{{ .url }}" rel="noopener">{{ partial "ikon.html" .ikon }}{{ .navn }}</a>
+    {{- end }}
+  </div>
+</section>

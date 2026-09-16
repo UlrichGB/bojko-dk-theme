@@ -1,0 +1,251 @@
+/* ===========================================================================
+   09 — FORLØB: tidslinjen, faktaboksen og flow-diagrammet
+   ===========================================================================
+   ★ Krav nummer fem: tidslinjer — en datoskinne i venstre margen, teksten på
+   læsemålet.
+
+   Filen holder de to måder, designet tegner et FORLØB på: lodret med datoer
+   (tidslinjen) og vandret med kasser (flow-diagrammet). Faktaboksen hører med,
+   fordi den bor inde i en hændelse.
+
+   ---------------------------------------------------------------------------
+   LÆRREDET HAR INGEN TIDSLINJE — MEN DET HAR SKINNEN
+   ---------------------------------------------------------------------------
+   Der er ingen tidslinje på nogen af lærredets fire skærme. Formen herunder
+   er derfor ikke aflæst direkte. Men den er heller ikke fundet på: lærredet
+   tegner den samme figur TO gange, og den ene er en tidslinje i alt undtagen
+   navnet.
+
+     Arkivets årsliste:   grid-template-columns: 72px  minmax(0,1fr)
+                          dato til venstre, titel til højre
+
+     Profilens CV-liste:  grid-template-columns: 120px minmax(0,1fr)
+                          gap: 20px, padding: 22px 0,
+                          border-top: 1px solid --color-neutral-300
+                          periode til venstre, rolle og brødtekst til højre
+
+   Den anden er præcis kravet: en datoskinne i venstre margen, tekst på
+   læsemålet, en streg mellem hver post. Tidslinjen herunder er bygget på
+   NETOP den figur — skinne, luft, streg — så komponenten er lærredets sprog,
+   også selv om skærmen ikke findes. (Skinnen er dog bredere end CV-listens;
+   hvorfor står ved --skinne længere nede.)
+
+   ---------------------------------------------------------------------------
+   DEN ENE TING, DER GØR DEN TIL EN TIDSLINJE
+   ---------------------------------------------------------------------------
+   Datoen bliver STÅENDE, mens man læser hændelsen. position: sticky. Det er
+   den detalje, demoartiklen beder læseren om at afprøve ("Prøv at rulle"), og
+   den er grunden til, at den er en komponent og ikke en punktopstilling.
+
+   Den virker kun, fordi ingen forælder laver en rullebeholder: <body> har
+   overflow-x: clip og ikke hidden, netop af den grund. Se 02-grundlag.css.
+
+   ---------------------------------------------------------------------------
+   HVOR SKINNEN LIGGER, OG HVORFOR IKKE LÆNGERE UDE
+   ---------------------------------------------------------------------------
+   Skinnen ligger inde i læsespalten (.col, 680px) og ikke ude i arkets luft.
+   Tidslinjen slipper altså 62ch-målet og bruger hele spalten: 160px skinne +
+   20px + 500px tekst, hvor de 500px er ca. 53 tegn på linjen — under det felt,
+   rapporterne målte som det bedste (63-67ch), men stadig en læsespalte. En
+   hændelse er en note på et par sætninger, ikke en artikel.
+
+   Alternativet var at lade skinnen hænge ud i arkets luft med en negativ
+   margen, så teksten lå på præcis 62ch. Det blev valgt fra: luften er
+   clamp(20px, 6vw, 100px), så den er 100px på en stor skærm og 20px på en
+   lille, og en skinne på 160px har altså kun plads under en brøkdel af de
+   bredder, siden bliver set i. Det ville være et udhæng, der virkede på
+   udviklerens skærm og skar sig selv af på alle andre.
+
+   Lærredets egen skinne — CV-listen — ligger også inde i sin spalte.
+   =========================================================================== */
+
+.tidslinje {
+  /* Skinnens to mål ét sted, så hændelsen og en eventuel senere komponent
+     ikke kan komme til at bruge to forskellige.
+
+     160px og ikke lærredets 120px: CV-listens venstrespalte bærer en PERIODE
+     ("2021 – nu"), tidslinjens bærer en dato OG hændelsens rubrik. Ved 120px
+     knækkede "Annonceret, og trukket tilbage igen" over tre linjer. Målt på
+     demoartiklen. Teksten har stadig 500px, altså ca. 53 tegn på linjen. */
+  --skinne: 10rem;           /* 160px — datoskinnen bærer TEKST, altså rem */
+  --skinne-luft: 1.25rem;    /* 20px                                       */
+
+  /* Slipper 62ch-målet fra .body-copy og bruger hele læsespalten. */
+  max-width: none;
+}
+
+
+/* --- ÉN HÆNDELSE ----------------------------------------------------------
+   Stregen står OVER hver hændelse, ikke under. Så får den sidste hændelse
+   ikke en streg hængende under sig med ingenting bagefter, og det kræver
+   ingen :last-child-undtagelse. */
+
+.haendelse {
+  display: grid;
+  grid-template-columns: var(--skinne) minmax(0, 1fr);
+  gap: var(--skinne-luft);
+  padding: 1.375rem 0;       /* 22px                                       */
+  border-top: 1px solid var(--color-neutral-300);
+}
+
+
+/* --- SKINNEN --------------------------------------------------------------
+   Datoen og hændelsens rubrik står SAMMEN i venstre spalte. Det er den
+   væsentlige forskel fra en almindelig liste: rubrikken hører til datoen, ikke
+   til brødteksten, og de to klæber derfor sammen.
+
+   top: beregnes af den klæbende topbar plus lidt luft — ellers ville datoen
+   klæbe OP UNDER navigationen og forsvinde ind i den orange flade. Den læser
+   --topbar-total og ikke --topbar-h, fordi bjælken er to rækker høj under
+   560px. Se 01-variabler.css. */
+
+.haendelse-hoved {
+  position: sticky;
+  top: calc(var(--topbar-total) + 1.25rem);   /* 20px                    */
+  align-self: start;
+
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;             /* 6px                                        */
+}
+
+.haendelse time {
+  font-family: var(--font-sub);
+  font-size: var(--lille);
+  color: var(--color-neutral-600);
+  font-variant-numeric: tabular-nums;
+  padding-top: 0.1875rem;    /* 3px                                        */
+}
+
+.haendelse h3 {
+  margin: 0;
+  font-family: var(--font-sub);
+  font-weight: 600;
+  font-size: 1.0625rem;      /* 17px                                       */
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+  color: var(--color-text);
+}
+.haendelse h3 a { color: inherit; text-decoration: none; }
+.haendelse h3 a:hover { color: var(--color-accent-600); }
+
+
+/* --- HÆNDELSENS TEKST -----------------------------------------------------
+   Et hak mindre end brødteksten og en anelse strammere: en hændelse er en
+   note, ikke et afsnit i en artikel. */
+
+.haendelse-krop {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--x) / 2);
+
+  font-size: 1rem;           /* 16px                                       */
+  line-height: 1.6;
+  color: var(--color-neutral-800);
+}
+.haendelse-krop > * { margin: 0; }
+.haendelse-krop p { margin: 0; }
+.haendelse-krop ul,
+.haendelse-krop ol {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--x) / 4);
+  margin: 0;
+  padding-left: 1.3em;
+}
+.haendelse-krop li::marker { color: var(--color-accent); font-weight: 600; }
+
+
+/* --- FAKTABOKSEN ----------------------------------------------------------
+   {{< fakta >}} — den lille opstilling inde i en hændelse.
+
+   Lærredet har ingen. Den er sat i samme sprog som kodeblokken — fyldt med
+   --color-neutral-200 og rundet med --radius-md — fordi den spiller den samme
+   rolle: en indsat plade i teksten. Det er også de to eneste steder i
+   brødteksten, hvor Organic-systemets runding overlever. At give den 3px som
+   knapperne ville have gjort den til en knap.                               */
+
+.fakta {
+  padding: var(--space-4) var(--space-6);
+  background: var(--color-neutral-200);
+  border-radius: var(--radius-md);
+
+  font-family: var(--font-sub);
+  font-size: 0.9375rem;      /* 15px                                       */
+  line-height: 1.65;
+  color: var(--color-neutral-800);
+}
+.fakta > *:first-child { margin-top: 0; }
+.fakta > *:last-child { margin-bottom: 0; }
+.fakta p { margin: 0; }
+.fakta strong { color: var(--color-text); font-weight: 600; }
+
+
+/* --- FLOW-DIAGRAMMET ------------------------------------------------------
+   Lærredets .flow og .node — fire kasser ved siden af hinanden inde i en
+   <figure class="wide">, så diagrammet bryder ud af læsespalten. Det er dét,
+   der står i lærredets første artikel, og hans egen gengivelse fra 20:26
+   viser det med hub-kassen i accentfarve og "Højst 3 kolonner" stiplet.
+
+   Der er ingen shortcode til det: figuren er opmærkning i en artikel, og at
+   opfinde en {{< flow >}} ville være at bestemme en forfatter-API, der ikke
+   findes i designet. Klasserne er der; de skrives i en artikel som HTML
+   inde i {{< bred >}}. markup.toml tillader det (unsafe = true).            */
+
+.flow {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1.5rem;               /* 24px                                       */
+  align-items: center;
+}
+
+.node {
+  padding: 0.875rem 1rem;    /* 14px / 16px                                */
+  border: 1.5px solid var(--color-neutral-400);
+  border-radius: var(--radius-xs);
+  background: var(--color-neutral-100);
+  text-align: center;
+  font-family: var(--font-sub);
+}
+.node b {
+  display: block;
+  margin-bottom: 0.125rem;   /* 2px                                        */
+  font-weight: 600;
+  font-size: 0.9375rem;      /* 15px                                       */
+}
+.node span {
+  font-size: var(--bitte);
+  color: var(--color-neutral-600);
+}
+.node.hub {
+  border-color: var(--color-accent);
+  border-width: 2px;
+}
+
+
+/* --- PÅ SMALLE SKÆRME -----------------------------------------------------
+   720px er lærredets eget brudpunkt for .flow.
+
+   34rem er temaets, og her SKIFTER tidslinjen form: der er ikke plads til to
+   spalter, så skinnen lægger sig oven på teksten, datoen og rubrikken bliver
+   til en overskrift, og sticky slås FRA. En klæbende dato, der klæber oven i
+   den tekst, den hører til, er værre end ingen klæbende dato. Det er netop
+   den prøve, demoartiklen beskriver til sidst.                              */
+
+@media (max-width: 45rem) {             /* 720px ved 16px rod             */
+  .flow { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 34rem) {
+  .haendelse {
+    grid-template-columns: 1fr;
+    gap: 0.625rem;             /* 10px                                       */
+  }
+  .haendelse-hoved {
+    position: static;
+    flex-direction: column;
+    gap: 0.125rem;             /* 2px                                        */
+  }
+  .haendelse time { padding-top: 0; }
+  .fakta { padding: var(--space-3) var(--space-4); }
+}

@@ -1,0 +1,44 @@
+{{- /*
+  STYLESHEETET — og rækkefølgen af det.
+
+  Alle CSS-filer i temaet samles til én, minificeres og får et fingeraftryk i
+  filnavnet, så en browser kan cache den for evigt og alligevel få den nye med
+  det samme, når du har ændret noget. Ét kald, ingen @import, ingen byggeskridt
+  og intet npm.
+
+  RÆKKEFØLGEN HERUNDER ER DESIGNET. CSS afgør uafgjorte kampe efter hvem der
+  står sidst, så listen læses ovenfra og ned:
+
+      00 skrifter      @font-face. Skal stå før noget bruger dem.
+      01 variabler     ★ farver, skala, mål. ALT andet læser herfra.
+      02 grundlag      body, gitteret .spalte, hoved og bund.
+      03 brødtekst     overskrifter, links, lister, citat, billeder.
+      04 kode          kodens form.
+      05 kode-farver   GENERERET. Skal stå EFTER 04, så farverne vinder.
+      06 tabeller      tabelkomponenten.
+      07 arkiv         artikellisten, tags, datolinjen.
+      08 omslag        ★ billedbehandlingen og metalinjen.
+      09 tidslinje     ★ forløbet med den klæbende dato.
+      10 print         papir.
+      11 dine-egne     ★ tom. Står sidst, så den vinder over alt ovenfor.
+
+  Tilføjer du en fil i assets/css/, skal den skrives ind på listen her. Det er
+  med vilje en håndholdt liste og ikke en resources.Match: rækkefølgen er en
+  beslutning, og den skal kunne læses ét sted.
+*/ -}}
+{{- $filer := slice
+      (resources.Get "css/00-skrifter.css")
+      (resources.Get "css/01-variabler.css")
+      (resources.Get "css/02-grundlag.css")
+      (resources.Get "css/03-brodtekst.css")
+      (resources.Get "css/04-kode.css")
+      (resources.Get "css/05-kode-farver.css")
+      (resources.Get "css/06-tabeller.css")
+      (resources.Get "css/07-arkiv.css")
+      (resources.Get "css/08-omslag.css")
+      (resources.Get "css/09-tidslinje.css")
+      (resources.Get "css/10-print.css")
+      (resources.Get "css/11-dine-egne.css")
+-}}
+{{- $stil := $filer | resources.Concat "css/alt.css" | minify | fingerprint -}}
+<link rel="stylesheet" href="{{ $stil.RelPermalink }}" integrity="{{ $stil.Data.Integrity }}">

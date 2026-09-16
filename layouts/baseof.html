@@ -1,0 +1,101 @@
+{{- /*
+  Sidens ramme. Alt andet i layouts/ fylder "main" ud.
+
+  Det, der var bevidst fra starten, står stadig — og det er grunden til, at
+  disse skabeloner blev styled i stedet for skiftet ud med et tema:
+
+    - lang kommer fra sprogets indstilling, ikke fra en streng
+    - datoer formateres i skabelonen, aldrig i prosaen. locale = "da-DK" i
+      languages.toml er det, der gør "10. marts 2026" til dansk
+    - "sidst opdateret" kommer fra git (enableGitInfo), ikke fra frontmatter,
+      så den hverken kan drive eller glemmes
+    - draft: og date: er de eneste to udgivelsesporte, og de håndhæves af
+      byggeriet. Se bojko-dk/scripts/check-gates.sh
+
+  To temaer, der blev prøvet, brød den første og den anden af de fire: det ene
+  skrev "10 Mar, 2026" på et dansk site, det andet skrev slet ingen dato.
+
+  ---------------------------------------------------------------------------
+  RAMMEN ER NU LÆRREDETS
+  ---------------------------------------------------------------------------
+  Fire vandrette lag: den klæbende topbar, det orange bånd, arket (som trækkes
+  op over båndet) og bunden (som ligger UDEN for arket). Tegningen med de tre
+  tal står i 02-grundlag.css.
+
+  Der er ingen inline style og ingen <x-dc>, <helmet>, data-screen-label eller
+  data-props tilbage fra lærredet. Det var designværktøjets stillads, ikke
+  opmærkning.
+*/ -}}
+<!DOCTYPE html>
+<html lang="{{ site.Language.Lang }}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{ if .IsHome }}{{ site.Title }}{{ else }}{{ .Title }} — {{ site.Title }}{{ end }}</title>
+  {{ with .Description | default site.Params.description }}<meta name="description" content="{{ . }}">{{ end }}
+
+  {{ partial "stil.html" . }}
+
+  {{ with .OutputFormats.Get "rss" }}<link rel="alternate" type="application/rss+xml" title="{{ site.Params.feedTitle }}" href="{{ .Permalink }}">{{ end }}
+
+  {{- /* ★ Favicon, og:image, canonical — din. Se partialen. */}}
+  {{ partial "hoved-ekstra.html" . }}
+</head>
+<body>
+
+{{- /* Den klæbende topbar følger med hele vejen ned gennem en lang artikel,
+     så et springlink er ikke bare en formalitet her. */}}
+<a class="kun-skaerm" href="#indhold">Spring til indholdet</a>
+
+{{- /* ★ HOVEDET. Bomærket til venstre, menuen i midten, ikonerne til højre.
+     Menuen kommer fra config/_default/menus.da.toml, så en ny side i menuen er
+     en linje i en konfigurationsfil og ikke en rettelse her. */}}
+<div class="topbar">
+  <nav class="nav" aria-label="Hovedmenu">
+
+    {{- /* Bomærket er det ENESTE Comfortaa på siden. Punktummet står dæmpet,
+         så "bojko" og "dk" læses som to ord. Navnet kommer fra params, fordi
+         site.Title er personens navn og bomærket er adressen — to forskellige
+         ting, som kun tilfældigvis er det samme på nogle sites. */ -}}
+    {{- $maerke := site.Params.maerke | default site.Title }}
+    {{- $dele := split $maerke "." }}
+    <a class="nav-brand" href="{{ "/" | relURL }}" aria-label="{{ $maerke }} – forside">
+      {{- if gt (len $dele) 1 -}}
+        {{ index $dele 0 }}<span aria-hidden="true">.</span>{{ delimit (after 1 $dele) "." }}
+      {{- else -}}
+        {{ $maerke }}
+      {{- end -}}
+    </a>
+
+    {{- range site.Menus.main }}
+      {{- $aktiv := or ($.IsMenuCurrent "main" .) ($.HasMenuCurrent "main" .) }}
+      <a class="nav-item" href="{{ .URL }}"{{ if $aktiv }} aria-current="page"{{ end }}>{{ .Name }}</a>
+    {{- end }}
+
+    <span class="nav-sep" aria-hidden="true"></span>
+
+    {{- /* Forstørrelsesglasset fører til arkivet og ikke til en søgeflade.
+         Hvorfor der ikke ER en søgning, står i 07-arkiv.css — kort: et
+         JSON-søgeindeks er præcis den slags skabelon, bojko-dk/scripts/check-gates.sh
+         findes for at fange. */}}
+    {{- with site.GetPage "/artikler" }}
+      <a class="nav-icon" href="{{ .RelPermalink }}" aria-label="Find et indlæg i arkivet">{{ partial "ikon.html" "soeg" }}</a>
+    {{- end }}
+    {{- with site.Home.OutputFormats.Get "rss" }}
+      <a class="nav-icon" href="{{ .RelPermalink }}" aria-label="RSS-feed">{{ partial "ikon.html" "rss" }}</a>
+    {{- end }}
+  </nav>
+</div>
+
+<div class="baand" aria-hidden="true"></div>
+
+<main id="indhold">
+  {{ block "main" . }}{{ end }}
+</main>
+
+{{ partial "bund.html" . }}
+
+{{ partial "skript.html" . }}
+
+</body>
+</html>

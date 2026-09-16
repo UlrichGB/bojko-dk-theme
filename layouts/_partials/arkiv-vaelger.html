@@ -1,0 +1,41 @@
+{{- /*
+  "Udforsk bojko.dk efter: Emner | År"
+
+      {{ partial "arkiv-vaelger.html" (dict "side" . "tilstand" "aar") }}
+
+  tilstand er "aar" eller "emner" og afgør, hvilken af de to der står som den
+  aktuelle. Den aktuelle holder op med at være et link — aria-current="page"
+  plus pointer-events: none i 07-arkiv.css.
+
+  Lærredet har FIRE tilstande: Emner | Produkter | År | Søg. De to, der ikke
+  er her, er ikke glemt:
+
+    Produkter  en anden taksonomi end tags, og sitet har kun tags og series.
+               At opfinde den ville være at bestemme hans indholdsmodel. Den
+               dag der står produkt = "produkter" under [taxonomies], er den
+               her partial stedet at tilføje linjen — skabelonen findes
+               allerede som layouts/taxonomy.html.
+    Søg        se 07-arkiv.css. Kort: en statisk side kan ikke filtrere en
+               liste uden JavaScript, og de tre veje til det koster hver især
+               noget, temaet ikke vil betale — især et JSON-indeks, som er
+               præcis den fejl, bojko-dk/scripts/check-gates.sh er skrevet for at fange.
+*/ -}}
+{{- $side := .side }}
+{{- $nu := .tilstand }}
+{{- $veje := slice }}
+{{- with site.GetPage "/tags" }}
+  {{- $veje = $veje | append (dict "navn" "Emner" "url" .RelPermalink "id" "emner") }}
+{{- end }}
+{{- with site.GetPage "/artikler" }}
+  {{- $veje = $veje | append (dict "navn" "År" "url" .RelPermalink "id" "aar") }}
+{{- end }}
+
+{{- if gt (len $veje) 1 }}
+<p class="arch-intro">Udforsk {{ site.Params.maerke | default site.Title }} efter:</p>
+<nav class="arch-modes" aria-label="Arkivets visninger">
+  {{- range $i, $v := $veje }}
+    {{- if $i }}<span class="sep" aria-hidden="true">|</span>{{ end }}
+    <a class="arch-mode" href="{{ $v.url }}"{{ if eq $v.id $nu }} aria-current="page"{{ end }}>{{ $v.navn }}</a>
+  {{- end }}
+</nav>
+{{- end }}

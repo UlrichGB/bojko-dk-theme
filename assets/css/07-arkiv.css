@@ -1,0 +1,541 @@
+/* ===========================================================================
+   07 — ARKIVET, PROFILEN, MÆRKERNE OG BUNDEN
+   ===========================================================================
+   Listerne. Alt, hvad der ikke er én artikel: arkivet, emne- og
+   produktoversigten, profilen, mærkerne, sidetallet på forsiden og bunden.
+
+   ---------------------------------------------------------------------------
+   HVOR ARKIVET KOMMER FRA
+   ---------------------------------------------------------------------------
+   Lærredets arkivskærm er ikke fundet på. Blandt hans skærmbilleder fra
+   samme aften ligger Stratecherys "Concepts"-side, og den er forlægget linje
+   for linje: en rubrik, sætningen "Explore Stratechery by:" og fire tilstande
+   adskilt af lodrette streger — Concepts | Companies | Topics | Search.
+   Lærredet skriver den på dansk: "Udforsk bojko.dk efter: Emner | Produkter |
+   År | Søg".
+
+   HVAD TEMAET KAN AF DE FIRE:
+
+     År        ja. Hugos .Pages.GroupByDate — /artikler/.
+     Emner     ja. Taxonomien tags, som bogstavindeks — /tags/.
+     Produkter nej, og det er ikke en mangel i temaet. "Produkter" er en
+               ANDEN taksonomi end tags, og sitet har kun tags og series.
+               At opfinde den ville være at bestemme hans indholdsmodel. Den
+               dag der står [taxonomies] produkt = "produkter" i konfigurationen,
+               er skabelonen /layouts/taxonomy.html den samme.
+     Søg       nej, og det er et VALG, ikke en forglemmelse. Se nedenfor.
+
+   ---------------------------------------------------------------------------
+   SØGNING ER IKKE BYGGET, OG HVORFOR
+   ---------------------------------------------------------------------------
+   Lærredets søgning er et <input> med onChange, der filtrerer en liste i
+   JavaScript. Det er præcis dét, et designværktøj kan, som en statisk side
+   ikke kan: lærredet HAR allerede alle indlæggene i hukommelsen.
+
+   En Hugo-side har tre veje til det samme, og alle tre koster noget, der
+   ikke er mit at bruge af:
+
+     - et JSON-indeks + et klientbibliotek. Det er et eksternt script og en
+       fil, der vokser med hvert indlæg — og ★ det er præcis den fejl,
+       bojko-dk/scripts/check-gates.sh er skrevet for at fange: et søgeindeks, der
+       læser forbi .Pages, genudgiver kladderne, som de to porte lige har
+       holdt ude.
+     - en tredjepartstjeneste. Et eksternt kald på et europæisk site.
+     - ingenting, og lade browserens Ctrl+F på arkivsiden være svaret.
+
+   Temaet gør det sidste, og siger det højt frem for at lade en knap, der
+   ikke virker, stå tilbage. Forstørrelsesglasset i hovedet fører derfor til
+   arkivet — ikke til en søgeflade.
+   =========================================================================== */
+
+
+/* --- TILSTANDSVÆLGEREN ----------------------------------------------------
+   "Udforsk bojko.dk efter: Emner | År". Understregningen er accentfarvet, og
+   den tilstand, man ER i, holder op med at være et link. */
+
+/* "Udforsk bojko.dk efter:" — linjen over tilstandene. */
+.arch-intro {
+  margin: 0 0 0.5rem;        /* 8px    */
+  font-family: var(--font-sub);
+  font-size: 1rem;           /* 16px   */
+  color: var(--color-neutral-700);
+}
+
+.arch-modes {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.625rem;             /* 10px   */
+  margin-bottom: 2rem;       /* 32px   */
+  font-family: var(--font-sub);
+  font-size: 1rem;           /* 16px   */
+  font-weight: 600;
+}
+.arch-modes .sep { color: var(--color-neutral-400); }
+
+.arch-mode {
+  color: var(--color-text);
+  text-decoration: underline;
+  text-decoration-color: var(--color-accent);
+  text-underline-offset: 4px;
+}
+.arch-mode:hover { color: var(--color-accent-600); }
+.arch-mode[aria-current="page"] {
+  color: var(--color-neutral-600);
+  text-decoration: none;
+  pointer-events: none;
+}
+
+
+/* --- BOGSTAVINDEKSET ------------------------------------------------------
+   44px felter. Et bogstav uden indhold er ikke skjult — det står dæmpet og
+   uklikkeligt, så indekset har den samme form hver gang og man kan se, at
+   der ikke ER noget på Q. */
+
+.letters {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.375rem;             /* 6px    */
+  max-width: 45rem;          /* 720px  */
+  margin: 0 auto 2.5rem;     /* 40px   */
+}
+
+.letter {
+  display: inline-grid;
+  place-items: center;
+  /* max(): 44px er trykfeltets GULV (WCAG 2.5.5) og må ikke blive mindre.
+     Men feltet indeholder et BOGSTAV, og bogstavet er i rem — så feltet
+     skal kunne vokse med det. Derfor begge dele, og ikke et valg mellem
+     dem. Modsat .nav-icon i 02, som kun indeholder et SVG og derfor
+     bliver stående på præcis 44px. */
+  width: max(44px, 2.75rem); height: max(44px, 2.75rem);
+  background: var(--color-neutral-200);
+  color: var(--color-text);
+  font-family: var(--font-sub);
+  font-weight: 600;
+  font-size: 0.9375rem;      /* 15px   */
+  text-decoration: none;
+  border-radius: var(--radius-xs);
+}
+.letter:hover {
+  background: var(--color-accent-100);
+  color: var(--color-accent-700);
+}
+.letter[aria-disabled="true"] {
+  color: var(--color-neutral-400);
+  pointer-events: none;
+}
+
+
+/* --- EN GRUPPE: ET ÅRSTAL ELLER ET BOGSTAV --------------------------------
+   Overskriften er stor og tynd, med "Til toppen" ude til højre på samme
+   grundlinje, og en streg under dem begge. */
+
+.arch-gruppe { padding: 1.5rem 0 0.5rem; }   /* 24px / 8px */
+
+.arch-gruppe-hoved {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding-bottom: 0.625rem;  /* 10px   */
+  border-bottom: 1px solid var(--color-neutral-300);
+}
+.arch-gruppe-hoved > span {
+  font-family: var(--font-sub);
+  font-weight: 400;
+  font-size: 1.625rem;       /* 26px   */
+  letter-spacing: -0.02em;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.totop {
+  font-family: var(--font-sub);
+  font-size: 0.875rem;       /* 14px   */
+  color: var(--color-neutral-700);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.totop:hover { color: var(--color-accent-600); }
+
+
+/* --- LISTERNE -------------------------------------------------------------
+   To former, og de er lærredets egne.
+
+   .arch-liste  — år: en datoskinne på 72px og titlen ved siden af.
+   .two-col     — emner: to spalter med et tal efter hvert navn.            */
+
+.arch-liste,
+.two-col {
+  list-style: none;
+  margin: 0;
+  padding: 1.25rem 0 1rem 1.5rem;        /* 20/16/24px */
+}
+
+.arch-liste {
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;             /* 10px   */
+}
+
+.arch-liste li {
+  display: grid;
+  grid-template-columns: 4.5rem minmax(0, 1fr);   /* 72px — sporet bærer en dato */
+  gap: 1rem;                 /* 16px   */
+  align-items: baseline;
+}
+
+.arch-liste time {
+  font-size: var(--lille);
+  color: var(--color-neutral-600);
+  font-variant-numeric: tabular-nums;
+}
+
+.two-col {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.5rem 2rem;          /* 8/32px */
+}
+.two-col .antal {
+  margin-left: 0.5rem;       /* 8px    */
+  font-size: var(--bitte);
+  color: var(--color-neutral-600);
+  font-variant-numeric: tabular-nums;
+}
+
+.arch-link {
+  font-family: var(--font-sub);
+  font-weight: 600;
+  font-size: 1rem;           /* 16px   */
+  line-height: 1.5;
+  color: var(--color-text);
+  text-decoration: underline;
+  text-decoration-color: var(--color-neutral-400);
+  text-underline-offset: 3px;
+}
+.arch-link:hover {
+  color: var(--color-accent-600);
+  text-decoration-color: var(--color-accent);
+}
+
+/* En hel række som klikflade — lærredets .arch-row. Den er det ene sted i
+   designet, der bruger --radius-row. */
+.arch-row {
+  display: grid;
+  grid-template-columns: 4.5rem minmax(0, 1fr);   /* 72px — sporet bærer en dato */
+  gap: 1rem;                 /* 16px   */
+  align-items: baseline;
+  padding: 0.5rem 0.625rem;  /* 8/10px */
+  margin-inline: -0.625rem;  /* -10px  */
+  border-radius: var(--radius-row);
+  color: inherit;
+  text-decoration: none;
+  transition: background .15s;
+}
+.arch-row:hover { background: var(--color-neutral-200); }
+
+
+/* --- MÆRKER ---------------------------------------------------------------
+   Lærredets .tag som den bruges i profilen: neutral flade, ingen ramme, skarp
+   kant. Designsystemets .tag-accent/.tag-accent-2-varianter bruges ikke i
+   lærredet og er ikke taget med. */
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;               /* 8px    */
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.tag {
+  display: inline-flex;
+  align-items: center;
+  /* em: mærkets polstring hører til mærkets EGEN tekst (--bitte, 13px). */
+  padding: 0.46154em 1.07693em;   /* 6px / 14px ved 13px skrift      */
+  border-radius: var(--radius-xs);
+  background: var(--color-neutral-200);
+  color: var(--color-neutral-800);
+  font-family: var(--font-sub);
+  font-size: var(--bitte);
+  letter-spacing: 0.02em;
+  text-decoration: none;
+}
+a.tag:hover {
+  background: var(--color-accent-100);
+  color: var(--color-accent-700);
+}
+
+
+/* --- SIDETALLET PÅ FORSIDEN -----------------------------------------------
+   "Side 1 af 6" til venstre, "Ældre indlæg →" til højre. Pilen er accentfarvet
+   — et ikon, ikke tekst, så accenten må godt være ubrudt her. */
+
+.sidetal {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;                 /* 16px   */
+  padding: 0 0 5rem;         /* 80px   */
+  font-family: var(--font-sub);
+  font-size: 0.875rem;       /* 14px   */
+  color: var(--color-neutral-600);
+}
+.sidetal a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;               /* 8px    */
+  font-weight: 500;
+}
+.sidetal svg { flex: none; color: var(--color-accent); }
+.sidetal-veje {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.5rem;        /* 8/24px */
+}
+
+
+/* --- "SIDST OPDATERET" ----------------------------------------------------
+   Kommer fra git-committen, ikke fra frontmatter. Se baseof.html. */
+
+.opdateret {
+  font-family: var(--font-sub);
+  font-size: var(--lille);
+  color: var(--color-neutral-600);
+  font-variant-numeric: tabular-nums;
+}
+
+
+/* --- BUNDEN ---------------------------------------------------------------
+   Tre spalter med grupper af links i. Rammen — bredde, luft, placering uden
+   for arket — står i 02-grundlag.css; her er formen.
+
+   Prikken midt i skillestregen er lærredets: en 10px accentcirkel med en 6px
+   ring i sidens farve omkring, så stregen ser ud til at gå bag om den. Den
+   ring SKAL være --color-neutral-200 og ikke arkets farve — bunden ligger på
+   bordet, ikke på papiret. */
+
+/* Tre spalter, men som CSS-kolonner og ikke som et gitter med tre spor.
+   Lærredet har de syv grupper fordelt i hånden — to, to og tre — og det kan en
+   skabelon ikke gøre uden at kende antallet på forhånd. Kolonner fordeler dem
+   selv og holder hver gruppe samlet (break-inside), og resultatet på skærmen
+   er det samme. Se layouts/_partials/bund.html. */
+.foot-grid {
+  columns: 3;
+  column-gap: 3rem;          /* 48px   */
+}
+.foot-grp {
+  break-inside: avoid;
+  margin-bottom: 2.25rem;    /* 36px   */
+}
+.foot-grid h3 {
+  margin: 0 0 0.875rem;      /* 14px   */
+  font-family: var(--font-sub);
+  font-weight: 600;
+  font-size: var(--bitte);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-align: center;
+  color: var(--color-text);
+}
+.foot-grid ul {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.foot-link {
+  display: inline-block;
+  padding: 0.375rem 0;       /* 6px    */
+  color: var(--color-neutral-800);
+  font-size: 0.9375rem;      /* 15px   */
+  line-height: 1.5;
+  text-decoration: none;
+}
+.foot-link:hover {
+  color: var(--color-accent-600);
+  text-decoration: underline;
+}
+
+.foot-skille {
+  position: relative;
+  height: 1px;
+  margin: 3rem 0 1.25rem;    /* 48/20px */
+  background: var(--color-neutral-300);
+}
+.foot-skille span {
+  position: absolute;
+  left: 50%; top: 50%;
+  transform: translate(-50%, -50%);
+  /* Prikken bliver i px — den er et ORNAMENT på 10px, ikke et mål på nogen
+     tekst, og ringen om den er en streg. Se enhedsreglen i 01. */
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  background: var(--color-accent);
+  outline: 6px solid var(--color-neutral-200);
+}
+
+.foot-bund {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;                 /* 16px   */
+  font-size: 0.875rem;       /* 14px   */
+  color: var(--color-neutral-700);
+}
+.foot-bund strong {
+  font-weight: 500;
+  color: var(--color-text);
+}
+
+
+/* --- PÅ SMALLE SKÆRME -----------------------------------------------------
+   720px og 760px er LÆRREDETS egne brudpunkter, ikke temaets 34rem. De står
+   her, fordi de hører til de komponenter, de gælder — bunden falder til én
+   spalte ved 720px, arkivrækken og emnelisten ved 760px.                    */
+
+@media (max-width: 47.5rem) {           /* 760px ved 16px rod            */
+  .two-col { grid-template-columns: 1fr; }
+  .arch-row { grid-template-columns: 1fr; gap: 0.125rem; }   /* 2px */
+}
+
+@media (max-width: 45rem) {             /* 720px ved 16px rod            */
+  .foot-grid { columns: 1; }
+}
+
+@media (max-width: 34rem) {
+  .arch-liste,
+  .two-col { padding-left: 0; }
+  .arch-liste li { grid-template-columns: 3.875rem minmax(0, 1fr); gap: 0.75rem; }   /* 62/12px */
+  .letter { width: max(38px, 2.375rem); height: max(38px, 2.375rem); font-size: 0.875rem; }
+}
+
+
+/* --- PROFILEN -------------------------------------------------------------
+   Lærredets "Profil"-skærm. To spalter: en klæbende venstrespalte med portræt
+   og kontakt, og en højrespalte med tekst, CV og mærker.
+
+   Skabelonen er layouts/profil.html, som vælges med `layout: profil` i
+   frontmatter, og som forklarer hvilke nøgler den læser.
+
+   ★ CV-LISTEN ER TIDSLINJENS FIGUR. Lærredet tegner den samme ting to steder
+   — her med en periode i skinnen, i tidslinjen med en dato — og tallene er
+   lærredets egne: 120px skinne, 20px luft, 22px lodret polstring, en streg
+   over hver post. Se 09-tidslinje.css, som er bygget på netop dem. */
+
+.profile-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 16.25rem) minmax(0, 1fr);   /* 260px */
+  gap: clamp(2rem, 7vw, 6rem);                                /* 32–96px */
+  align-items: start;
+}
+
+.profile-aside {
+  display: flex;
+  flex-direction: column;
+  gap: 1.75rem;              /* 28px   */
+  position: sticky;
+  top: calc(var(--topbar-total) + 1.75rem);   /* 28px   */
+}
+
+/* Portrættet er rundt. Det er sammen med ikonknapperne og citatets mærke det
+   eneste sted, Organic-systemets runde former overlever lærredets 3px. */
+/* Portrættet bliver i px. Et fotografi er ikke typografi: det har en
+   opløsning og en udsnitsramme, og det skal ikke vokse, fordi teksten ved
+   siden af gør. Prikken nedenfor hører til billedet og følger det. */
+.portraet { position: relative; width: 200px; height: 200px; }
+.portraet img { width: 200px; height: 200px; border-radius: 50%; object-fit: cover; }
+.portraet-prik {
+  position: absolute;
+  right: 6px; bottom: 6px;
+  width: 22px; height: 22px;
+  border-radius: 50%;
+  background: var(--color-accent);
+  border: 3px solid var(--color-neutral-100);
+}
+
+.profil-rolle {
+  margin: 0;
+  font-size: 0.9375rem;      /* 15px   */
+  line-height: 1.5;
+  color: var(--color-neutral-700);
+}
+
+.profil-kontakt {
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;             /* 10px   */
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  font-size: 0.90625rem;     /* 14,5px */
+}
+.profil-kontakt a { font-weight: 500; }
+
+.profil-krop {
+  display: flex;
+  flex-direction: column;
+  gap: 4rem;                 /* 64px   */
+  max-width: 38.75rem;       /* 620px  */
+}
+
+/* Profilens brødtekst er et hak mindre og strammere end en artikels: det er
+   en præsentation, ikke en tekst man læser i tyve minutter. Lærredets tal. */
+.profil-tekst {
+  max-width: none;
+  font-size: 1.03125rem;     /* 16,5px */
+  gap: 1rem;                 /* 16px   */
+  line-height: 1.6;
+}
+
+/* Versaletiketten over hver sektion. Den ene brug af accenten som TEKST på
+   siden — og derfor --color-accent-700 og ikke accenten selv. */
+.profil-etiket {
+  margin: 0 0 1.75rem;       /* 28px   */
+  font-family: var(--font-sub);
+  font-weight: 600;
+  font-size: var(--bitte);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-accent-700);
+}
+
+.profil-cv {
+  display: flex;
+  flex-direction: column;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.profil-cv li {
+  display: grid;
+  grid-template-columns: 7.5rem minmax(0, 1fr);   /* 120px — bærer årstal */
+  gap: 1.25rem;              /* 20px   */
+  padding: 1.375rem 0;       /* 22px   */
+  border-top: 1px solid var(--color-neutral-300);
+}
+.profil-cv .periode {
+  padding-top: 0.1875rem;    /* 3px    */
+  font-size: 0.875rem;       /* 14px   */
+  color: var(--color-neutral-600);
+  font-variant-numeric: tabular-nums;
+}
+.profil-cv li > div { display: flex; flex-direction: column; gap: 0.375rem; }   /* 6px */
+.profil-cv .rolle { font-weight: 600; font-size: 1.0625rem; letter-spacing: -0.01em; }   /* 17px */
+.profil-cv .sted { font-size: 0.90625rem; color: var(--color-neutral-700); }   /* 14,5px */
+.profil-cv p { margin: 0.375rem 0 0; font-size: 0.9375rem; line-height: 1.6; color: var(--color-neutral-800); }
+
+/* 760px er lærredets eget brudpunkt for profilen: to spalter bliver til én,
+   og venstrespalten holder op med at klæbe — en klæbende blok, der fylder
+   hele bredden, ville dække teksten under sig. */
+@media (max-width: 47.5rem) {           /* 760px ved 16px rod            */
+  .profile-grid { grid-template-columns: 1fr; }
+  .profile-aside { position: static; }
+  .profil-krop { gap: 3rem; }              /* 48px */
+  .profil-cv li { grid-template-columns: 1fr; gap: 0.25rem; }   /* 4px */
+}

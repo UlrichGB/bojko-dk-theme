@@ -1,0 +1,37 @@
+{{ define "main" }}
+  {{- /*
+    ÉT MÆRKE — alle indlæg under ét emne eller én serie.
+
+    Samme form som arkivets årsvisning: en datoskinne på 72px og titlen ved
+    siden af, grupperet efter år. Lærredet har ikke denne skærm, men den er
+    den samme liste som "År" med et filter på, og at give den en anden form
+    ville være at opfinde en femte tilstand.
+  */ -}}
+  <section class="arkiv-side">
+    <h1 class="post-h post-h--arkiv">{{ .Title }}</h1>
+
+    {{- with .Content }}<div class="body-copy">{{ . }}</div>{{ end }}
+
+    <p class="arch-intro">
+      {{ len .Pages }} indlæg{{ if eq (len .Pages) 1 }}{{ end }} under dette emne.
+      {{- with site.GetPage "/tags" }} <a class="arch-mode" href="{{ .RelPermalink }}">Alle emner</a>{{ end }}
+    </p>
+
+    {{- range .Pages.GroupByDate "2006" }}
+      <div class="arch-gruppe">
+        <div class="arch-gruppe-hoved">
+          <span>{{ .Key }}</span>
+          <a class="totop" href="#indhold">Til toppen</a>
+        </div>
+        <ul class="arch-liste">
+          {{- range .Pages }}
+          <li>
+            <time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date | time.Format "2. Jan" }}</time>
+            <a class="arch-link" href="{{ .RelPermalink }}">{{ .Title }}</a>
+          </li>
+          {{- end }}
+        </ul>
+      </div>
+    {{- end }}
+  </section>
+{{ end }}

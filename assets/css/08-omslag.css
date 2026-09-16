@@ -1,0 +1,366 @@
+/* ===========================================================================
+   08 — OMSLAGET, METALINJEN OG ARTIKLENS MØBLEMENT
+   ===========================================================================
+   ★ Krav nummer fire: behandlingen af artiklens billede. Plus metalinjen,
+   delelinks, relaterede indlæg og forrige/næste — alt det, der står omkring
+   teksten på et indlæg.
+
+   ---------------------------------------------------------------------------
+   OMSLAGET ER SKIFTET UD, IKKE ÆNDRET
+   ---------------------------------------------------------------------------
+   Den forrige udgave havde en behandling aflæst af docupoint.eu: et 24:10-bånd
+   i en ramme skævvredet −15°, med billedet skævvredet +15° tilbage og skaleret
+   1,15, så motivet stod lige og kanten stod skråt. De 15 grader gik igen i
+   metalinjens skillestreger.
+
+   DEN ER VÆK. Ikke fordi den var dårlig, men fordi lærredet har sin egen, og
+   de to kan ikke blandes: lærredets .featured er en ren, retvinklet flade i
+   arkets fulde bredde med 3px hjørner og .washed-filteret på. En skæv kant
+   oven i det ville være to designs på samme side.
+
+   Det betyder også, at demoartiklen "Omslag, og noget der skal være bredt"
+   er skrevet om: dens prosa beskrev de fire dele af den gamle behandling
+   ("Skævheden", "Udløbet"), og en demoartikel, der forklarer noget, siden
+   ikke gør, er værre end ingen demoartikel.
+
+   ---------------------------------------------------------------------------
+   HØJDEN: DEN ENE STEDFORTRÆDER
+   ---------------------------------------------------------------------------
+   Lærredet sætter billedet til `height: 360px` — et fast tal. I et
+   designværktøj, der tegnes ved én bredde, er det det samme som et forhold.
+   På et site er det ikke: ved arkets 1120px er 360px et bånd på 3,1:1, men på
+   en telefon på 390px er de samme 360px NÆSTEN KVADRATISK. Båndet holder op
+   med at være et bånd præcis dér, hvor der er mindst plads.
+
+   Her står forholdet i stedet for højden: aspect-ratio: 28/9, som er 3,11 —
+   altså nøjagtigt lærredets proportion ved den bredde, den blev tegnet i.
+   Formen er den samme på skærmen, og den bliver ved med at være den samme
+   hele vejen ned. Under 34rem åbnes den til 16:9, fordi et 3:1-bånd på 390px
+   er 125px højt og dermed ikke længere et billede, man kan se noget på.
+
+   Det er den ene aflæsning i hele temaet, hvor lærredets tal ikke er skrevet
+   af ordret. Grunden står her, så den kan omgøres med åbne øjne.
+   =========================================================================== */
+
+
+/* --- OMSLAGET -------------------------------------------------------------
+   Bredden kommer fra .featured i 02-grundlag.css — samme udbrud som .bleed,
+   altså arkets fulde bredde.
+
+   .washed er designsystemets billedbehandling og lægges på af skabelonen.
+   Systemets readme er udtrykkelig om, at ethvert indholdsfotografi skal
+   igennem den, og omslaget er et fotografi i kraft af sin rolle. Se
+   03-brodtekst.css for hvorfor den IKKE lægges på billeder i brødteksten. */
+
+/* ★ margin-BOTTOM, aldrig margin-shorthanden. Udbruddet i 02-grundlag.css
+   virker ved at sætte en beregnet, negativ margin-left; skriver man `margin:
+   0 0 40px` her, nulstiller shorthanden den, figuren bliver stående i
+   læsespaltens venstre kant og stikker 140px ud over arket til højre. Målt
+   ved 1280px: præcis 140px vandret overløb på hver side med et omslag. */
+.featured {
+  margin-bottom: 2.5rem;     /* 40px                                       */
+}
+
+/* --- OMSLAGET FLUGTER MED ARKETS TOP --------------------------------------
+   ★ Her stod ingenting, og det var fejlen. Arket trækkes --overlap (100px) op
+   over båndet og får de samme 100px tilbage som polstring — se blokken om
+   `main` i 02-grundlag.css. Nettoresultatet er med vilje, at INDHOLDET står,
+   hvor det ville have stået; men omslaget er ikke indhold i den forstand. Det
+   er artiklens flade, og en flade, der begynder 100px nede i arket, har en
+   hvid stribe over sig og flugter i stedet med BÅNDETS UNDERKANT. Målt ved
+   1280px: arkets kant 108px, båndets underkant og billedets top begge 208px.
+
+   Polstringen tages tilbage igen med DEN SAMME VARIABEL, ikke med 100px:
+   under 34rem sætter 01-variabler.css --overlap ned til 64px sammen med
+   båndet, og et hårdt tal ville dér trække billedet 36px OP OVER arkets kant
+   og ud i den orange flade. Kontrolmål ved 390px: arkets kant og billedets
+   top begge 164px, 40px orange tilbage under menuen — præcis --band-h minus
+   --overlap, som det skal være. Forholdet åbner samtidig til 16:9 dér, og det
+   er UÆNDRET af rettelsen: figuren er stadig 0–375px, altså skærmens fulde
+   bredde, og sidens scrollWidth er 375px — intet vandret overløb.
+
+   ★ KUN NÅR OMSLAGET ER DET FØRSTE. Reglen er `> .featured:first-child`, og
+   begge led er nødvendige: et omslag, der ikke står øverst, har ikke arkets
+   polstring over sig, og at trække det 100px op ville skyde det ind i det
+   afsnit, der står før. I dag findes den situation ikke i temaet — omslag.html
+   kaldes først i både page.html og home.html — men reglen skal ikke være den,
+   der falder om, den dag den gør.
+
+   ★ KUN PÅ ET INDLÆG, IKKE PÅ FORSIDEN. .post og ikke .featured alene.
+   Forsidens artikler ligger i .forside-indlaeg, og INGEN af dem rører arkets
+   top: forsidens egen indledning står øverst, og artiklerne står i en RÆKKE
+   adskilt af den lille centrerede streg. Målt ved 1280px: arkets kant 108px,
+   indledningen 208px, den første artikel 427px — og omslaget i demoen hører
+   til den TREDJE artikel, altså 4000px nede midt i arket. Der er ikke en
+   arkkant at flugte med; en negativ margin dér ville æde stregen og det
+   indlæg, der står over. Ulrichs sætning er "when we have a feature image in
+   the post"; forsiden er ikke indlægget.
+
+   ★ margin-TOP som egen egenskab, af samme grund som margin-bottom ovenfor:
+   udbruddet er en beregnet, negativ margin-left, og en shorthand ville
+   nulstille den. Kontrolmål efter rettelsen, 1280px: figuren står stadig
+   48–1168px, altså arkets fulde bredde, og sidens scrollWidth er uændret.
+
+   MARGINEN KOLLAPSER UD PÅ .post, og det er værd at vide. .post har hverken
+   polstring eller kant foroven, så de −100px slår igennem til artiklens egen
+   kasse; den flytter sig 100px op sammen med figuren. Det er harmløst HER,
+   fordi .post kun er positioneret af hensyn til vandmærket — og vandmærket
+   er netop udeladt, når artiklen har et omslag (se _partials/vandmaerke.html:
+   `{{ if not .Params.cover }}`). De to kan ikke mødes. Skulle nogen en dag
+   hænge noget andet absolut op på .post, er det denne linje, der forklarer,
+   hvorfor det står 100px for højt.
+
+   HJØRNERNE. Arket har ingen border-radius — det er en retvinklet flade — så
+   billedets egne 3px foroven efterlader to hvide hak i arkets to øverste
+   hjørner, hvor papiret kigger frem mellem billedet og den orange flade. Det
+   er set på et 10× udsnit af hjørnet, ikke regnet ud. Når billedet ER arkets
+   top, skal det have arkets hjørner: 0 foroven, --radius-xs forneden, hvor
+   det stadig ligger på papiret. */
+.post > .featured:first-child {
+  margin-top: calc(var(--overlap) * -1);
+}
+
+.post > .featured:first-child img {
+  border-radius: 0 0 var(--radius-xs) var(--radius-xs);
+}
+
+.featured img {
+  width: 100%;
+  height: 100%;
+  aspect-ratio: 28 / 9;
+
+  /* Skabelonen skalerer billedet i bredden og lader browseren beskære i
+     højden. Alternativet — at lade Hugo beskære med .Fill — ville bage
+     3,1:1-udsnittet ind i filen, og så kunne telefonen ikke få sit eget. */
+  object-fit: cover;
+  object-position: center;
+
+  border-radius: var(--radius-xs);
+}
+
+.featured figcaption {
+  margin-top: 0.75rem;       /* 12px                                       */
+  font-size: var(--bitte);
+  text-align: center;
+  color: var(--color-neutral-600);
+}
+
+
+/* --- METALINJEN -----------------------------------------------------------
+   "Af Ulrich Bojko / I SharePoint / 12. september 2026 / 6 min. læsning".
+
+   Skråstregerne er rigtige elementer og ikke ::before-indhold, fordi de skal
+   kunne have deres egen farve — lærredet sætter dem lysere end teksten, så
+   linjen læses som fire ting og ikke som én sætning.
+
+   tabular-nums, fordi linjen er fuld af tal: datoer, minutter, årstal. */
+
+.meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.875rem;             /* 14px                                       */
+  font-family: var(--font-sub);
+  font-size: var(--meta);
+  line-height: calc(var(--x) / 2);
+  letter-spacing: 0.01em;
+  color: var(--color-neutral-600);
+  font-variant-numeric: tabular-nums;
+}
+.meta .sep { color: var(--color-neutral-400); }
+
+
+/* --- ARTIKLENS HOVED ------------------------------------------------------
+   Rubrik og metalinje i en kolonne med X/2 imellem, og X under. position:
+   relative, fordi vandmærket er absolut placeret inde i den; z-index, så
+   teksten står foran det. */
+
+.post-hoved {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--x) / 2);
+  margin-bottom: var(--x);
+}
+.post-hoved--indlaeg { margin-bottom: calc(var(--x) * 1.5); }
+
+
+/* --- KNAPPER --------------------------------------------------------------
+   Lærredets .btn — versaler, spatieret, skarp kant. Et skærmbillede fra 21:00
+   viser hans egne PERMALINK/DEL-knapper i netop den form, så 3px er valgt og
+   ikke arvet.
+
+   Designsystemets egen .btn er en pille (border-radius: 999px) i display-
+   skriften. Den er overskrevet af lærredet. Se uenighed 2 i 01-variabler.css. */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  /* em: polstringen hører til knappens EGEN tekst (--bitte, 13px), så den
+     bliver ved med at være lige så meget luft, når teksten vokser. */
+  gap: 0.46154em;            /* 6px ved 13px skrift                        */
+  padding: 0.69231em 1.23077em;   /* 9px / 16px ved 13px skrift            */
+  border: 1px solid transparent;
+  border-radius: var(--radius-xs);
+  background: transparent;
+  color: var(--color-text);
+  font-family: var(--font-sub);
+  font-weight: 600;
+  font-size: var(--bitte);
+  line-height: 1.2;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  text-decoration: none;
+  cursor: pointer;
+}
+.btn svg { display: block; flex: none; }
+
+.btn-primary { background: var(--color-accent); color: var(--color-neutral-100); }
+.btn-primary:hover { background: var(--color-accent-600); color: var(--color-neutral-100); }
+.btn-primary:active { background: var(--color-accent-700); }
+
+.btn-secondary { border-color: var(--color-accent); color: var(--color-accent-700); }
+.btn-secondary:hover { background: var(--color-accent-100); color: var(--color-accent-700); }
+
+
+/* --- DEL ------------------------------------------------------------------
+   Lærredet har fem: LinkedIn, Mastodon, Bluesky, E-mail og "Kopiér link".
+   Temaet har de fire første. Den femte er en knap, der skriver til
+   udklipsholderen, altså JavaScript — og temaet har ikke en linje af det.
+   Se rapporten; den er nævnt der frem for stiltiende udeladt.
+
+   Hvilke af de fire der faktisk står på siden, styres af params.social, som
+   står tom med vilje. Se layouts/_partials/del.html. */
+
+.share-raekke {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;               /* 8px                                        */
+}
+
+.share {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.57143em;            /* 8px ved 14px skrift                        */
+  min-height: 2.5rem;        /* 40px                                       */
+  padding: 0 1em;            /* 14px ved 14px skrift                       */
+  border: 1px solid var(--color-neutral-400);
+  border-radius: var(--radius-xs);
+  color: var(--color-text);
+  font-family: var(--font-sub);
+  font-size: 0.875rem;       /* 14px                                       */
+  font-weight: 500;
+  text-decoration: none;
+  transition: background .15s, border-color .15s, color .15s;
+}
+.share:hover {
+  border-color: var(--color-accent);
+  color: var(--color-accent-700);
+  background: var(--color-accent-100);
+}
+.share svg { flex: none; }
+
+
+/* --- AFSNIT EFTER TEKSTEN -------------------------------------------------
+   "Del" og "Relaterede" står begge 2X under det, de følger efter. */
+
+.post-efter { margin-top: calc(var(--x) * 2); }
+
+.post-efter > h2 {
+  margin: 0 0 0.75rem;       /* 12px                                       */
+  font-family: var(--font-sub);
+  font-weight: 600;
+  font-size: 0.875rem;       /* 14px                                       */
+  color: var(--color-text);
+}
+
+/* "Relaterede" er derimod en rigtig rubrik i display-skriften. */
+.post-efter > h2.post-h {
+  margin: 0 0 0.875rem;      /* 14px                                       */
+  font-size: var(--h3);
+  letter-spacing: -0.01em;
+}
+
+
+/* --- RELATEREDE INDLÆG ----------------------------------------------------
+   Tre spalter, titel over dato. Datoen er den LANGE danske form med ugedag —
+   "Fredag 21. november 2025" — og det er lærredets, ikke en tilfældighed:
+   forlægget er Stratecherys artikelfod, som ligger blandt hans skærmbilleder
+   fra 21:01, og som skriver "Monday, June 23, 2025" på samme plads.
+
+   ★ Hugos .Related læser kun site.RegularPages, altså det, de to
+   udgivelsesporte har sluppet igennem. Det er ikke en antagelse:
+   bojko-dk/scripts/check-gates.sh bygger sitet og gennemsøger HELE outputtet for
+   kladder og fremdaterede indlæg, netop fordi en "relaterede"-partial er den
+   klassiske måde at genudgive dem på. */
+
+.related {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.5rem;               /* 24px                                       */
+}
+.related a {
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;             /* 10px                                       */
+}
+.related .titel {
+  font-family: var(--font-sub);
+  font-weight: 600;
+  font-size: 1rem;           /* 16px                                       */
+  line-height: 1.35;
+}
+.related time {
+  font-size: var(--lille);
+  color: var(--color-neutral-600);
+  font-variant-numeric: tabular-nums;
+}
+
+
+/* --- FORRIGE OG NÆSTE -----------------------------------------------------
+   Stiplet streg over — lærredets ene stiplede linje på hele sitet. */
+
+.naboer-rule {
+  margin-top: calc(var(--x) * 1.5);
+  height: 0;
+  background: none;
+  border: 0;
+  border-top: 1px dashed var(--color-neutral-400);
+}
+
+.naboer {
+  display: flex;
+  justify-content: space-between;
+  gap: 1.5rem;               /* 24px                                       */
+  padding: calc(var(--x) * 0.75) 0 0;
+}
+.naboer a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.625rem;             /* 10px                                       */
+  min-width: 0;
+  font-family: var(--font-sub);
+  font-weight: 600;
+  font-size: 0.9375rem;      /* 15px                                       */
+}
+.naboer .naeste { text-align: right; margin-left: auto; }
+.naboer svg { flex: none; }
+
+
+/* --- PÅ SMALLE SKÆRME ----------------------------------------------------- */
+
+@media (max-width: 45rem) {             /* 720px ved 16px rod             */
+  .related { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 34rem) {
+  .featured img { aspect-ratio: 16 / 9; }
+  .featured { margin-bottom: var(--x); }
+
+  /* To lange titler ved siden af hinanden på 390px er to titler, der hver
+     får 12 tegn. De stables. */
+  .naboer { flex-direction: column; gap: 0.875rem; }   /* 14px */
+  .naboer .naeste { text-align: left; margin-left: 0; flex-direction: row-reverse; }
+}

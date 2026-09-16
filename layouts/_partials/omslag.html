@@ -1,0 +1,54 @@
+{{- /*
+  OMSLAGSBILLEDET — lærredets .featured.
+
+      {{ partial "omslag.html" . }}
+
+  Billedet ligger i artiklens egen mappe og hentes som page-bundle-ressource,
+  så Hugo kan skalere det; en stavefejl i filnavnet giver ingen figur og ingen
+  fejl.
+
+  Nøglen hedder cover: image / alt / caption. Den form er valgt med vilje,
+  fordi det er den, de udbredte Hugo-temaer bruger: en artikel skrevet til
+  dette tema kan læses af et andet uden at blive rettet. Behandlingen er
+  vores; nøglen er ikke.
+
+  ★ REKKEFØLGEN ER SKIFTET. Den forrige udgave satte omslaget EFTER titlen,
+  som på docupoint.eu. Lærredet sætter det FØR: <figure class="featured"> står
+  over <header> på forsideindlægget. Derfor står denne partial før rubrikken i
+  både page.html og home.html.
+
+  ★ VIL DU ÆNDRE HVORDAN OMSLAGET SER UD, er det assets/css/08-omslag.css —
+  der står også, hvorfor højden er et FORHOLD (28:9) og ikke lærredets faste
+  360px. Vil du ændre hvilke størrelser der genereres, er det listen over
+  bredder herunder.
+
+  .washed er designsystemets billedbehandling og lægges på her, fordi et
+  omslag er et fotografi i kraft af sin rolle. Billeder inde i brødteksten får
+  den IKKE automatisk — se 03-brodtekst.css for hvorfor.
+*/ -}}
+{{- with .Params.cover }}
+  {{- $navn  := .image }}
+  {{- $alt   := .alt }}
+  {{- $tekst := .caption }}
+  {{- with $.Resources.GetMatch $navn }}
+    {{- $org := . }}
+    {{- $saet := slice }}
+    {{- range (slice 480 800 1200 1600 2000 2400) }}
+      {{- if ge $org.Width . }}
+        {{- $saet = $saet | append (printf "%s %dw" ($org.Resize (printf "%dx webp q82" .)).RelPermalink .) }}
+      {{- end }}
+    {{- end }}
+    {{- $vist := $org.Resize "1600x webp q82" }}
+    <figure class="featured">
+      <img class="washed"
+           src="{{ $vist.RelPermalink }}"
+           {{ with $saet }}srcset="{{ delimit . ", " }}"
+           {{- /* Billedet er arkets fulde bredde: 1120px, indtil vinduet er
+                smallere end arket, og derefter hele vinduet. */}}
+           sizes="(min-width: 1120px) 1120px, 100vw"{{ end }}
+           width="{{ $org.Width }}" height="{{ $org.Height }}"
+           alt="{{ $alt }}">
+      {{- with $tekst }}<figcaption>{{ . | markdownify }}</figcaption>{{ end }}
+    </figure>
+  {{- end }}
+{{- end }}

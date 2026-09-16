@@ -1,0 +1,41 @@
+{{ define "main" }}
+  {{- /*
+    404. Ikke designet — lærredet har ingen fejlside — men den er skrevet i
+    sidens eget sprog frem for at være uformateret: rubrik i display-skriften,
+    en vej videre, og de tre nyeste indlæg, så siden er en indgang og ikke en
+    blindgyde.
+
+    ★ Et fint sted at bruge en time senere.
+  */ -}}
+  <section class="col post">
+    <header class="post-hoved post-hoved--indlaeg">
+      <h1 class="post-h post-h--indlaeg">Den side findes ikke</h1>
+      <p class="lede">Adressen kan være skrevet forkert, eller siden kan være flyttet.</p>
+    </header>
+
+    <div class="body-copy">
+      <p>
+        <a class="btn btn-secondary" href="{{ "/" | relURL }}">Til forsiden</a>
+        {{- with site.GetPage "/artikler" }}
+        <a class="btn btn-secondary" href="{{ .RelPermalink }}">Hele arkivet</a>
+        {{- end }}
+      </p>
+    </div>
+
+    {{- with first 3 (where site.RegularPages "Section" "artikler").ByDate.Reverse }}
+    <section class="post-efter" aria-labelledby="nyeste">
+      <h2 class="post-h" id="nyeste">Nyeste indlæg</h2>
+      <div class="related">
+        {{- range . }}
+        <a class="quiet" href="{{ .RelPermalink }}">
+          <span class="titel">{{ .Title }}</span>
+          {{- if not .Date.IsZero }}
+          <time datetime="{{ .Date.Format "2006-01-02" }}">{{ strings.FirstUpper (.Date | time.Format "Monday 2. January 2006") }}</time>
+          {{- end }}
+        </a>
+        {{- end }}
+      </div>
+    </section>
+    {{- end }}
+  </section>
+{{ end }}

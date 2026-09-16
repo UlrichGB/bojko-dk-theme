@@ -1,0 +1,557 @@
+/* ===========================================================================
+   02 — GRUNDLAGET: siden, arket, spalten og udbruddet
+   ===========================================================================
+   Den ene mekanisme, resten af temaet hviler på. Rør den med omtanke: det er
+   her, "en normal læsespalte, der kan bryde ud" faktisk bor.
+
+   Der er ingen farver og ingen skriftstørrelser i denne fil. Alt sådant læses
+   fra 01-variabler.css.
+
+   ---------------------------------------------------------------------------
+   SIDEN ER ET ARK PÅ ET BORD
+   ---------------------------------------------------------------------------
+   Lærredet bygger siden af fire vandrette lag, og de skal læses nedefra:
+
+       ┌──────────────────────────────────────────────┐  siden, --color-
+       │  ╔════════════════════════════════════════╗  │  neutral-200
+       │  ║  bojko.dk   FORSIDE  ARKIV  PROFIL  ⌕  ║  │  .topbar, klæbende,
+       │  ╠════════════════════════════════════════╣  │  accent, 72px
+       │  ║                                        ║  │  .baand, accent,
+       │  ╟────────────────────────────────────────╢  │  136px — arket
+       │  ║                                        ║  │  trækkes 100px op
+       │  ║   ARKET, --color-neutral-100           ║  │  over det, så der
+       │  ║   1120px bredt, skygge under           ║  │  bliver 36px farve
+       │  ║                                        ║  │  tilbage
+       │  ║        [ læsespalte, 680px ]           ║  │
+       │  ║                                        ║  │
+       │  ╚════════════════════════════════════════╝  │
+       │      bunden, PÅ siden og ikke på arket       │
+       └──────────────────────────────────────────────┘
+
+   Arket er LYSERE end det, det ligger på (neutral-100 mod neutral-200). Det er
+   den ene detalje, der får layoutet til at læse som papir og ikke som en
+   baggrundsfarve, og det er derfor bunden ligger uden for arket: den ligger på
+   bordet, ikke på papiret.
+
+   De tre tal — 72, 136, 100 — er variabler i 01, og de skal regnes sammen.
+   =========================================================================== */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+/* ★ <html> HAR MED VILJE INGEN font-size, OG DEN SKAL BLIVE VED MED AT VÆRE
+   UDEN. Hele temaets skriftskala er i rem, og rem regnes af netop dette
+   element. Sætter du font-size her — også den "harmløse" font-size: 100%, og
+   især den gamle 62.5%-trick — så er roden ikke længere læserens indstilling,
+   men dit tal, og alle rem-værdierne holder op med at reagere på, at nogen
+   har skruet op for skriften i browseren. Enhedsreglen står i 01-variabler.css.
+
+   -webkit-text-size-adjust: 100% er noget ANDET og skal blive stående: den
+   slår iOS' automatiske opskalering af tekst i landskabstilstand fra. Den
+   rører ikke roden. */
+html {
+  -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;
+}
+
+/* Lærredet lægger sit flex-layout på en <div> omkring det hele. Her ligger det
+   på <body> i stedet — samme geometri, ét element mindre, og ingen klasse at
+   huske i baseof.html.
+
+   overflow-x: clip, ikke hidden: clip laver ikke en rullebeholder, så
+   position: sticky inde i tidslinjen og i topbaren bliver ved med at klæbe til
+   vinduet. hidden ville have slået dem fra uden at sige det. */
+body {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+
+  margin: 0;
+  overflow-x: clip;
+  background: var(--color-neutral-200);
+  color: var(--color-text);
+  font-family: var(--font-read);
+  font-size: var(--brodtekst);
+  line-height: 1.55;
+  text-wrap: pretty;
+  -webkit-font-smoothing: antialiased;
+}
+
+
+/* --- HOVEDET: DEN KLÆBENDE LINJE ------------------------------------------
+   Accent hele vejen ud, indholdet holdt på arkets bredde. Den klæber, så
+   navigationen er der hele vejen ned gennem en lang artikel.
+
+   Den indvendige skygge foroven er lærredets: en lys streg på 18% inde i
+   toppen af båndet, så den orange flade får en kant og ikke bare stopper. */
+
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  flex: none;
+  background: var(--color-accent);
+  box-shadow:
+    0 1px 0 color-mix(in srgb, var(--color-neutral-100) 18%, transparent) inset,
+    var(--shadow-sm);
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;              /* 4px                                        */
+  width: 100%;
+  max-width: var(--sheet-max);
+  min-height: var(--topbar-h);
+  margin: 0 auto;
+  padding: 0;
+  color: var(--color-neutral-100);
+}
+
+/* Bomærket. Den ENESTE Comfortaa på siden, og små bogstaver med vilje — se
+   00-skrifter.css. Punktummet står dæmpet, så "bojko" og "dk" læses som to
+   ord og ikke som et domænenavn. */
+.nav-brand {
+  display: inline-flex;
+  align-items: baseline;
+  margin-right: auto;
+  font-family: var(--font-brand);
+  font-weight: 700;
+  font-size: 2.625rem;       /* 42px — Ulrichs egen rettelse, i rem        */
+  letter-spacing: 0.01em;
+  text-transform: lowercase;
+  text-decoration: none;
+  color: var(--color-neutral-100);
+}
+
+/* ★ BOMÆRKET HAR MED VILJE INGEN HOVER-TILSTAND. Det skal blive hvidt.
+   Her stod `.nav-brand:hover { opacity: .85 }` — en dæmpning, ikke et
+   farveskift, men virkningen var den, Ulrich beskrev: navnet blev svagere,
+   når man pegede på det. Sat ikke tilbage.
+
+   `transition: opacity` er fjernet med den: der er ikke længere en
+   opacitet på selve <a>, der skifter, så overgangen var død kode.
+
+   TASTATURFOKUS ER IKKE RØRT. Bomærket er et <a> inde i .nav, så den lyse
+   fokusring længere nede i filen gælder stadig for det — en hover må gerne
+   forsvinde, en fokusindikator må ikke. Designsystemet er udtrykkeligt:
+   "never leave the default blue focus ring".
+
+   Den permanente .55 herunder er noget ANDET: det er punktummet og "dk",
+   der står dæmpet hele tiden, så "bojko" og "dk" læses som to ord. Den er
+   en del af designet og skal blive. */
+.nav-brand span { opacity: .55; }
+
+/* Menupunkterne. Understregningen kører ud fra venstre på hover og bliver
+   stående på den side, man er på.
+
+   ★ TRE ENHEDER I ÉN REGEL, OG DE ER VALGT HVER FOR SIG:
+
+     font-size   rem  — menuen er tekst. Skruer læseren op for skriften i
+                        browseren, skal menupunkterne følge med. 12,5/16.
+     padding     em   — polstringen hører til PUNKTETS EGEN tekst, ikke til
+                        siden: 1,28em er 16px ved 12,5px skrift og bliver ved
+                        med at være "lige så meget luft som før", uanset hvor
+                        stor den tekst bliver. Det er forskellen på en knap,
+                        der vokser rigtigt, og en knap, hvor teksten vokser
+                        ud af sin egen ramme.
+     height      rem  — via --topbar-h, sammen med båndet. Se 01.
+
+   ::after-understregningen herunder skal have SAMME em-tal som padding, så
+   stregen bliver ved med at flugte med teksten. Pseudo-elementet arver
+   punktets font-size, så 1,28em dér er det samme som 1,28em her.          */
+.nav-item {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  height: var(--topbar-h);
+  padding: 0 1.28em;         /* 16px ved 12,5px skrift                     */
+  font-family: var(--font-sub);
+  font-size: 0.84375rem;     /* 13,5px — Ulrichs egen rettelse, i rem      */
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: color-mix(in srgb, var(--color-neutral-100) 82%, transparent);
+  transition: color .15s, background .15s;
+}
+.nav-item:hover,
+.nav-item[aria-current="page"] { color: var(--color-neutral-100); }
+
+.nav-item::after {
+  content: "";
+  position: absolute;
+  /* em, så stregen flugter med punktets padding ovenfor; rem på afstanden op
+     fra bunden, fordi den måler mod bjælkens højde og ikke mod teksten.
+     height bliver i px: en 2px streg er en streg, ikke typografi.         */
+  left: 1.28em; right: 1.28em; bottom: 1.375rem;   /* 16px / 16px / 22px   */
+  height: 2px;
+  background: var(--color-neutral-100);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform .2s ease;
+}
+.nav-item:hover::after,
+.nav-item[aria-current="page"]::after { transform: scaleX(1); }
+
+/* width bliver i px — det ER hårstregen. Højden og luften om den er rem, så
+   stregen bliver ved med at være en streg i menuens højde og ikke en prik i
+   den, når skriften vokser. */
+.nav-sep {
+  width: 1px; height: 1.25rem;          /* 1px / 20px                      */
+  margin: 0 0.625rem 0 0.875rem;        /* 10px / 14px                     */
+  background: var(--color-neutral-100);
+  opacity: .28;
+}
+
+/* Ikonerne — søgning og feed. Runde, og det er med vilje: cirklerne er det,
+   Organic-systemets "soft circular shapes" overlever i. Se uenighed 2 i
+   01-variabler.css.
+
+   ★ 44px BLIVER I PX, og det er den ene værdi i hovedet, der ikke er blevet
+   rem. 44px er ikke en skriftstørrelse og heller ikke en tegning — det er
+   MÅLET PÅ EN FINGERSPIDS, minimumsstørrelsen på et trykfelt (WCAG 2.5.5,
+   og Apples egen anvisning siger det samme). Et fysisk mål skal ikke følge en
+   tekstindstilling: knappen indeholder et SVG-ikon og ikke ét bogstav, og
+   gjorde den det, ville den blive MINDRE end 44px hos en læser, der havde
+   sat sin skrift NED. Gulvet skal blive, hvor det er.                     */
+.nav-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px; height: 44px;
+  border-radius: 50%;
+  color: inherit;
+  transition: background .15s;
+}
+.nav-icon:hover { background: color-mix(in srgb, var(--color-neutral-100) 14%, transparent); }
+.nav-icon:last-child { margin-right: -14px; }
+
+/* Fokus i båndet skal være lyst, ikke accentfarvet: en orange ring på en
+   orange flade er ingen ring. */
+.nav a:focus-visible { outline: 2px solid var(--color-neutral-100); outline-offset: 2px; }
+
+
+/* --- BÅNDET ---------------------------------------------------------------
+   Rent dekorativt felt under hovedet. Arket trækkes op over det. */
+
+.baand {
+  flex: none;
+  height: var(--band-h);
+  background: var(--color-accent);
+}
+
+
+/* --- ARKET ----------------------------------------------------------------
+   container-type: inline-size er ikke pynt — det er HELE udbrudsmekanismen.
+   Se næste blok. Den gør også arket til et indeslutningsområde, hvilket er
+   grunden til, at z-index og skyggen står her og ikke et tilfældigt sted. */
+
+main {
+  flex: 1;
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: var(--sheet-max);
+
+  /* Arket trækkes op over båndet og får den samme afstand tilbage som
+     polstring. Nettoresultatet er, at arkets KANT ligger 100px oppe i den
+     orange flade, mens INDHOLDET står, hvor det ville have stået. Lærredet
+     gør det med et tomt <div style="height:100px"> på hver skærm; her er det
+     ét sted, så en ny skabelon ikke kan glemme det. */
+  margin: calc(var(--overlap) * -1) auto 0;
+  padding: var(--overlap) var(--sheet-gutter) 0;
+
+  background: var(--color-neutral-100);
+  box-shadow: var(--shadow-md);
+
+  container-type: inline-size;
+}
+
+
+/* --- SIDERNES EGEN LUFT ---------------------------------------------------
+   Lærredets fire skærme har hver sin polstring. De stod som inline style;
+   her er de klasser, så der ikke er et px-tal i en skabelon. */
+
+.post           { position: relative; padding: 0 0 5rem; }                /* 80px */
+.forside-intro  { padding: 0 0 0.5rem; }                                  /*  8px */
+.forside-indlaeg{ position: relative; padding: 4.6875rem 0 2.8125rem; }   /* 75/45 */
+.arkiv-side     { max-width: 47.5rem; margin-inline: auto; padding: 0 0 6rem; } /* 760/96 */
+.profil-side    { max-width: 55rem;   margin-inline: auto; padding: 0 0 6rem; } /* 880/96 */
+
+
+/* --- LÆSESPALTEN OG UDBRUDDET ---------------------------------------------
+   ★ Krav 2: "en læsespalte, der kan bryde ud og blive bredere".
+
+   Den forrige udgave løste det med et gitter på fem navngivne spor. Det
+   virkede, men det er ikke den mekanisme, lærredet bruger, og de to kan ikke
+   blandes: gitteret måler udbruddet fra læsespalten og ud, lærredet måler det
+   fra ARKET og ind. Det giver to forskellige bredder på den samme skærm.
+   Lærredets vandt, fordi det er den, der er tegnet.
+
+   MEKANISMEN:
+
+       main er en container      →  100cqw = arkets bredde MINUS luften
+       .col er læsespalten       →  min(680px, 100cqw), centreret
+       .wide er et udbrud        →  arkets bredde minus 5px i hver side
+
+       ┌─ arket, 1120px ────────────────────────────────────────────┐
+       │ luft │                                            │  luft  │
+       │      │        ┌───── .col, 680px ─────┐           │        │
+       │      │        │  brødtekst, 62ch      │           │        │
+       │ ┌────┴────────┴───────────────────────┴───────────┴─────┐  │
+       │ │                    .wide                              │  │
+       │ └───────────────────────────────────────────────────────┘  │
+       │┌───────────────────────────────────────────────────────────┐│
+       ││                   .wide.bleed                             ││
+       │└───────────────────────────────────────────────────────────┘│
+       └────────────────────────────────────────────────────────────┘
+
+   Et udbrud kan ikke skubbe siden vandret: bredden er regnet ud af CONTAINERENS
+   bredde, ikke af vinduets. Der er ingen 100vw at ramme ved siden af, ingen
+   rullebjælke at glemme at trække fra, og ingen negativ margin at regne
+   forkert. På en telefon er 100cqw = skærmen minus 2×20px luft, og et udbrud
+   fylder præcis skærmen — der ER ikke mere plads at bryde ud i, og det kræver
+   ingen media query at opdage.
+
+   OM .bleed: lærredet definerer .wide.bleed nøjagtigt som .wide — de to er
+   ens der, altså har klassen ingen virkning i designet. Her har den fået den
+   betydning, navnet lover, og som {{< bred fuld="ja" >}} allerede havde i
+   scaffoldet: helt ud til arkets kant, uden sikkerhedsafstanden. Det er en
+   tilføjelse til lærredet, ikke en aflæsning af det. */
+
+/* ★ LÆSESPALTEN ER LÆSEMÅLET. ÉN BREDDE, DELT AF ALT I SPALTEN.
+   ---------------------------------------------------------------------------
+   Her stod `max-width: var(--col-max)`, altså 680px, og læsemålet blev i
+   stedet lagt på hvert enkelt BARN af brødteksten længere nede. Det var
+   fejlen bag "Textkolonnen er ikke i center", og den er målt:
+
+     arket      163,5 – 1283,5   midte 723,5   — centreret
+     .col       383,5 – 1063,5   midte 723,5   — centreret
+     et <p>     383,5 –  969,0   midte 676,2   — 47,3px TIL VENSTRE
+     et <h2>    383,5 – 1063,5   midte 723,5
+     .wide      168,5 – 1278,5   midte 723,5   — centreret
+
+   Arket og spalten var altså centreret hele tiden. Det, der ikke var, var
+   TEKSTEN inde i spalten, og grunden er, at --measure er 62ch: ch måles af
+   ELEMENTETS EGEN skrift, så den samme regel gav 585,5px på et afsnit i 19px
+   og 1108px — altså hele spalten — på en mellemrubrik i 27px. To forskellige
+   bredder i den samme spalte, begge stillet til venstre, mens billedudbruddene
+   var centreret. Forskellen (680 − 585,5) / 2 = 47,3px — præcis det, han så.
+
+   Rettelsen er at lade SPALTEN være målet i stedet for hvert barn: én bredde,
+   som rubrikken, underrubrikken, metalinjen, afsnittene og mellemrubrikkerne
+   deler. Så flugter venstrekanterne, højrekanterne flugter, og blokken er
+   centreret på den samme akse som udbruddene.
+
+   min() og ikke bare --measure: er skærmen smal, er det containeren, der
+   bestemmer, og på en telefon rører målet aldrig. --col-max på 680px står
+   stadig som LOFTET — den bliver først den bindende, hvis nogen sætter
+   --measure op over den.
+
+   ch er sikkert HER, hvor det ikke var det på børnene: .col sætter ikke sin
+   egen font-size, så den arver brødtekstens — og brødteksten er præcis den
+   skrift, et læsemål skal måles i. */
+.col {
+  max-width: min(var(--col-max), var(--measure));
+  margin-inline: auto;
+}
+
+/* De to bredder regnes ét sted, så .wide og det fremhævede billede ikke kan
+   komme til at være næsten lige brede.
+
+   --sheet-inner: arkets fulde bredde. 100cqw er indholdsbredden, altså uden
+   luften, så luften lægges til igen.
+   --col-w: læsespaltens faktiske bredde lige nu. Den SKAL regnes af de samme
+   tre led som .col ovenfor — udbruddet centreres om spaltens midte, så hvis
+   de to udtryk går fra hinanden, hænger et bredt billede ikke længere sammen
+   med teksten over det. Det var netop den uenighed, rettelsen fjernede. */
+.body-copy .wide,
+.featured {
+  --sheet-inner: calc(100cqw + 2 * var(--sheet-gutter));
+  --col-w: min(var(--col-max), var(--measure), 100cqw);
+}
+
+.body-copy .wide {
+  width: calc(var(--sheet-inner) - var(--wide-inset));
+  max-width: none;
+  margin-left: calc((var(--col-w) - (var(--sheet-inner) - var(--wide-inset))) / 2);
+}
+
+.body-copy .wide.bleed {
+  width: var(--sheet-inner);
+  margin-left: calc((var(--col-w) - var(--sheet-inner)) / 2);
+}
+
+/* Det fremhævede billede er et udbrud, der ikke ligger i brødteksten — se
+   08-omslag.css for behandlingen. Bredden er den samme som .bleed. */
+.featured {
+  width: var(--sheet-inner);
+  max-width: none;
+  margin-left: calc((var(--col-w) - var(--sheet-inner)) / 2);
+}
+
+/* Ligger brødteksten i en .col, er målet allerede sat ÉN gang, på spalten
+   ovenfor. Så skal den ikke sættes igen her — hverken på .body-copy eller på
+   dens børn.
+
+   Her stod `.col .body-copy > :not(.wide) { max-width: var(--measure) }`, og
+   den regel er FJERNET, ikke glemt. Den lagde læsemålet på hvert enkelt barn,
+   og fordi ch måles af barnets egen skrift, fik et afsnit i 19px og en
+   mellemrubrik i 27px to forskellige bredder — begge stillet til venstre i en
+   bredere spalte. Det var årsagen til den skæve tekstkolonne; regnestykket
+   står i blokken om .col ovenfor.
+
+   Børnene skal fylde spalten. Er der ét, der skal være bredere, er det .wide,
+   og den har sin egen mekanisme. */
+.col .body-copy { max-width: none; }
+
+
+/* --- BUNDEN ---------------------------------------------------------------
+   Uden for arket, på bordet. Samme bredde og samme luft som arket, så de tre
+   kolonner flugter med brødteksten ovenfor. Se 07-arkiv.css for formen. */
+
+body > footer {
+  width: 100%;
+  max-width: var(--sheet-max);
+  margin: 0 auto;
+  padding: 3.5rem var(--sheet-gutter) 2.5rem;   /* 56px / 40px             */
+  color: var(--color-neutral-800);
+  font-family: var(--font-sub);
+}
+
+
+/* --- FÆLLES SMÅTING -------------------------------------------------------
+   Basis fra designsystemets styles.css, med lærredets rettelser lagt oveni.  */
+
+img { display: block; max-width: 100%; }
+figure { margin: 0; }
+
+/* Understregningen bliver i px, begge tal. En streg på 1px er en hårstreg —
+   i rem bliver den 1,25px hos en læser med stor skrift, og en streg på 1,25px
+   er ikke tykkere, den er GRÅ: browseren udglatter den over to pixelrækker.
+   Og afstanden ned til den skal blive et fast, lille hul; den hører til
+   stregen, ikke til bogstaverne. Begge er pixelgitter-værdier. */
+a {
+  color: var(--color-accent-700);   /* IKKE --color-accent: se 01, kontrast */
+  text-underline-offset: 3px;
+  text-decoration-thickness: 1px;
+  text-decoration-color: var(--color-accent-400);
+}
+a:hover { color: var(--color-accent-600); }
+
+/* Tastaturfokus er tematiseret overalt — designsystemet er udtrykkeligt om
+   det: "never leave the default blue focus ring". */
+:focus { outline: none; }
+:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 2px; }
+::selection { background: color-mix(in srgb, var(--color-accent) 30%, transparent); }
+
+/* Et dæmpet link, der ikke skal se ud som et link — brugt i metalinjen, i
+   relaterede indlæg og i forrige/næste. */
+.quiet { color: var(--color-text); text-decoration: none; }
+.quiet:hover { color: var(--color-accent-600); }
+
+.title-link { color: inherit; text-decoration: none; }
+.title-link:hover { color: var(--color-accent-600); }
+
+.rule { height: 1px; margin: 0; border: 0; background: var(--color-neutral-300); }
+
+/* Den lille centrerede streg mellem to indlæg på forsiden. Lærredet tegner
+   den som en 50px streg i neutral-400 med god luft om. */
+.skille {
+  display: flex;
+  justify-content: center;
+  padding: calc(var(--x) * 2) 0;
+}
+/* Ornamentet bliver i px, begge veje. Det er en tegnet streg på 50px — ikke
+   et mål på noget tekst — og højden er hårstregen igen. Luften OM den er
+   derimod --x og skalerer altså med. */
+.skille span {
+  display: block;
+  width: 50px; height: 1px;
+  background: var(--color-neutral-400);
+}
+
+/* Kun for skærmlæsere. Springlinket foroven i baseof.html bruger den.
+   1px og -1px er selve teknikken — det er sådan, et element bliver usynligt
+   uden at forsvinde for en skærmlæser. De er ikke størrelser og skal aldrig
+   skaleres. */
+.kun-skaerm {
+  position: absolute; width: 1px; height: 1px;
+  margin: -1px; padding: 0; border: 0;
+  overflow: hidden; clip-path: inset(50%); white-space: nowrap;
+}
+.kun-skaerm:focus {
+  position: fixed; top: 0.5rem; left: 0.5rem;   /* 8px                     */
+  width: auto; height: auto; margin: 0;
+  padding: var(--space-2) var(--space-3);
+  clip-path: none;
+  background: var(--color-neutral-100);
+  color: var(--color-text);
+  border-radius: var(--radius-xs);
+  box-shadow: var(--shadow-md);
+  z-index: 20;
+}
+
+
+/* --- PÅ EN SMAL SKÆRM -----------------------------------------------------
+   1140px er lærredets eget brudpunkt, og det handler kun om hovedet: under
+   arkets bredde plus lidt skal navigationen have luft ind til kanten, og det
+   negative hæng på det sidste ikon skal væk, ellers står det uden for skærmen.
+
+   560px er også lærredets: menupunkterne strammes ind, og skillestregen
+   mellem menu og ikoner falder bort, fordi der ikke er plads til begge dele. */
+
+@media (max-width: 71.25rem) {          /* 1140px ved 16px rod             */
+  .nav { padding: 0 0.625rem; }         /* 10px                            */
+  .nav-icon:last-child { margin-right: 0; }
+}
+
+/* ★ 560px: MENUEN OMBRYDER.
+
+   Lærredets eneste regel her er `.nav-item { padding: 0 10px }`, og den er
+   ikke nok: bomærket (105px) + fire menupunkter (~300px) + to ikoner (88px)
+   er knap 500px indhold i en bjælke, der ikke ombryder. Målt ved 390px:
+   52px vandret overløb på HVER eneste side i temaet — det var sidens eneste
+   overløb, og det kom fra hovedet.
+
+   Løsningen er ikke at gøre skriften mindre, for der er ikke 110px at hente.
+   Bjælken bliver to rækker: bomærket og ikonerne på den første, menuen på den
+   anden. `order` gør det uden at flytte noget i skabelonen.
+
+   Bjælken er dermed 116px høj her, og det er derfor --topbar-total findes. */
+
+@media (max-width: 35rem) {             /* 560px ved 16px rod              */
+  .nav {
+    flex-wrap: wrap;
+    min-height: 0;
+    padding-bottom: 0.25rem;            /* 4px                             */
+  }
+  .nav-brand { order: 1; min-height: var(--topbar-h); }
+  .nav-icon  { order: 2; }
+
+  /* Skillestregen bliver til et LINJESKIFT i stedet for at forsvinde. Et
+     flex-element på 100% bredde og 0 højde tvinger alt efter sig ned på en ny
+     række, og det er den eneste måde at holde ikonerne ude til højre på den
+     første række: uden den pakker menupunkterne sig ind mellem bomærket og
+     ikonerne, fordi `margin-right: auto` kun opsluger plads, når der ER plads
+     tilbage på rækken. Elementet er allerede aria-hidden i skabelonen. */
+  .nav-sep {
+    order: 3;
+    width: 100%;
+    height: 0;
+    margin: 0;
+    background: none;
+  }
+
+  .nav-item {
+    order: 4;
+    height: 2.5rem;                     /* 40px                            */
+    padding: 0 0.96em;                  /* 12px ved 12,5px skrift          */
+    letter-spacing: .06em;
+  }
+  .nav-item::after { left: 0.96em; right: 0.96em; bottom: 0.375rem; }  /* 12/12/6px */
+
+  /* Den anden række er menuens egen højde plus lidt luft, ikke et tal fra
+     ingenting — derfor rem, så den følger bjælken ovenfor. */
+  :root { --topbar-total: calc(var(--topbar-h) + 2.75rem); }   /* + 44px   */
+}

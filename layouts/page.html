@@ -1,0 +1,121 @@
+{{ define "main" }}
+  {{- /*
+    ÉT INDLÆG. Lærredets "Indlæg"-skærm.
+
+    Rækkefølgen er lærredets: omslag, vandmærke, rubrik, underrubrik,
+    metalinje, tekst — og derefter møblementet: Del, Relaterede, forrige/næste.
+
+    .col er læsespalten (680px). Alt heri lander i den af sig selv; kun det,
+    der beder om .wide, træder udenfor. Mekanismen står i 02-grundlag.css.
+  */ -}}
+  <article class="col post">
+
+    {{- partial "omslag.html" . }}
+
+    {{- /* ★ Vandmærket er SØSKENDE til <header>, ikke barn af det, og det er
+         ikke en smagssag. Begge er positionerede: vandmærket ligger på
+         z-index 0, hovedet på z-index 1. Lægger man vandmærket INDE i hovedet,
+         bliver hovedets z-index til en ny stablingskontekst, og så tegnes et
+         positioneret barn med z-index 0 OVEN PÅ hovedets egen tekst i stedet
+         for bagved. Resultatet er et 220px bogstav hen over metalinjen.
+         Målt: det skete. Lærredet har dem som søskende af samme grund. */}}
+    {{ partial "vandmaerke.html" . }}
+
+    <header class="post-hoved post-hoved--indlaeg">
+      <h1 class="post-h post-h--indlaeg">{{ .Title }}</h1>
+
+      {{- /* Underrubrikken er .Description — ikke en ny frontmatter-nøgle.
+
+           Den nøgle findes allerede, den står allerede i alle artikler, og
+           den er allerede det, en søgemaskine viser. Én linje frontmatter, to
+           steder den bliver brugt, ingen risiko for at de to siger
+           forskellige ting. Klassen hedder nu .lede, som i lærredet. */ -}}
+      {{- with .Description }}
+        <p class="lede">{{ . | markdownify }}</p>
+      {{- end }}
+
+      {{ partial "meta.html" . }}
+    </header>
+
+    <div class="body-copy">
+      {{ .Content }}
+    </div>
+
+    {{- /* --- DEL ------------------------------------------------------- */}}
+    {{ partial "del.html" . }}
+
+    {{- /* --- RELATEREDE --------------------------------------------------
+         Slægtskabet er FÆLLES MÆRKER, og det er regnet her i skabelonen frem
+         for med Hugos .Related. Grunden er konkret: .Related indekserer som
+         standard frontmatter-nøglen `keywords`, og dette site har ikke én —
+         det har `tags`. Kaldet returnerede tom hver gang, og en tom sektion
+         ser ud som "ingen relaterede artikler" og ikke som en fejl. Målt.
+
+         Alternativet var at kræve en [related]-blok i konfigurationen. Det
+         blev valgt fra: temaet kræver i forvejen to indstillinger, der fejler
+         tavst (se markup.toml), og en tredje er en til at glemme.
+
+         ★ Listen kommer fra mærkesidernes .Pages, altså fra site.RegularPages,
+         altså kun det, de to udgivelsesporte har sluppet igennem. En kladde
+         kan ikke komme ud her. Det er ikke en antagelse —
+         bojko-dk/scripts/check-gates.sh bygger sitet og gennemsøger HELE outputtet,
+         netop fordi en "relaterede"-sektion er den klassiske måde at
+         genudgive gatede sider på. Kør den, når du har rettet i denne fil. */}}
+    {{- $rel := slice }}
+    {{- range .GetTerms "tags" }}
+      {{- range .Pages }}
+        {{- if ne .RelPermalink $.RelPermalink }}{{ $rel = $rel | append . }}{{ end }}
+      {{- end }}
+    {{- end }}
+    {{- /* sort og ikke .ByDate.Reverse: uniq giver et almindeligt []interface{}
+         tilbage, ikke en page.Pages, og så findes .ByDate ikke. */}}
+    {{- with first 3 (sort ($rel | uniq) "Date" "desc") }}
+    <section class="post-efter" aria-labelledby="relaterede">
+      <h2 class="post-h" id="relaterede">Relaterede</h2>
+      <div class="related">
+        {{- range . }}
+        <a class="quiet" href="{{ .RelPermalink }}">
+          <span class="titel">{{ .Title }}</span>
+          {{- if not .Date.IsZero }}
+          <time datetime="{{ .Date.Format "2006-01-02" }}">{{ strings.FirstUpper (.Date | time.Format "Monday 2. January 2006") }}</time>
+          {{- end }}
+        </a>
+        {{- end }}
+      </div>
+    </section>
+    {{- end }}
+
+    {{- /* --- Tags ----------------------------------------------------- */}}
+    {{- with .GetTerms "tags" }}
+    <section class="post-efter" aria-labelledby="maerker">
+      <h2 id="maerker">Tags</h2>
+      <ul class="tags">
+        {{- range . }}<li><a class="tag" href="{{ .RelPermalink }}">{{ .LinkTitle }}</a></li>{{ end }}
+      </ul>
+    </section>
+    {{- end }}
+
+    {{- /* --- FORRIGE OG NÆSTE --------------------------------------------
+         Stiplet streg over — lærredets ene stiplede linje på hele sitet. */}}
+    {{- if or .PrevInSection .NextInSection }}
+    <hr class="naboer-rule">
+    <nav class="naboer" aria-label="Forrige og næste indlæg">
+      {{- with .NextInSection }}{{- /* Hugo: "Next" er den NYERE. Til venstre
+           står den ældre, altså .PrevInSection. */}}{{ end }}
+      {{- with .PrevInSection }}
+      <a href="{{ .RelPermalink }}" rel="prev">{{ partial "ikon.html" "nabo-venstre" }}<span>{{ .Title }}</span></a>
+      {{- end }}
+      {{- with .NextInSection }}
+      <a class="naeste" href="{{ .RelPermalink }}" rel="next"><span>{{ .Title }}</span>{{ partial "ikon.html" "nabo-hoejre" }}</a>
+      {{- end }}
+    </nav>
+    {{- end }}
+
+    {{- /* "Sidst opdateret" kommer fra git-committen (enableGitInfo), så den
+         hverken kan drive eller glemmes. */}}
+    {{- with .GitInfo }}
+    <p class="opdateret post-efter">Sidst opdateret {{ $.Lastmod | time.Format "2. January 2006" }}</p>
+    {{- end }}
+
+  </article>
+{{ end }}

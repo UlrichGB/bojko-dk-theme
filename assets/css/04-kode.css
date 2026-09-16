@@ -1,0 +1,355 @@
+/* ===========================================================================
+   04 — KODE
+   ===========================================================================
+   ★ Krav nummer ét: flere sprog, lange linjer, læsbart på en telefon.
+
+   Denne fil bestemmer kodens FORM — størrelse, luft, farveflade, linjenumre
+   og hvad der sker med en linje, der er for lang. SYNTAKSFARVERNE ligger i
+   05-kode-farver.css, som er genereret og ikke skal rettes i hånden.
+
+   TO indstillinger i konfigurationen er forudsætninger, og begge fejler tavst:
+
+       markup.highlight.noClasses = false
+       markup.highlight.lineNos   = true    (med lineNumbersInTable = false)
+
+   Uden den første skriver Hugo style="color:#..." direkte ind i hvert eneste
+   <span>, i ét fast skema, som intet stylesheet kan nå. Uden den anden er der
+   ingen <span class="ln">, og så er renden i venstre side tom — blokken
+   virker, men den ser ikke ud som den, Ulrich bad om. Begge står med deres
+   begrundelse i README.md ("Four config settings") og i
+   bojko-dk/config/_default/markup.toml.
+
+   Hugo fremhæver koden selv, med Chroma indbygget i binæren. Ingen
+   JavaScript, ingen highlight.js, intet eksternt kald: farverne er i HTML'en,
+   før siden når frem.
+
+   ---------------------------------------------------------------------------
+   TRE TIDLIGERE BESLUTNINGER ER VENDT OM HER, OG DE ER ULRICHS EGNE
+   ---------------------------------------------------------------------------
+   Filen argumenterede før for det modsatte af tre ting, den gør nu. Det er
+   ikke et sjusk, det er hans beslutninger efter at have set resultatet, og
+   argumenterne er skrevet om frem for slettet, så man kan se, hvad der blev
+   vejet op mod hvad.
+
+   1. BLOKKEN ER MØRK. Før: --color-neutral-200, "som om der er skåret hul i
+      papiret". Nu: mørk skifer, efter et forlæg han sendte. Bunden er målt og
+      ikke valgt — se --kode-bund i 01-variabler.css.
+
+      Det er IKKE mørk tilstand. Mørk tilstand er stadig ikke designet.
+
+   2. HJØRNET ER 5px. Før: var(--radius-md), 16px, og filen kaldte blokken
+      "sidens eneste bløde flade". Nu er den 5px, fordi han sagde 5px.
+      Se --radius-kode i 01.
+
+   3. KODEN OMBRYDER. Før rullede en lang linje vandret, og filen skrev med
+      versaler, at den IKKE måtte ombryde. Hans ord nu: "codesnippets skal
+      ombryde og ike scrolle horisontalt".
+
+      Den gamle indvending var reel, og den er værd at kende, fordi den IKKE
+      længere gælder: en kodelinje, der knækkes, ser ud som om der er en linje
+      mere, og i PowerShell og YAML BETYDER en linje mere noget andet.
+
+      Men knækket her er RENT VISUELT. Der kommer ikke et newline ind i
+      teksten: demoartiklens Graph-linje på 297 tegn er stadig ÉN linje, når
+      man markerer den og trykker Ctrl+C, og når man bruger kopiér-knappen.
+      Ombrydningen flytter altså kun, hvor øjet ser linjen fortsætte — og for
+      at det ikke skal kunne forveksles med et rigtigt linjeskift, hænger en
+      fortsættelse ind under sin egen linje og får ikke sit eget nummer. Se
+      blokken om renden nedenfor.
+
+   ---------------------------------------------------------------------------
+   LINJENUMRE OG OMBRYDNING SLÅS, HVIS MAN LADER DEM
+   ---------------------------------------------------------------------------
+   Det er her, ombrudt kode normalt går galt: en naiv ombrydning gør en blok
+   på 14 linjer til noget, der ser ud som 19 linjer med fem manglende numre.
+
+   Chroma kan skrive numrene på to måder, og de ombryder vidt forskelligt:
+
+     lineNumbersInTable = true   (Hugos standard)  ét <table> med ÉN celle
+        fuld af numre og ÉN celle fuld af kode. De to celler ved intet om
+        hinanden: ombryder kode-cellen, bliver den højere end tal-cellen, og
+        fra den første ombrudte linje og ned står hvert tal ud for den
+        forkerte linje. Den kan ikke reddes med CSS.
+
+     lineNumbersInTable = false  ← det, temaet kræver.  Hver linje er sit eget
+        element med præcis to børn:
+
+            <span class="line"><span class="ln">7</span><span class="cl">kode
+            </span></span>
+
+   Fordi de to børn er søskende inde i HVER linje, kan linjen laves til et
+   lille gitter med to spor: nummeret i det første, koden i det andet.
+   Ombrydningen sker så INDE i kodesporet og kan pr. konstruktion ikke løbe
+   ind under renden, og den kan ikke lave et nummer mere — der er kun ét .ln
+   pr. linje, uanset hvor mange gange kodesporet knækker.
+
+   Den indrykning, linjen selv har, står i teksten som mellemrum og bevares af
+   pre-wrap. En FORTSÆTTELSE får desuden sin egen hængende indrykning, så den
+   læses som "det her hører til linjen ovenfor" og ikke som en ny linje.
+   =========================================================================== */
+
+
+/* --- KODE MIDT I EN SÆTNING -----------------------------------------------
+   0,86em af 19px = 16,3px. Lidt mindre end prosaen, ikke to hak mindre: et
+   kommandonavn midt i en sætning skal kunne læses i samme tempo som
+   sætningen, og det skal blive stående i linjen i stedet for at rejse sig op
+   som en knap.
+
+   ★ KODE I EN SÆTNING ER IKKE BLEVET MØRK, og det er et valg. Blokken er en
+   flade, man kigger PÅ; et kommandonavn er et ord, man læser IGENNEM. Et
+   mørkt felt midt i en dansk sætning standser øjet hver gang og gør en tekst
+   med mange produktnavne til en stiplet linje. Baggrunden er derfor stadig
+   --color-neutral-200, altså nøjagtig den farve, siden bag arket har: kode i
+   en sætning ser ud, som om der er skåret hul i papiret.
+
+   Den skal kunne knække, hvis den er nødt til det. Et filnavn som
+   `content/da/artikler/eksempel-paa-en-artikel/index.md` er 52 tegn uden ét
+   mellemrum, og browseren har ingen lovlig knækposition i det. Ved
+   standardstørrelse er der plads; hos en læser, der har sat sin skrift op til
+   24px, er den samme streng 401px bred på en 390px-skærm, og så skubber den
+   HELE siden vandret. Målt: 50px overløb, og det var det eneste, opskaleringen
+   fremkaldte. break-word knækker kun, når ordet ellers ikke kan være der. */
+
+code {
+  font-family: var(--font-mono);
+  font-size: 0.86em;
+  overflow-wrap: break-word;
+  background: var(--color-neutral-200);
+  /* rem og ikke em: em ville regnes af kodens egen 0,86em-størrelse og give
+     et tal med fire decimaler, der kun tilfældigvis rammer 2px. Radius er px,
+     som alle radier — se 01. */
+  padding: 0.125rem 0.375rem;   /* 2px / 6px                               */
+  border-radius: 6px;
+}
+
+
+/* --- KODEBLOKKEN ----------------------------------------------------------
+   .highlight er Chromas egen indpakning. Den er beholderen for knappen, og
+   derfor er den position: relative — knappen skal kunne lægge sig i dens
+   nederste højre hjørne og ikke i artiklens. */
+
+.highlight {
+  position: relative;
+  min-width: 0;
+  max-width: 100%;
+}
+
+pre {
+  font-family: var(--font-mono);
+  font-size: var(--kode);
+
+  /* Tre fjerdedele af en brødtekstlinje. Kode har korte linjer og skal ikke
+     stå så luftigt som prosa — men det er stadig X, der bestemmer. */
+  line-height: calc(var(--x) * 0.75);
+
+  /* Bunden er 3,5rem og ikke 1,25rem som de andre sider. Det er IKKE pynt:
+     det er den plads, kopiér-knappen står i. Knappen er absolut placeret, så
+     den fylder ikke selv noget i flowet — uden den reserverede plads ville
+     den lægge sig oven på den sidste kodelinje, og det er præcis den fejl,
+     en knap i nederste hjørne plejer at have. Her KAN den ikke dække kode,
+     fordi koden aldrig når derned. */
+  padding: 1.25rem 1.5rem 3.5rem;
+
+  background: var(--kode-bund);
+  color: var(--kode-tekst);
+  border-radius: var(--radius-kode);
+
+  /* ★ INGEN VANDRET RULNING. Se punkt 3 i hovedet af filen. hidden og ikke
+     auto: med ombrydning er der ikke noget at rulle til, og en rullebeholder,
+     der aldrig har noget at rulle, stjæler stadig tastaturets piletaster. */
+  overflow-x: hidden;
+
+  /* En flex-beholder giver sine børn min-width: auto, og et <pre> med en lang
+     linje ville derfor vokse ud over spalten i stedet for at ombryde. Uden
+     den her virker ombrydningen ikke inde i .body-copy. Målt. */
+  min-width: 0;
+}
+
+/* 05-kode-farver.css er genereret og sætter selv `.chroma { background: ... }`
+   til github-darks egen næsten-sorte bund. Den fil skal ikke rettes i hånden,
+   så bunden vindes her i stedet — `pre.chroma` er ét element mere specifikt
+   end `.chroma` og vinder derfor, selv om 05 står efter 04 i rækkefølgen. */
+pre.chroma {
+  background: var(--kode-bund);
+  color: var(--kode-tekst);
+}
+
+pre code {
+  background: none;
+  padding: 0;
+  font-size: inherit;
+  border-radius: 0;
+}
+
+
+/* --- RENDEN MED LINJENUMRENE ----------------------------------------------
+   Gitteret, der er hele forklaringen i hovedet af filen. To spor: nummeret,
+   som fylder præcis hvad det skal, og koden, som får resten.
+
+   :has(.ln) er en vagt. Slår et site linjenumrene fra i sin egen markup.toml,
+   findes .ln ikke, og så skal linjen ikke være et gitter med et tomt spor —
+   den skal bare være en linje. Uden vagten ville koden rykke ind i det spor,
+   nummeret skulle have stået i. */
+
+pre.chroma .line:has(.ln) {
+  display: grid;
+
+  /* ★ minmax(0, 1fr) OG IKKE BARE 1fr. Det er den samme fælde som
+     `min-width: 0` på <pre> ovenfor, bare i et gitter i stedet for en flex:
+     et 1fr-spor er i virkeligheden minmax(AUTO, 1fr), og auto-minimummet er
+     sporets min-content-bredde. Og efter CSS Text 3 tæller
+     `overflow-wrap: break-word` IKKE med i min-content — kun `anywhere` gør.
+     Sporet blev derfor gjort så bredt som det længste ubrudte ord, og en
+     PowerShell-linje på 297 tegn skubbede koden ud over blokkens kant, hvor
+     overflow-x: hidden klippede den af. Målt ved 390px: 111px kode, der var
+     væk og ikke kunne rulles frem.
+
+     minmax(0, ...) fjerner det gulv, så sporet må blive smalt, og så knækker
+     break-word linjen, som den skal. Målt igen bagefter: 0px. */
+  grid-template-columns: max-content minmax(0, 1fr);
+}
+
+/* Nummeret. user-select: none er den direkte grund til, at linjenumre
+   overhovedet kunne slås til igen: markup.toml frarådede dem før med, at
+   "markerer man blokken og trykker Ctrl+C, følger tallene med ind i
+   terminalen". Det gør de ikke længere — browseren springer dem over i en
+   markering — og kopiér-knappen læser dem slet ikke.
+
+   Stregen er renden. Den er 1px og bliver i px som alle hårstreger.
+
+   `pre.chroma .ln` og ikke `.chroma .ln`: den genererede 05 sætter selv
+   `.chroma .ln { color:#6e7681 }`, som er github-darks eget tal stemt efter
+   deres næsten-sorte bund. På temaets lysere skifer er den kun 3,31:1. De to
+   vælgere er lige specifikke, og 05 står efter 04, så den ville vinde — et
+   element mere i vælgeren her afgør det. Målt bagefter: 4,95:1. */
+pre.chroma .ln {
+  padding-right: 1em;
+  margin-right: 1em;
+  border-right: 1px solid var(--kode-streg);
+  color: var(--kode-nr);
+  text-align: right;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* Kodesporet. Her sker ombrydningen, og kun her.
+
+   pre-wrap: bevarer linjens egen indrykning og dens mellemrum, men tillader
+   knæk ved mellemrum. break-word: tillader et knæk MIDT i et ord, når ordet
+   er længere end sporet — en URL eller et Graph-kald på 297 tegn har ikke ét
+   mellemrum at knække ved, og uden den ville blokken vokse ud over spalten i
+   stedet for at ombryde.
+
+   Den hængende indrykning er det, der gør en fortsættelse til en fortsættelse
+   og ikke til en ny linje: padding trækker hele sporet 2 tegn ind, text-indent
+   trækker FØRSTE linje lige så meget tilbage. Første linje står altså på
+   sporets kant, mens hver ombrudt fortsættelse er rykket 2 tegn ind under
+   den. Sammen med at fortsættelsen ikke har noget nummer, er der ikke noget
+   sted, den kan forveksles med linje nummer næste. */
+pre.chroma .cl {
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
+  padding-left: 2ch;
+  text-indent: -2ch;
+}
+
+
+/* --- KOPIÉR-KNAPPEN -------------------------------------------------------
+   ★ Knappen findes kun, hvis JavaScript kører. Den bliver LAVET af
+   assets/js/kode-kopi.js og står ikke i HTML'en — se den fil for hvorfor.
+   Er der ingen JavaScript, er der ingen knap, og blokken er præcis lige så
+   læselig og lige så nem at markere som før.
+
+   FARVEN ER ULRICHS ACCENT OG IKKE FORLÆGGETS BLÅ. Forlæggets knap er
+   klarblå; på denne side ville en blå knap være den eneste blå ting og ville
+   slås med Atomic Orange om at være det, øjet finder først. Atomic Orange på
+   skiferen er målt til 4,54:1.
+
+   Den er ALTID synlig. En knap, der først kommer frem på hover, findes ikke
+   på en telefon og er svær at finde med tastaturet. Den er et rigtigt
+   <button>, så den ligger i tabuleringsrækkefølgen af sig selv. */
+
+.kopi-knap {
+  position: absolute;
+  right: 1rem;
+  bottom: 1rem;
+
+  display: inline-flex;
+  align-items: center;
+  gap: 0.46154em;              /* 6px ved 13px skrift                      */
+  padding: 0.46154em 0.92308em;/* 6px / 12px ved 13px skrift               */
+
+  border: 1px solid transparent;
+  border-radius: var(--radius-kode);
+  background: var(--color-accent);
+  color: var(--color-neutral-100);
+
+  font-family: var(--font-sub);
+  font-size: var(--bitte);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  line-height: 1;
+  cursor: pointer;
+  transition: background .15s, color .15s;
+}
+
+.kopi-knap:hover { background: var(--color-accent-600); }
+
+/* Fokusringen er LYS her og ikke accentfarvet: ringen skal ses mod knappen,
+   og en orange ring om en orange knap er ingen ring. Samme regel som i
+   hovedet — se .nav a:focus-visible i 02-grundlag.css. */
+.kopi-knap:focus-visible {
+  outline: 2px solid var(--color-neutral-100);
+  outline-offset: 2px;
+}
+
+/* Kvitteringen. Knappen skifter tekst i to sekunder; scriptet sætter
+   data-kopieret, og farven bekræfter det uden at bruge en ny farve — den
+   træder tilbage til skiferen med en accentkant. */
+.kopi-knap[data-kopieret] {
+  background: transparent;
+  border-color: var(--color-accent);
+  color: var(--color-accent-400);
+}
+
+
+/* --- RYTMEN ---------------------------------------------------------------
+   Lærredet giver kodeblokken 4px egen margin oven i flex-gap'et, altså
+   strammere end en figur (som får X/2). Reglen skal stå her og ikke i 03,
+   fordi den skal vinde over .body-copy figure, .body-copy pre dér. */
+
+.body-copy pre { margin: 0.25rem 0; }   /* 4px */
+
+/* En kodeblok må gerne bryde ud, hvis en linje fortjener det:
+   {{< bred >}} rundt om blokken. Så er det et valg pr. blok og ikke en regel
+   for hele siden. Det er en anden ting nu, end det var: før købte udbruddet
+   færre knæk i en linje, der rullede. Nu køber det færre OMBRYDNINGER. */
+.wide > pre,
+.wide > .highlight > pre { margin-bottom: 0; }
+
+
+/* --- PÅ EN TELEFON --------------------------------------------------------
+   ★ Her er temaet uenigt med sin egen forrige udgave, og det er bevidst.
+
+   Den forrige satte kodeskriften NED på en telefon (13px), for at få flere
+   tegn på linjen før rullebjælken. Det køber bredde med læsbarhed, og kravet
+   hedder "læsbart på 390px", ikke "bredt på 390px".
+
+   Størrelsen bliver derfor stående på 13,5px, og det er LUFTEN, der giver
+   sig: 24px vandret polstring bliver til 14px. Det er 20px mere kode på
+   linjen uden at et eneste tegn bliver mindre.
+
+   Det tæller endnu mere nu, end det gjorde før. Før var en smal blok en blok
+   med en rullebjælke; nu er den en blok med flere ombrydninger, og hver
+   ombrydning koster en linje. De 20px er altså ikke længere kun kosmetik —
+   de er færre knækkede linjer i den blok, der har mindst plads. */
+
+@media (max-width: 34rem) {
+  pre { padding: 1rem 0.875rem 3.25rem; }   /* 16px / 14px, + plads til knappen */
+
+  /* Renden strammes ind. På 390px er hvert tegn dyrt, og to tegns luft om
+     nummeret er nok til, at stregen stadig læses som en rende. */
+  pre.chroma .ln { padding-right: 0.5em; margin-right: 0.5em; }
+
+  .kopi-knap { right: 0.75rem; bottom: 0.75rem; }
+}

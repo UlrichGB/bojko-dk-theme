@@ -1,0 +1,15 @@
+# Hugo build output and caches. All of it is regenerated; none of it belongs
+# in git.
+#
+# Dette repo er KUN temaet: der bygges ikke noget her, så de her linjer er en
+# sikkerhedssele, ikke noget der rammer i det daglige. Byggeriet sker i
+# bojko-dk, og outputtet ligger der.
+public/
+resources/
+.hugo_build.lock
+
+# Local tooling state, specific to one machine.
+.claude/
+
+# Import-mappe: arbejdskopi, ikke kilde. Se design-kilde/.
+design-import/

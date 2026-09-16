@@ -1,0 +1,72 @@
+{{- /*
+  BUNDEN.
+
+  Lærredets bund er tre spalter med i alt syv grupper af links — "Det jeg
+  arbejder på", "Følg mig", "Mest læste", "Dem jeg læser", "Anbefalede bøger",
+  "Det jeg deltager i", "Politik" — så en prikket skillestreg og en kolofon.
+
+  FORMEN ER TEMAETS. INDHOLDET ER KONFIGURATION. Hvilke syv grupper der skal
+  stå der, og hvad der skal stå i dem, er redaktionelle beslutninger og ikke
+  en skabelon. Grupperne kommer derfor fra en Hugo-menu ved navn "foot", hvor
+  et gruppehoved er et punkt uden url og linkene er dens børn:
+
+      [[foot]]
+        identifier = "foelg"
+        name       = "Følg mig"
+        weight     = 20
+      [[foot]]
+        parent = "foelg"
+        name   = "LinkedIn"
+        url    = "https://…"
+        weight = 10
+
+  Er der ingen foot-menu, står bunden med kolofonen alene. Det er en gyldig
+  bund, og det er den, et nyt site starter med.
+
+  Spalterne er CSS-kolonner og ikke et gitter med tre spor. Lærredet har
+  grupperne fordelt i hånden (2 / 2 / 3), og det kan en skabelon ikke gøre
+  uden at kende antallet på forhånd. CSS-kolonner fordeler dem selv, og
+  resultatet er det samme: tre spalter med grupper i. Se .foot-grid i
+  07-arkiv.css.
+*/ -}}
+<footer>
+
+  {{- with site.Menus.foot }}
+  <div class="foot-grid">
+    {{- range . }}
+      {{- if .Children }}
+      <div class="foot-grp">
+        <h3>{{ .Name }}</h3>
+        <ul>
+          {{- range .Children }}
+          <li><a class="foot-link" href="{{ .URL }}"{{ if strings.HasPrefix .URL "http" }} rel="noopener"{{ end }}>{{ .Name }}</a></li>
+          {{- end }}
+        </ul>
+      </div>
+      {{- end }}
+    {{- end }}
+  </div>
+  {{- end }}
+
+  {{- /* Stregen med accentprikken i midten. Ringen om prikken SKAL være
+       sidens farve og ikke arkets — bunden ligger uden for arket. */}}
+  <div class="foot-skille" aria-hidden="true"><span></span></div>
+
+  <div class="foot-bund">
+    {{- /* Årstallene: fra params.startaar til det nyeste indlægs år, så
+         kolofonen ikke står og påstår 2026 i 2031. */ -}}
+    {{- $fra := site.Params.startaar }}
+    {{- $til := now.Year }}
+    {{- with site.RegularPages.ByDate.Reverse }}{{ $til = (index . 0).Date.Year }}{{ end }}
+    <span>
+      {{- with site.Params.maerke | default site.Title }}{{ . }}{{ end }} er
+      {{- with site.Params.licens }} <a class="foot-link" href="{{ .url }}" rel="license noopener">{{ .navn }}</a>{{ end }}
+      {{ with $fra }}{{ . }}{{ if ne (string $fra) (string $til) }}–{{ $til }}{{ end }}{{ else }}{{ $til }}{{ end }}
+      <a class="foot-link" href="{{ "/om/" | relURL }}"><strong>{{ site.Params.author }}</strong></a>
+    </span>
+    <span>Bygget med <a class="foot-link" href="https://gohugo.io/" rel="noopener"><strong>Hugo</strong></a>.</span>
+  </div>
+
+  {{- /* ★ Din. Se partialen. */}}
+  {{ partial "bund-ekstra.html" . }}
+</footer>

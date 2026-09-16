@@ -1,0 +1,78 @@
+/* ===========================================================================
+   10 — PRINT
+   ===========================================================================
+   Minimal med vilje: navigation, bund, delelinks og relaterede indlæg væk,
+   skriften ned i punkt, links i almindelig tekstfarve, fordi en orange
+   understregning på papir bare er grå.
+
+   To ting mere end sidst, og de skyldes designet:
+
+     - DET ORANGE BÅND. Det er en fyldt flade på 208px, og en printer fylder
+       den med blæk. Båndet, skyggen under arket og arkets eget negative
+       hæng slukkes, så udskriften starter med rubrikken.
+     - VANDMÆRKET. 220px lysegråt bogstav bag rubrikken bliver til en grå
+       klat på papir og lægger sig oven i teksten, fordi det er absolut
+       placeret. Væk.
+
+   ★ Ikke designet. Det er den mindste udgave, der ikke er pinlig. Skal en
+   udskrift være noget, er der mere at hente: sidehoved med adressen, URL'er
+   foldet ud efter links (a[href]::after { content: " (" attr(href) ")" }),
+   og sideskift, der ikke deler en tabel eller en hændelse midt over.
+   =========================================================================== */
+
+@media print {
+
+  /* Sidens møblement. */
+  .topbar,
+  .baand,
+  body > footer,
+  .post-efter,
+  .naboer,
+  .naboer-rule,
+  .sidetal,
+  .totop,
+  .wm { display: none; }
+
+  /* Arket er ikke et ark på papir — det er papiret. */
+  body {
+    display: block;
+    background: none;
+    font-size: 11pt;
+  }
+  main {
+    max-width: none;
+    margin: 0;
+    padding: 0;
+    background: none;
+    box-shadow: none;
+    container-type: normal;   /* ingen udbrud, når der ikke er et ark        */
+  }
+  .col { max-width: none; }
+
+  /* Et udbrud har intet at bryde ud i. Bredden regnes af 100cqw, som uden en
+     container ville blive 0 og gøre figuren usynlig. */
+  .body-copy .wide,
+  .body-copy .wide.bleed,
+  .featured {
+    width: auto;
+    margin-left: 0;
+  }
+
+  a { color: inherit; text-decoration: underline; }
+
+  /* Kodeblok og faktaboks: ramme i stedet for fyld, så de kan ses uden at
+     koste en halv patron. */
+  pre,
+  .fakta {
+    background: none;
+    border: 1px solid #999;
+  }
+
+  /* .washed løfter og afmætter et fotografi, så det sidder tilbage i en varm
+     side. På hvidt papir gør den det bare blegt. */
+  .washed { filter: none; }
+
+  /* Tidslinjen må ikke klæbe på papir — der er ikke noget at rulle. */
+  .haendelse-hoved { position: static; }
+  .haendelse { break-inside: avoid; }
+}

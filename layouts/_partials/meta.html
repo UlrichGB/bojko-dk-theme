@@ -1,0 +1,40 @@
+{{- /*
+  METALINJEN: "Af Ulrich Bojko / I SharePoint / 12. september 2026 / 6 min. læsning"
+
+  Delene bygges i en liste først og sættes så sammen med skråstreger imellem.
+  Grunden er den kedelige: en artikel uden mærker har ingen "I …"-del, og hvis
+  skråstregerne var skrevet ind mellem delene i hånden, ville den artikel få
+  to skråstreger ved siden af hinanden. Sådan en fejl ses ikke i kilden.
+
+  "I <emne>" bruger artiklens FØRSTE mærke. Lærredet skriver en kategori der,
+  men sitet har ikke kategorier — taksonomierne er tags og series, og det er
+  et bevidst valg i hugo.toml ("ét løst grupperingsord er nok; to er et
+  ordforråd, der rådner"). Det første mærke er det, der findes, og det linker
+  hen, hvor lærredets kategori linkede hen: til arkivet.
+
+  Læsetiden kan slås fra med params.laesetid = false. Det svarer til
+  lærredets egen kontakt, "readingTime", som står med default: true.
+*/ -}}
+{{- $dele := slice -}}
+
+{{- with .GetTerms "tags" -}}
+  {{- $t := index . 0 -}}
+  {{- $dele = $dele | append (printf `<a class="quiet" href="%s">%s</a>` $t.RelPermalink $t.LinkTitle) -}}
+{{- end -}}
+
+{{- if not .Date.IsZero -}}
+  {{- $dele = $dele | append (printf `<time datetime="%s">%s</time>` (.Date.Format "2006-01-02") (.Date | time.Format "2. January 2006")) -}}
+{{- end -}}
+
+{{- if and (site.Params.laesetid | default true) .ReadingTime -}}
+  {{- $dele = $dele | append (printf `%d min. læsning` .ReadingTime) -}}
+{{- end -}}
+
+{{- with $dele }}
+<div class="meta">
+  {{- range $i, $d := . }}
+    {{- if $i }}<span class="sep" aria-hidden="true">/</span>{{ end }}
+    <span>{{ $d | safeHTML }}</span>
+  {{- end }}
+</div>
+{{- end -}}

@@ -1,0 +1,72 @@
+{{ define "main" }}
+  {{- /*
+    EMNEOVERSIGTEN — lærredets "Arkiv"-skærm i tilstanden "Emner".
+
+    Et bogstavindeks øverst, så alfabetiske grupper med to spalter og et antal
+    efter hvert navn. Formen er lærredets, inklusive at et bogstav UDEN emner
+    stadig står i indekset — dæmpet og uklikkeligt — så indekset har den samme
+    form hver gang, og man kan SE, at der ikke er noget på Q.
+
+    Alfabetet er dansk: Æ, Ø og Å står til sidst, hvor de hører hjemme, og
+    ikke som varianter af A og O. Sorteringen inde i en gruppe er også dansk —
+    lærredet bruger localeCompare(…, 'da'), her er det Hugos egen
+    sprogbevidste sortering via .ByCount/.Alphabetical, med samme virkning på
+    det, der findes.
+
+    Alt, der ikke starter med et bogstav, samles under "0-9", som i lærredet.
+  */ -}}
+  <section class="arkiv-side">
+    <h1 class="post-h post-h--arkiv">{{ .Title }}</h1>
+
+    {{- with .Content }}<div class="body-copy">{{ . }}</div>{{ end }}
+
+    {{ partial "arkiv-vaelger.html" (dict "side" . "tilstand" "emner") }}
+
+    {{- /* Grupper termerne efter forbogstav. */}}
+    {{- $grupper := dict }}
+    {{- range .Pages }}
+      {{- $b := upper (substr .LinkTitle 0 1) }}
+      {{- if not (findRE `^\pL$` $b) }}{{ $b = "0-9" }}{{ end }}
+      {{- $grupper = merge $grupper (dict $b (index $grupper $b | default slice | append .)) }}
+    {{- end }}
+
+    {{- $alfabet := split "ABCDEFGHIJKLMNOPQRSTUVWXYZÆØÅ" "" }}
+    {{- $alfabet = $alfabet | append "0-9" }}
+
+    {{- /* --- BOGSTAVINDEKSET --------------------------------------------- */}}
+    <nav class="letters" aria-label="Bogstavindeks">
+      {{- range $alfabet }}
+        {{- $har := index $grupper . }}
+        {{- if $har }}
+          <a class="letter" href="#ark-{{ . }}">{{ . }}</a>
+        {{- else }}
+          <span class="letter" aria-disabled="true">{{ . }}</span>
+        {{- end }}
+      {{- end }}
+    </nav>
+
+    {{- /* --- GRUPPERNE ---------------------------------------------------- */}}
+    {{- /* $ er templatens ROD (siden), ikke range-variablen. Bogstavet skal
+         fanges i sin egen variabel, før `with` skifter konteksten — ellers
+         står der "/tags" i hver gruppeoverskrift og i hvert anker, og
+         bogstavindekset foroven peger på id'er, der ikke findes. */}}
+    {{- range $b := $alfabet }}
+      {{- with index $grupper $b }}
+      <div class="arch-gruppe" id="ark-{{ $b }}">
+        <div class="arch-gruppe-hoved">
+          <span>{{ $b }}</span>
+          <a class="totop" href="#indhold">Til toppen</a>
+        </div>
+        <ul class="two-col">
+          {{- range . }}
+          <li>
+            <a class="arch-link" href="{{ .RelPermalink }}">{{ .LinkTitle }}</a>
+            <span class="antal">{{ len .Pages }}</span>
+          </li>
+          {{- end }}
+        </ul>
+      </div>
+      {{- end }}
+    {{- end }}
+  </section>
+{{ end }}

@@ -1,0 +1,46 @@
+{{- /*
+  Ikonerne. Ét sted, så de har den samme stregtykkelse og den samme størrelse
+  overalt, og så et ikon skiftes ét sted.
+
+      {{ partial "ikon.html" "soeg" }}
+
+  Stregerne er Lucide (lucide.dev), som Organic-systemets readme udpeger ved
+  navn. Systemet beder om stroke-width 2.75 "for a rounder, heavier look";
+  lærredet tegner dem med 2.5 i navigationen og 2.25 i delelinkene. Lærredet
+  vinder, som alle andre steder, så de to tal står herunder.
+
+  De er inline SVG og ikke en ikonskrift eller en sprite-fil: så er der intet
+  ekstra kald, ingen FOUT på et ikon, og currentColor virker.
+
+  Delelinkenes ikoner er lærredets EGNE tegninger og ikke platformenes
+  bomærker — lærredet bruger generiske Lucide-former til LinkedIn, Mastodon og
+  Bluesky. Det er ikke en fejl at rette: et tema, der leverer tredjeparters
+  varemærker, leverer også deres retningslinjer for brug af dem.
+*/ -}}
+{{- $n := . -}}
+{{- $s := "17" -}}
+{{- $w := "2.5" -}}
+{{- if in (slice "linkedin" "mastodon" "bluesky" "mail" "pil-hoejre" "pil-venstre") $n -}}
+  {{- $s = "16" -}}{{- $w = "2.25" -}}
+{{- end -}}
+{{- if eq $n "rss" }}{{ $s = "16" }}{{ end -}}
+{{- if in (slice "nabo-hoejre" "nabo-venstre") $n }}{{ $s = "18" }}{{ $w = "2.25" }}{{ end -}}
+<svg width="{{ $s }}" height="{{ $s }}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="{{ $w }}" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+{{- if eq $n "soeg" -}}
+  <circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path>
+{{- else if eq $n "rss" -}}
+  <path d="M4 11a9 9 0 0 1 9 9"></path><path d="M4 4a16 16 0 0 1 16 16"></path><circle cx="5" cy="19" r="1"></circle>
+{{- else if eq $n "linkedin" -}}
+  <path d="M4.5 9.5a4 4 0 0 1 4-4H15"></path><path d="M19.5 14.5a4 4 0 0 1-4 4H9"></path><path d="M8 12h8"></path>
+{{- else if eq $n "mastodon" -}}
+  <path d="M12 3a9 9 0 1 0 9 9"></path><path d="M12 8v4l3 2"></path>
+{{- else if eq $n "bluesky" -}}
+  <path d="M12 4c-2 4-6 6-8 6 2 4 5 6 8 6s6-2 8-6c-2 0-6-2-8-6Z"></path>
+{{- else if eq $n "mail" -}}
+  <rect x="2" y="4" width="20" height="16" rx="2"></rect><path d="m22 7-10 6L2 7"></path>
+{{- else if or (eq $n "pil-hoejre") (eq $n "nabo-hoejre") -}}
+  <path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path>
+{{- else if or (eq $n "pil-venstre") (eq $n "nabo-venstre") -}}
+  <path d="M19 12H5"></path><path d="m12 19-7-7 7-7"></path>
+{{- end -}}
+</svg>

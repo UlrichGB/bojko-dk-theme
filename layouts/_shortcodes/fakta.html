@@ -1,0 +1,7 @@
+{{- /*
+  {{< fakta >}} ... {{< /fakta >}}
+  Den lille faktaboks — Ghosts callout-kort, uden emojien.
+*/ -}}
+<div class="fakta">
+{{ .Page.RenderString (dict "display" "block") .Inner }}
+</div>
