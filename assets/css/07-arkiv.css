@@ -392,6 +392,10 @@ a.tag:hover {
   font-weight: 500;
   color: var(--color-text);
 }
+/* Prikken mellem kolofonen og licensen. Samme dæmpede tone som skråstregerne
+   i metalinjen og i arkivets tilstandsvælger — .sep ser ens ud alle tre
+   steder, den bruges. */
+.foot-bund .sep { color: var(--color-neutral-400); }
 
 
 /* --- PÅ SMALLE SKÆRME -----------------------------------------------------

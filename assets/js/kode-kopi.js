@@ -59,13 +59,18 @@
     // kopierer. Sproget er Chromas eget data-lang, når det er sat.
     var kode = pre.querySelector("code");
     var sprog = kode && kode.getAttribute("data-lang");
-    knap.setAttribute(
-      "aria-label",
-      sprog ? "Kopiér kodeblokken (" + sprog + ")" : "Kopiér kodeblokken"
-    );
+    knap._blok = sprog ? "Kodeblokken (" + sprog + ")" : "Kodeblokken";
+    knap.setAttribute("aria-label", navn(ETIKET, knap._blok));
 
     // Kvitteringen skal også nå en skærmlæser. aria-live på selve knappen
     // læser den nye etiket op, når teksten skifter.
+    //
+    // ★ MEN aria-label VINDER OVER TEKSTEN. Et element med aria-label får sit
+    // tilgængelige navn DERFRA og ikke fra sit indhold, også når indholdet
+    // skifter. Knappen sagde derfor stadig "Kopiér kodeblokken (bash)", i det
+    // øjeblik der stod "Kopieret" på den — kvitteringen nåede øjet og aldrig
+    // øret. Derfor skriver kvittér() etiketten ind i BEGGE dele. Navnet på
+    // blokken gemmes ovenfor, så den kan sætte den sammen igen.
     knap.setAttribute("aria-live", "polite");
 
     knap.addEventListener("click", function () {
@@ -96,12 +101,23 @@
     blok.appendChild(knap);
   });
 
+  // Det tilgængelige navn er en hel sætning og ikke etiketten plus et ord.
+  // "Kopieret kodeblokken (bash)" er ikke dansk; "Kodeblokken (bash) er
+  // kopieret" er. Etiketten på knappen er stadig de to ord, designet har.
+  function navn(besked, blok) {
+    if (besked === KVITTERING) return blok + " er kopieret";
+    if (besked === FEJL) return "Kunne ikke kopiere " + blok.toLowerCase();
+    return "Kopiér " + blok.toLowerCase();
+  }
+
   function kvittér(knap, besked) {
     if (knap._ur) clearTimeout(knap._ur);
     knap.textContent = besked;
+    knap.setAttribute("aria-label", navn(besked, knap._blok));
     knap.setAttribute("data-kopieret", "");
     knap._ur = setTimeout(function () {
       knap.textContent = ETIKET;
+      knap.setAttribute("aria-label", navn(ETIKET, knap._blok));
       knap.removeAttribute("data-kopieret");
     }, 2000);
   }

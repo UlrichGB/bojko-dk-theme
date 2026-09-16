@@ -142,7 +142,7 @@
   margin-top: 0.75rem;       /* 12px                                       */
   font-size: var(--bitte);
   text-align: center;
-  color: var(--color-neutral-600);
+  color: var(--color-neutral-700);   /* 5,96:1 på arket. Se 01-variabler.  */
 }
 
 
@@ -164,7 +164,11 @@
   font-size: var(--meta);
   line-height: calc(var(--x) / 2);
   letter-spacing: 0.01em;
-  color: var(--color-neutral-600);
+  /* ★ 700 OG IKKE 600. Metalinjen er tekst — den står med dato, mærke og
+     læsetid på hver eneste artikel — og 600 måler 3,90:1 mod arket, altså
+     under AA's 4,5:1. 700 måler 5,96:1. Forskellen er knap synlig; den er et
+     halvt trin på den samme rampe og ikke en anden farve.               */
+  color: var(--color-neutral-700);
   font-variant-numeric: tabular-nums;
 }
 .meta .sep { color: var(--color-neutral-400); }

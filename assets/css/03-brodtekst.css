@@ -357,16 +357,21 @@
 
 /* Billedtekst. To størrelser: 13px og centreret under noget bredt, 11px og
    venstrestillet under noget i spalten — lærredet har begge. */
+/* ★ BEGGE STÅR I 700 OG IKKE I 600 ELLER I EN color-mix. Her stod
+   color-mix(--color-text 55%) på den ene og --color-neutral-600 på den
+   anden; de måler 3,70:1 og 3,90:1 mod arket og falder begge for AA på
+   4,5:1. 700 måler 5,96:1. Rampen er desuden det, designsystemets readme
+   beder om frem for en color-mix, man selv har regnet ud. */
 .body-copy figcaption {
   margin-top: var(--space-1);
   font-size: 0.6875rem;      /* 11px                                       */
-  color: color-mix(in srgb, var(--color-text) 55%, transparent);
+  color: var(--color-neutral-700);
 }
 .body-copy .wide figcaption {
   margin-top: 0.75rem;       /* 12px                                       */
   font-size: var(--bitte);
   text-align: center;
-  color: var(--color-neutral-600);
+  color: var(--color-neutral-700);
 }
 
 /* Billedtekst skrevet som markdown-kursiv lige under et billede — den form,

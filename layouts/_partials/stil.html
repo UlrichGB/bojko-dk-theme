@@ -20,7 +20,9 @@
       08 omslag        ★ billedbehandlingen og metalinjen.
       09 tidslinje     ★ forløbet med den klæbende dato.
       10 print         papir.
-      11 dine-egne     ★ tom. Står sidst, så den vinder over alt ovenfor.
+      11 bevægelse     prefers-reduced-motion. Skal stå EFTER alt med en
+                       transition i, ellers taber den uden at sige noget.
+      12 dine-egne     ★ tom. Står sidst, så den vinder over alt ovenfor.
 
   Tilføjer du en fil i assets/css/, skal den skrives ind på listen her. Det er
   med vilje en håndholdt liste og ikke en resources.Match: rækkefølgen er en
@@ -38,7 +40,8 @@
       (resources.Get "css/08-omslag.css")
       (resources.Get "css/09-tidslinje.css")
       (resources.Get "css/10-print.css")
-      (resources.Get "css/11-dine-egne.css")
+      (resources.Get "css/11-bevaegelse.css")
+      (resources.Get "css/12-dine-egne.css")
 -}}
 {{- $stil := $filer | resources.Concat "css/alt.css" | minify | fingerprint -}}
 <link rel="stylesheet" href="{{ $stil.RelPermalink }}" integrity="{{ $stil.Data.Integrity }}">

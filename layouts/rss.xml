@@ -1,0 +1,89 @@
+{{- /*
+  FEEDET.
+
+  Hugos indbyggede RSS-skabelon er god, men den er skrevet på engelsk til et
+  engelsk site, og tre ting ved den var forkerte her. Målt på et rigtigt byg:
+
+    <title>Ulrich Bojko</title>
+        …mens <head> samtidig reklamerede for feedet under et ANDET navn,
+        params.feedTitle ("Ulrich Bojko — artikler"). De to sagde hver sit,
+        og feedlæseren viser det ene, mens siden lover det andet.
+
+    <description>Recent content on Ulrich Bojko</description>
+        …engelsk boilerplate på et dansk site. Det er den ENE sætning, en
+        feedlæser viser om kanalen, og den var ikke skrevet af nogen.
+
+    ingen forfatter på et eneste punkt
+        …altså den samme manglende tilskrivning som inde i <article>, bare i
+        den anden kanal.
+
+  ---------------------------------------------------------------------------
+  HVORFOR dc:creator OG IKKE <author>
+  ---------------------------------------------------------------------------
+  RSS 2.0's eget <author> SKAL indeholde en e-mailadresse — "ulrich@…
+  (Ulrich Bojko)" — og der står ikke en e-mailadresse i dette repo eller i
+  sitets konfiguration, og der skal ikke komme til at gøre det for feedets
+  skyld. Dublin Core's dc:creator tager et navn og kun et navn, og det er
+  derfor, det er blevet den almindelige måde at kreditere et feedpunkt på.
+  Det er også den, læsere som NetNewsWire og Feedly læser.
+
+  ---------------------------------------------------------------------------
+  FULD TEKST: SAMME KONTAKT SOM FORSIDEN
+  ---------------------------------------------------------------------------
+  content:encoded bærer hele artiklen med i feedet. Om den skal med, er ikke
+  en ny indstilling — det er præcis det samme valg, sitet allerede har truffet
+  for forsiden med params.fuldeIndlaeg: hele artikler eller uddrag. Feedet
+  følger den, så de to ikke kan komme til at sige hver sit, og så der ikke
+  kommer en fjerde kontakt at huske.
+
+  Adresserne inde i teksten er absolutte, uden at skabelonen gør noget:
+  Hugo skriver selv relative URL'er om i sine ikke-HTML-outputformater.
+  Efterprøvet — et absURL-kald her var et no-op og er taget ud igen.
+*/ -}}
+{{- $navn := site.Params.maerke | default site.Title -}}
+{{- $titel := site.Params.feedTitle | default site.Title -}}
+{{- $besk := site.Home.Description | default site.Params.description -}}
+{{- if not $besk }}{{ $besk = printf "Nye artikler fra %s." $navn }}{{ end -}}
+{{- $hele := site.Params.fuldeIndlaeg | default true -}}
+{{- $sider := .RegularPages -}}
+{{- if .IsHome }}{{ $sider = site.RegularPages }}{{ end -}}
+{{- $graense := site.Config.Services.RSS.Limit -}}
+{{- if ge $graense 1 }}{{ $sider = first $graense $sider }}{{ end -}}
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    {{- /* params.feedTitle er FORSIDENS feed. Et mærkefeed skal hedde mærket
+         og sitet — "Datasuverænitet — Ulrich Bojko" — og ikke mærket plus
+         forsidefeedets navn, som ville skrive "artikler" to gange. */}}
+    <title>{{ if .IsHome }}{{ $titel }}{{ else }}{{ .Title }} — {{ site.Title }}{{ end }}</title>
+    <link>{{ .Permalink }}</link>
+    <description>{{ if .IsHome }}{{ $besk | plainify | chomp }}{{ else }}{{ printf "%s på %s." .Title $navn }}{{ end }}</description>
+    <language>{{ site.Language.Locale | default site.Language.Lang }}</language>
+    {{- with site.Params.author }}
+    <copyright>{{ . }}</copyright>
+    {{- end }}
+    {{- with $sider }}
+    <lastBuildDate>{{ (index . 0).Date.Format "Mon, 02 Jan 2006 15:04:05 -0700" | safeHTML }}</lastBuildDate>
+    {{- end }}
+    {{- with .OutputFormats.Get "rss" }}
+    <atom:link href="{{ .Permalink }}" rel="self" type="{{ .MediaType.Type }}" />
+    {{- end }}
+    {{- range $sider }}
+    <item>
+      <title>{{ .Title }}</title>
+      <link>{{ .Permalink }}</link>
+      <pubDate>{{ .Date.Format "Mon, 02 Jan 2006 15:04:05 -0700" | safeHTML }}</pubDate>
+      <guid>{{ .Permalink }}</guid>
+      {{- with site.Params.author }}
+      <dc:creator>{{ . }}</dc:creator>
+      {{- end }}
+      {{- range .GetTerms "tags" }}
+      <category>{{ .LinkTitle }}</category>
+      {{- end }}
+      <description>{{ .Description | default .Summary | plainify | chomp | html }}</description>
+      {{- if $hele }}
+      <content:encoded>{{ .Content | transform.XMLEscape | safeHTML }}</content:encoded>
+      {{- end }}
+    </item>
+    {{- end }}
+  </channel>
+</rss>

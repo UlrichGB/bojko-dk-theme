@@ -24,6 +24,15 @@
   er dansk som alt andet i den ende (se AGENTS.md). Klassenavnene er lærredets,
   fordi de er designets. To sprog, to lag, og et lag imellem der oversætter.
 */ -}}
+{{- /* ★ FLAGET TIL BILLED-RENDER-HOOKEN. Et billede herinde vises i arkets
+     bredde og ikke i læsespaltens, og det afgør hvilken kandidat i srcset'en
+     browseren skal hente. Hooken kan ikke se, hvor den bliver kaldt fra, så
+     den får det at vide gennem .Page.Store — Hugos egen kanal mellem en
+     shortcode og en render-hook. Ryddes igen bagefter, ellers ville det
+     næste billede i den almindelige brødtekst arve det.
+     Se layouts/_markup/render-image.html. */ -}}
+{{- .Page.Store.Set "billede-i-bred" true -}}
 <div class="wide{{ if eq (.Get "fuld") "ja" }} bleed{{ end }}">
 {{ .Page.RenderString (dict "display" "block") .Inner }}
 </div>
+{{- .Page.Store.Set "billede-i-bred" false -}}

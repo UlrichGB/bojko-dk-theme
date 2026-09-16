@@ -1,0 +1,111 @@
+{{- /*
+  BILLED-RENDER-HOOK.
+
+  Hugo kalder den her for hvert eneste markdown-billede i en artikel:
+
+      ![alternativtekst](skaerm.png)
+      ![med titel](skaerm.png "Vises som tooltip")
+
+  Den gør for brødtekstens billeder præcis det, _partials/omslag.html i
+  forvejen gjorde for omslaget: henter filen som page-bundle-ressource,
+  skalerer den til en srcset i webp og skriver bredde og højde på.
+
+  ---------------------------------------------------------------------------
+  HVAD DEN KØBER — MÅLT
+  ---------------------------------------------------------------------------
+  Uden den blev den oprindelige fil serveret, som den lå. Ét demoindlæg
+  hentede 90 KB mere end nødvendigt, og de tre billeder på siden havde ingen
+  width/height, så hver af dem flyttede teksten under sig, når de landede —
+  tre kilder til layoutskred på én side.
+
+  width og height er derfor ikke pynt: de giver browseren forholdet, FØR
+  billedet er hentet, så pladsen er reserveret. De skal være det VISTE
+  billedes tal og ikke originalens, ellers er forholdet forkert.
+
+  loading="lazy" og decoding="async" er sikre her, fordi et billede i
+  brødteksten pr. definition ikke er det første, der ses — omslaget er det, og
+  det tegnes af omslag.html UDEN lazy netop derfor.
+
+  ---------------------------------------------------------------------------
+  ★ INGEN <figure>. Det er med vilje.
+  ---------------------------------------------------------------------------
+  03-brodtekst.css har regelen `.body-copy img + em`, som gør en kursiv linje
+  LIGE efter et billede til billedtekst — den form, scaffoldet brugte, og som
+  stadig virker, så gamle artikler ikke skal rettes. Pakker denne hook
+  billedet ind i en <figure>, er <em> ikke længere nabo til <img>, og hver
+  eneste af de billedtekster falder på gulvet uden en fejl. Derfor: et <img>
+  og intet andet, som før.
+
+  ---------------------------------------------------------------------------
+  HVAD DEN IKKE RØRER
+  ---------------------------------------------------------------------------
+  - En absolut URL (http…) eller et billede, der ikke ligger i artiklens egen
+    mappe: skrives ud som det er. Temaet henter ikke noget udefra på
+    byggetidspunktet — det er den samme regel, der holder skrifterne lokale.
+  - SVG og GIF: Hugos billedbehandling kan ikke skalere dem, og et animeret
+    GIF ville blive til ét stillbillede. De skrives ud som de er.
+  - .washed lægges IKKE på. Se 03-brodtekst.css: et tema kan ikke se forskel
+    på et fotografi og en infografik, og en afmættet infografik er en ødelagt
+    infografik.
+*/ -}}
+{{- $alt := .PlainText -}}
+{{- $titel := .Title -}}
+
+{{- /* ★ ER VI INDE I {{< bred >}}? Det afgør, hvor bredt billedet FAKTISK
+     vises, og dermed hvilken kandidat browseren skal vælge. .wide er arkets
+     bredde minus --wide-inset (1120 − 10 px), og læsespalten er --col-max
+     (680px). Vidste hooken det ikke, måtte den gætte, og et gæt på 680px gør
+     en infografik i et bred-blok grynet, mens et gæt på 1120px henter 90 KB
+     for meget til hvert eneste billede i spalten.
+
+     _shortcodes/bred.html sætter flaget i .Page.Store, lige før den render
+     sit indhold, og rydder det bagefter. Det er Hugos egen måde at lade en
+     shortcode og en render-hook tale sammen; der er ikke en anden. */ -}}
+{{- $bred := .Page.Store.Get "billede-i-bred" -}}
+{{- $sizes := cond $bred
+      "(min-width: 70rem) 1110px, 100vw"
+      "(min-width: 46rem) 680px, 92vw" -}}
+
+{{- $r := "" -}}
+{{- if not (urls.Parse .Destination).IsAbs -}}
+  {{- with .PageInner.Resources.GetMatch .Destination }}{{ $r = . }}{{ end -}}
+{{- end -}}
+
+{{- /* Kan Hugo overhovedet skalere den? webp, png, jpeg og gif er "image",
+     men gif mister sin animation ved skalering, og svg har ingen pixels at
+     skalere. */ -}}
+{{- $kan := false -}}
+{{- with $r -}}
+  {{- if and (eq .ResourceType "image") (in (slice "png" "jpeg" "webp" "tiff" "bmp") .MediaType.SubType) -}}
+    {{- $kan = true -}}
+  {{- end -}}
+{{- end -}}
+
+{{- if $kan -}}
+  {{- $maal := cond $bred 1120 680 -}}
+  {{- /* Bredderne er omslagets egen liste. Kandidater bredere end
+       originalen springes over — en opskaleret 800px-fil er større at hente
+       og ikke skarpere at se på. */ -}}
+  {{- $saet := slice -}}
+  {{- range (slice 480 800 1200 1600 2000 2400) -}}
+    {{- if ge $r.Width . -}}
+      {{- $saet = $saet | append (printf "%s %dw" ($r.Resize (printf "%dx webp q82" .)).RelPermalink .) -}}
+    {{- end -}}
+  {{- end -}}
+  {{- /* Det viste billede: målbredden, eller originalen hvis den er mindre.
+       Højden kommer FRA den skalerede ressource, så forholdet er det, der
+       faktisk står på siden. */ -}}
+  {{- $vist := $r -}}
+  {{- if gt $r.Width $maal }}{{ $vist = $r.Resize (printf "%dx webp q82" $maal) }}{{ end -}}
+  <img src="{{ $vist.RelPermalink }}"
+       {{ with $saet }}srcset="{{ delimit . ", " }}" sizes="{{ $sizes }}"
+       {{ end -}}
+       width="{{ $vist.Width }}" height="{{ $vist.Height }}"
+       loading="lazy" decoding="async"
+       alt="{{ $alt }}"{{ with $titel }} title="{{ . }}"{{ end }}>
+{{- else -}}
+  {{- /* Uden en ressource kendes målene ikke, og et gættet width/height er
+       værre end ingen: det ville reservere den forkerte plads. */ -}}
+  <img src="{{ .Destination | safeURL }}" loading="lazy" decoding="async"
+       alt="{{ $alt }}"{{ with $titel }} title="{{ . }}"{{ end }}>
+{{- end -}}

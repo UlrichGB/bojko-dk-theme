@@ -14,8 +14,28 @@
 
   Læsetiden kan slås fra med params.laesetid = false. Det svarer til
   lærredets egen kontakt, "readingTime", som står med default: true.
+
+  ---------------------------------------------------------------------------
+  ★ "AF <NAVN>" ER FØRSTE DEL, OG DEN ER IKKE PYNT
+  ---------------------------------------------------------------------------
+  Den stod i beskrivelsen ovenfor fra dag ét og blev aldrig bygget. Målt på et
+  rigtigt byg: navnet "Ulrich Bojko" fandtes tre steder på en artikelside — i
+  <title>, i bomærket og i kolofonen — og NUL steder inde i <article>. Det er
+  <article>, en udtrækker klipper efter, så en artikel herfra kunne læses i
+  fuld længde af en svarmaskine uden at kunne tilskrives nogen.
+
+  Navnet kommer fra site.Params.author. Er den ikke sat, står delen ikke —
+  et "Af " uden navn er værre end ingen byline.
+
+  rel="author" på linket til /om/ er den gamle, stadig læste måde at binde en
+  tekst til en person. Den maskinlæsbare udgave står i JSON-LD'en
+  (_partials/hoved-ekstra.html); denne her er den, læseren kan se.
 */ -}}
 {{- $dele := slice -}}
+
+{{- with site.Params.author -}}
+  {{- $dele = $dele | append (printf `Af <a class="quiet" href="%s" rel="author">%s</a>` ("/om/" | relURL) .) -}}
+{{- end -}}
 
 {{- with .GetTerms "tags" -}}
   {{- $t := index . 0 -}}

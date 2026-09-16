@@ -111,8 +111,13 @@
   --color-neutral-300: #D9D9CA;   /* streger og rammer                      */
   --color-neutral-400: #BDBDAC;   /* skillestreger i meta, kanter på noder  */
   --color-neutral-500: #9C9C8B;
-  --color-neutral-600: #7C7C6D;   /* datoer, billedtekst           4,6:1    */
-  --color-neutral-700: #5F5F52;   /* dæmpet brødtekst              7,2:1    */
+  /* ★ 600 ER IKKE TEKSTFARVE PÅ ARKET. Her stod "datoer, billedtekst 4,6:1",
+     og det tal er målt mod noget andet end arket: #7C7C6D på #F6F6EE er
+     3,90:1 og falder for AA. Metalinjen og billedteksterne bruger derfor 700
+     (5,96:1) — se 08-omslag.css og 03-brodtekst.css. 600 er stadig rigtig til
+     det, der IKKE er tekst: skillestreger, rammer, dæmpet pynt.            */
+  --color-neutral-600: #7C7C6D;   /* pynt, ikke tekst på arket     3,90:1   */
+  --color-neutral-700: #5F5F52;   /* datoer, billedtekst, dæmpet   5,96:1   */
   --color-neutral-800: #43433A;
   --color-neutral-900: #2B2B25;   /* brødtekst i .body-copy                 */
 

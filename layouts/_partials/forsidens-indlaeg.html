@@ -1,0 +1,17 @@
+{{- /*
+  FORSIDENS ARTIKELLISTE — som en VÆRDI, ikke som opmærkning.
+
+      {{ $liste := partial "forsidens-indlaeg.html" . }}
+
+  Listen står her og ikke i home.html, fordi to steder skal bruge den samme:
+  home.html pagineret den, og hoved-data.html skal kende SIDETALLET for at
+  kunne skrive "Side 2 — …" i <title> og en canonical, der peger på /page/2/
+  og ikke på forsiden.
+
+  ★ Og de to skal have PRÆCIS den samme liste. Hugo tillader kun ét
+  .Paginate-kald pr. side, og kaldes det to gange med hver sin liste, stopper
+  bygningen med "a Paginator was already initialized". Med samme liste er det
+  andet kald bare den, der allerede er regnet ud. Derfor ét sted at skrive
+  forespørgslen, og ikke to, der kan drive fra hinanden.
+*/ -}}
+{{- return (where site.RegularPages "Section" "artikler").ByDate.Reverse -}}

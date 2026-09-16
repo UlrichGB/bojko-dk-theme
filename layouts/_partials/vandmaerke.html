@@ -18,6 +18,14 @@
      regel — `showWm: wm && !p.featured` — og den er rigtig: vandmærket ER
      artiklens billede, når der ikke er et.
 
+     ★ "HAR ET OMSLAGSBILLEDE" ER RESSOURCEN, IKKE NØGLEN. Her stod før
+     `if not .Params.cover`, altså en test på om nøglen fandtes. Men
+     omslag.html tegner kun en figur, hvis RESSOURCEN kan findes. En
+     stavefejl i cover.image gav derfor en artikel med hverken omslag eller
+     vandmærke — den ene sprang over, fordi billedet ikke fandtes, den anden
+     fordi nøglen gjorde. Målt. Begge spørger nu
+     _partials/omslag-ressource.html, så de ikke kan svare forskelligt.
+
   3. Det tager kun det første TEGN. Står der et citationstegn eller et ciffer
      forrest i titlen, bliver det tegnet vist; det er dét, der står. Men er
      tegnet ikke et bogstav, står vandmærket over, fordi et 220px komma ikke
@@ -27,7 +35,7 @@
   lærredets egen kontakt, "watermark", som står med default: true.
 */ -}}
 {{- if site.Params.vandmaerke | default true -}}
-  {{- if not .Params.cover -}}
+  {{- if not (partial "omslag-ressource.html" .) -}}
     {{- $b := upper (substr .Title 0 1) -}}
     {{- if findRE `^\pL$` $b -}}
       <span class="wm" data-glyph="{{ $b }}" aria-hidden="true">{{ $b }}</span>

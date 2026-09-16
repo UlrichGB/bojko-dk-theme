@@ -1,0 +1,27 @@
+{{- /*
+  OMSLAGSBILLEDET SOM RESSOURCE — ét sted at slå det op.
+
+      {{ with partial "omslag-ressource.html" . }} … {{ end }}
+
+  Returnerer artiklens omslag som en page-bundle-ressource, eller ingenting.
+  Tre steder skal vide det samme:
+
+      omslag.html        tegner figuren
+      vandmaerke.html    skal UDELADE bogstavet, når der ER et omslag
+      hoved-ekstra.html  skal have og:image og JSON-LD'ens image
+
+  ★ OG DE SKAL SVARE ENS. Før stod vandmærket på .Params.cover — altså på om
+  NØGLEN fandtes — mens figuren stod på om RESSOURCEN kunne findes. En
+  stavefejl i filnavnet gav derfor en artikel med hverken omslag eller
+  vandmærke: figuren sprang over, fordi billedet ikke fandtes, og vandmærket
+  sprang over, fordi nøglen gjorde. Målt. Nu spørger alle tre om det samme.
+*/ -}}
+{{- $r := "" -}}
+{{- with .Params.cover -}}
+  {{- with .image -}}
+    {{- with $.Resources.GetMatch . -}}
+      {{- $r = . -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+{{- return $r -}}

@@ -50,6 +50,9 @@
    rører ikke roden. */
 html {
   -webkit-text-size-adjust: 100%;
+  /* Den bløde rulning slås fra igen for læsere, der har bedt om mindre
+     bevægelse. Reglen står i 11-bevaegelse.css sammen med de seks
+     hover-overgange — der står også, hvorfor den ikke kan stå her. */
   scroll-behavior: smooth;
 }
 

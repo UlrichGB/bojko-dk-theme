@@ -1,0 +1,40 @@
+# ---------------------------------------------------------------------------
+# bojko-dk-theme — temaets EGEN konfiguration
+# ---------------------------------------------------------------------------
+# ★ DETTE ER IKKE ET SITES KONFIGURATION, og der kommer ikke mere i den end
+# det, der står nu. Hugo fletter et temas config ind under sitets, så sitet
+# altid kan overskrive. Alt, der er et redaktionelt valg — sprog, taksonomier,
+# menuer, paginering — hører i bojko-dk og ikke her.
+#
+# Det ene, der står her, er et OUTPUTFORMAT. Grunden er, at et outputformat
+# ikke er et valg: layouts/llms.txt kan ikke bygges uden det, og en skabelon,
+# der kræver fire linjers konfiguration i et andet repo for at virke, er en
+# skabelon, der ikke virker. Med den her følger llms.txt med temaet.
+#
+# robots.txt kan IKKE klares på samme måde: den har sin egen port,
+# enableRobotsTXT, og Hugo læser den kun fra sitets egen konfiguration.
+# Se layouts/robots.txt.
+# ---------------------------------------------------------------------------
+
+# llms.txt — et markdown-indeks over sitet til sprogmodeller. Se
+# layouts/llms.txt for hvad der står i den og hvorfor.
+#
+# notAlternative = true holder den ude af <link rel="alternate"> i hovedet:
+# den er ikke en anden udgave af forsiden, den er en anden fil.
+[outputFormats]
+  [outputFormats.llms]
+    mediaType   = "text/plain"
+    baseName    = "llms"
+    isPlainText = true
+    notAlternative = true
+
+# ★ OG SITET SKAL SLÅ DEN TIL. [outputFormats] flettes fra et tema; [outputs]
+# gør IKKE — målt med `hugo config`: blokken herfra forsvandt sporløst, og
+# llms.txt blev aldrig bygget. Formatet findes altså, men ingen side beder om
+# det, før sitets egen konfiguration siger:
+#
+#     [outputs]
+#       home = ["html", "rss", "llms"]
+#
+# Kun forsiden. Hvert andet sideformat ville lægge en llms.txt i hver eneste
+# mappe i outputtet.

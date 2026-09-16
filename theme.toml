@@ -12,7 +12,7 @@
 name = "bojko-dk-theme"
 license = "MIT"
 licenselink = "https://github.com/UlrichGB/bojko-dk-theme/blob/main/LICENSE"
-description = "Læsespalte på 62ch, der kan bryde ud i bredden med en container-forespørgsel. Selvhostet Merriweather og Source Sans 3, danske datoer fra locale, omslagsbånd i 28:9 med skæv kant, tidslinje med klæbende datorække. Mørk kodeblok med ombrydning og kopiknap. Intet byggeskridt, ingen eksterne kald, ét script."
+description = "Læsespalte på 62ch, der kan bryde ud i bredden med en container-forespørgsel. Selvhostet Merriweather og Source Sans 3, danske datoer fra locale, omslagsbånd i 28:9 med skæv kant, tidslinje med klæbende datorække. Mørk kodeblok med ombrydning og kopiknap. Canonical, Open Graph, BlogPosting-JSON-LD, robots.txt og llms.txt uden en linje konfiguration i temaet. Intet byggeskridt, ingen eksterne kald, ét script."
 
 homepage = "https://github.com/UlrichGB/bojko-dk-theme"
 demosite = ""            # Der er ingen offentlig demo, og der ligger ikke en
@@ -31,8 +31,13 @@ features = [
   "sidst opdateret fra git",
   "breakout-gitter",
   "tabel-render-hook",
+  "billed-render-hook med srcset",
   "tidslinje",
   "syntaksfarver uden JavaScript",
+  "canonical, Open Graph og Twitter-kort",
+  "BlogPosting-JSON-LD",
+  "robots.txt og llms.txt",
+  "dansk feed med forfatter og fuld tekst",
 ]
 
 min_version = "0.146.0"   # Skabelonerne bruger layouts-opbygningen fra v0.146

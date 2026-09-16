@@ -1,0 +1,34 @@
+{{- /*
+  robots.txt — ALT ER TILLADT, OG SITEMAPPET HAR EN LINJE.
+
+  ★ DEN VIRKER KUN, HVIS SITET SÆTTER enableRobotsTXT = true.
+  Det er Hugos egen port til denne fil, den står i SITETS hugo.toml (altså i
+  bojko-dk, ikke her), og uden den bliver denne skabelon aldrig bygget. Der
+  kommer ingen fejl; filen udebliver bare. Det var sådan, den manglede før:
+  målt på et rigtigt byg lå der 404.html, index.html, index.xml og
+  sitemap.xml i roden og ikke andet.
+
+  ---------------------------------------------------------------------------
+  HVORFOR DER IKKE STÅR ET ENESTE Disallow
+  ---------------------------------------------------------------------------
+  Heller ikke for AI-crawlerne — ikke GPTBot, ikke ClaudeBot, ikke CCBot,
+  ikke PerplexityBot, ikke Google-Extended. Det er en beslutning og ikke en
+  forglemmelse, og den følger af sitets egen strategi, som står skrevet i
+  languages.toml: "Den danske korpus på disse emner er tynd, så denne stemme
+  bærer der." At blive citeret af en svarmaskine ER den strategi, der virker.
+  At blokere den ville være at argumentere mod sitets egen tese.
+
+  Skulle det nogensinde laves om, er det de fem navne ovenfor, det handler om,
+  og linjerne hører til HER — ikke i en konfigurationsnøgle, for en blokering
+  er en holdning og skal kunne læses som en.
+
+  ---------------------------------------------------------------------------
+  Sitemap-linjen er hele det andet formål. Søgemaskiner finder sitemappet af
+  konvention; svarmaskiner gør det ofte ikke. Adressen regnes af absURL, fordi
+  der ikke står et domæne noget sted i dette repo — Hugo får det med
+  --baseURL ved bygning.
+*/ -}}
+User-agent: *
+Disallow:
+
+Sitemap: {{ "sitemap.xml" | absURL }}

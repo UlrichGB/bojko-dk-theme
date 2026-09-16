@@ -58,11 +58,21 @@
     {{- $fra := site.Params.startaar }}
     {{- $til := now.Year }}
     {{- with site.RegularPages.ByDate.Reverse }}{{ $til = (index . 0).Date.Year }}{{ end }}
+    {{- /* ★ LICENSEN ER ET LED FOR SIG, OG DET ER EN RETTELSE.
+         Linjen var før én sætning med licensen indsat midt i: "{mærke} er
+         {licens} {årstal} {navn}". params.licens er valgfri, og uden den stod
+         der "Ulrich Bojko er 2002–2026 Ulrich Bojko" — på hver eneste side af
+         det levende site. Sætningen var altså kun grammatisk, når en valgfri
+         del var der.
+
+         Nu er kolofonen en kolofon og ikke en sætning: mærke, årstal, navn,
+         og licensen som et selvstændigt led efter en prik, når den findes.
+         Begge udgaver er læselige, og den ene afhænger ikke af den anden. */ -}}
     <span>
-      {{- with site.Params.maerke | default site.Title }}{{ . }}{{ end }} er
-      {{- with site.Params.licens }} <a class="foot-link" href="{{ .url }}" rel="license noopener">{{ .navn }}</a>{{ end }}
+      {{- with site.Params.maerke | default site.Title }}{{ . }}{{ end }}
       {{ with $fra }}{{ . }}{{ if ne (string $fra) (string $til) }}–{{ $til }}{{ end }}{{ else }}{{ $til }}{{ end }}
       <a class="foot-link" href="{{ "/om/" | relURL }}"><strong>{{ site.Params.author }}</strong></a>
+      {{- with site.Params.licens }} <span class="sep" aria-hidden="true">·</span> <a class="foot-link" href="{{ .url }}" rel="license noopener">{{ .navn }}</a>{{ end }}
     </span>
     <span>Bygget med <a class="foot-link" href="https://gohugo.io/" rel="noopener"><strong>Hugo</strong></a>.</span>
   </div>

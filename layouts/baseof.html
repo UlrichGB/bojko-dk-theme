@@ -31,14 +31,20 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>{{ if .IsHome }}{{ site.Title }}{{ else }}{{ .Title }} — {{ site.Title }}{{ end }}</title>
-  {{ with .Description | default site.Params.description }}<meta name="description" content="{{ . }}">{{ end }}
+  {{- /* ★ Titel, beskrivelse og canonical regnes ét sted, fordi
+       hoved-ekstra.html skal bruge de samme tre til og:title, og:description
+       og og:url. Se _partials/hoved-data.html for hvorfor beskrivelsen ikke
+       bare er .Description, og for hvad "Side 2 — …" handler om. */ -}}
+  {{- $hoved := partial "hoved-data.html" . }}
+  <title>{{ $hoved.titel }}</title>
+  {{ with $hoved.beskrivelse }}<meta name="description" content="{{ . }}">{{ end }}
 
   {{ partial "stil.html" . }}
 
   {{ with .OutputFormats.Get "rss" }}<link rel="alternate" type="application/rss+xml" title="{{ site.Params.feedTitle }}" href="{{ .Permalink }}">{{ end }}
 
-  {{- /* ★ Favicon, og:image, canonical — din. Se partialen. */}}
+  {{- /* Canonical, Open Graph, Twitter-kort og BlogPosting-JSON-LD. Favicon
+       og webmanifest hører stadig til SITET — se partialen. */ -}}
   {{ partial "hoved-ekstra.html" . }}
 </head>
 <body>

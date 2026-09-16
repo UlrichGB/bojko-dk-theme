@@ -26,29 +26,29 @@
   omslag er et fotografi i kraft af sin rolle. Billeder inde i brødteksten får
   den IKKE automatisk — se 03-brodtekst.css for hvorfor.
 */ -}}
-{{- with .Params.cover }}
-  {{- $navn  := .image }}
-  {{- $alt   := .alt }}
-  {{- $tekst := .caption }}
-  {{- with $.Resources.GetMatch $navn }}
-    {{- $org := . }}
-    {{- $saet := slice }}
-    {{- range (slice 480 800 1200 1600 2000 2400) }}
-      {{- if ge $org.Width . }}
-        {{- $saet = $saet | append (printf "%s %dw" ($org.Resize (printf "%dx webp q82" .)).RelPermalink .) }}
-      {{- end }}
+{{- /* Opslaget af selve billedet ligger i omslag-ressource.html, fordi
+     vandmærket og hoved-ekstra.html skal have det SAMME svar på, om artiklen
+     har et omslag. Se den partial. */ -}}
+{{- with partial "omslag-ressource.html" . }}
+  {{- $org   := . }}
+  {{- $alt   := $.Params.cover.alt }}
+  {{- $tekst := $.Params.cover.caption }}
+  {{- $saet  := slice }}
+  {{- range (slice 480 800 1200 1600 2000 2400) }}
+    {{- if ge $org.Width . }}
+      {{- $saet = $saet | append (printf "%s %dw" ($org.Resize (printf "%dx webp q82" .)).RelPermalink .) }}
     {{- end }}
-    {{- $vist := $org.Resize "1600x webp q82" }}
-    <figure class="featured">
-      <img class="washed"
-           src="{{ $vist.RelPermalink }}"
-           {{ with $saet }}srcset="{{ delimit . ", " }}"
-           {{- /* Billedet er arkets fulde bredde: 1120px, indtil vinduet er
-                smallere end arket, og derefter hele vinduet. */}}
-           sizes="(min-width: 1120px) 1120px, 100vw"{{ end }}
-           width="{{ $org.Width }}" height="{{ $org.Height }}"
-           alt="{{ $alt }}">
-      {{- with $tekst }}<figcaption>{{ . | markdownify }}</figcaption>{{ end }}
-    </figure>
   {{- end }}
+  {{- $vist := $org.Resize "1600x webp q82" }}
+  <figure class="featured">
+    <img class="washed"
+         src="{{ $vist.RelPermalink }}"
+         {{ with $saet }}srcset="{{ delimit . ", " }}"
+         {{- /* Billedet er arkets fulde bredde: 1120px, indtil vinduet er
+              smallere end arket, og derefter hele vinduet. */}}
+         sizes="(min-width: 1120px) 1120px, 100vw"{{ end }}
+         width="{{ $org.Width }}" height="{{ $org.Height }}"
+         alt="{{ $alt }}">
+    {{- with $tekst }}<figcaption>{{ . | markdownify }}</figcaption>{{ end }}
+  </figure>
 {{- end }}
