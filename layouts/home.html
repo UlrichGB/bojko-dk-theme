@@ -3,6 +3,7 @@
     FORSIDEN. Forsidens egen tekst, derefter indlæggene — hele eller som
     resumé, styret af params.fuldeIndlaeg — og sidetallet.
   */ -}}
+  <h1 class="kun-skaerm">{{ site.Title }}</h1>
   {{- with .Content }}
     <div class="col forside-intro"><div class="body-copy">{{ . }}</div></div>
   {{- end }}

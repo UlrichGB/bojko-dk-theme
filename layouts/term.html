@@ -8,7 +8,7 @@
     {{- with .Content }}<div class="body-copy">{{ . }}</div>{{ end }}
 
     <p class="arch-intro">
-      {{ len .Pages }} indlæg{{ if eq (len .Pages) 1 }}{{ end }} under dette emne.
+      {{ len .Pages }} indlæg under dette emne.
       {{- with site.GetPage "/tags" }} <a class="arch-mode" href="{{ .RelPermalink }}">Alle emner</a>{{ end }}
     </p>
 

@@ -8,14 +8,18 @@
 {{- $billede := "" -}}
 {{- $billedtekst := "" -}}
 {{- with partial "omslag-ressource.html" . -}}
-  {{- $billede = (.Resize "1200x").Permalink -}}
+  {{- $billede = (.Resize "1200x jpg q82").Permalink -}}
   {{- $billedtekst = $.Params.cover.alt -}}
 {{- else -}}
   {{- with site.Params.ogBillede }}{{ $billede = . | absURL }}{{ end -}}
 {{- end -}}
 {{- $lokale := replace (site.Language.Locale | default site.Language.Lang) "-" "_" -}}
 
+{{- if eq .Kind "404" }}
+  <meta name="robots" content="noindex">
+{{- else }}
   <link rel="canonical" href="{{ $h.kanonisk }}">
+{{- end }}
 {{- with $forfatter }}
   <meta name="author" content="{{ . }}">
 {{- end }}
@@ -66,7 +70,7 @@
       "mainEntityOfPage" (dict "@type" "WebPage" "@id" .Permalink)
       "wordCount" .WordCount
 -}}
-{{- $krop := replaceRE `<span class="ln">[^<]*</span>` "" .Content | plainify | htmlUnescape | chomp -}}
+{{- $krop := replaceRE `<span class="ln">[^<]*</span>` "" (partial "uden-anker.html" .Content) | plainify | htmlUnescape | chomp -}}
 {{- $ld = merge $ld (dict "articleBody" $krop) -}}
 {{- with $h.beskrivelse }}{{ $ld = merge $ld (dict "description" .) }}{{ end -}}
 {{- if not .Date.IsZero }}{{ $ld = merge $ld (dict "datePublished" (.Date.Format "2006-01-02T15:04:05-07:00")) }}{{ end -}}

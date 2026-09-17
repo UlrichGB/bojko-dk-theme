@@ -1,0 +1,10 @@
+{{- /*
+  SKRIFTERNE som fingeraftrykte ressourcer, slået op på filnavnet:
+
+      {{ $s := partial "skrifter.html" . }}{{ (index $s "SourceSans3").RelPermalink }}
+*/ -}}
+{{- $ud := dict -}}
+{{- range resources.Match "fonts/*.woff2" -}}
+  {{- $ud = merge $ud (dict (path.BaseName .Name) (. | fingerprint)) -}}
+{{- end -}}
+{{- return $ud -}}

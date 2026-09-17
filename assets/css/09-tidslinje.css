@@ -33,7 +33,7 @@
 .haendelse time {
   font-family: var(--font-sub);
   font-size: var(--lille);
-  color: var(--color-neutral-600);
+  color: var(--color-neutral-700);
   font-variant-numeric: tabular-nums;
   padding-top: 0.1875rem;
 }
@@ -112,7 +112,7 @@
 }
 .node span {
   font-size: var(--bitte);
-  color: var(--color-neutral-600);
+  color: var(--color-neutral-700);
 }
 .node.hub {
   border-color: var(--color-accent);

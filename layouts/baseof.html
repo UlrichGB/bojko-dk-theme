@@ -17,7 +17,7 @@
 </head>
 <body>
 <a class="kun-skaerm" href="#indhold">Spring til indholdet</a>
-<div class="topbar">
+<header class="topbar">
   <nav class="nav" aria-label="Hovedmenu">
     {{- $maerke := site.Params.maerke | default site.Title }}
     {{- $dele := split $maerke "." }}
@@ -39,7 +39,7 @@
       <a class="nav-icon" href="{{ .RelPermalink }}" aria-label="RSS-feed">{{ partial "ikon.html" "rss" }}</a>
     {{- end }}
   </nav>
-</div>
+</header>
 
 <div class="baand" aria-hidden="true"></div>
 

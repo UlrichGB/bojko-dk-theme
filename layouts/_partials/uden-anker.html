@@ -1,0 +1,7 @@
+{{- /*
+  HTML uden ankerlænkerne fra render-heading.html. Til alt, der skal læses
+  som tekst og ikke bladres i:
+
+      {{ partial "uden-anker.html" .Content }}
+*/ -}}
+{{- return (replaceRE `<a class="anker" href="[^"]*" aria-label="[^"]*">#</a>` "" .) -}}

@@ -25,6 +25,9 @@
     {{- $titel = site.Title -}}
     {{- $kort = site.Title -}}
   {{- end -}}
+{{- else if eq .Kind "404" -}}
+  {{- $titel = printf "Siden findes ikke — %s" site.Title -}}
+  {{- $kort = "Siden findes ikke" -}}
 {{- else -}}
   {{- $titel = printf "%s — %s" .Title site.Title -}}
   {{- $kort = .Title -}}
@@ -49,7 +52,7 @@
 {{- end -}}
 {{- if not $besk -}}
   {{- with .Summary -}}
-    {{- $besk = . | plainify | htmlUnescape | chomp | truncate 155 -}}
+    {{- $besk = partial "uden-anker.html" . | plainify | htmlUnescape | replaceRE `\s+` " " | strings.TrimSpace | truncate 155 -}}
   {{- end -}}
 {{- end -}}
 {{- if not $besk -}}

@@ -63,9 +63,15 @@ et plausibelt gæt ud, som ville se ud som en beslutning.
 
 ## Skrifterne
 
-De tre familier i `static/fonts/` — Merriweather, Source Sans 3 og Comfortaa —
+De tre familier i `assets/fonts/` — Merriweather, Source Sans 3 og Comfortaa —
 er SIL Open Font License 1.1 og **ikke** dækket af `LICENSE`. Licensteksterne
-ligger ved siden af filerne og skal følge med, hvis skrifterne følger med.
+ligger i `static/fonts/` og skal følge med, hvis skrifterne følger med.
+
+Filerne får fingeraftryk som CSS'en, og `@font-face`-adresserne skrives af
+`_partials/skrifter.html`. Derfor er der ingen `/fonts/`-adresse skrevet i
+hånden nogen steder, og temaet kan serveres fra en undermappe. De to skrifter,
+der bærer første skærmbillede — Merriweather-Bold og SourceSans3 — bliver
+`preload`'et; resten hentes, når stylesheettet er læst.
 
 ## Licens
 

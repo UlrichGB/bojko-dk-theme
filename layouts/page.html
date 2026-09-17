@@ -53,7 +53,6 @@
     {{- if or .PrevInSection .NextInSection }}
     <hr class="naboer-rule">
     <nav class="naboer" aria-label="Forrige og næste indlæg">
-      {{- with .NextInSection }}{{ end }}
       {{- with .PrevInSection }}
       <a href="{{ .RelPermalink }}" rel="prev">{{ partial "ikon.html" "nabo-venstre" }}<span>{{ .Title }}</span></a>
       {{- end }}

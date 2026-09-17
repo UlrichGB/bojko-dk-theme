@@ -8,8 +8,11 @@
 {{ with site.Home.Description }}> {{ . | plainify | chomp }}
 
 {{ end -}}
-{{ with site.Params.author }}Skrevet af {{ . }}. {{ end }}{{ if eq site.Language.Lang "da" }}Alt indhold er på dansk.{{ end }}
-{{ range site.Sections }}
+{{- $intro := slice -}}
+{{- with site.Params.author }}{{ $intro = $intro | append (printf "Skrevet af %s." .) }}{{ end -}}
+{{- if eq site.Language.Lang "da" }}{{ $intro = $intro | append "Alt indhold er på dansk." }}{{ end -}}
+{{- with $intro }}{{ delimit . " " }}
+{{ end }}{{ range site.Sections }}
 {{- $sektion := . -}}
 {{- with $sektion.RegularPagesRecursive.ByDate.Reverse }}
 ## {{ $sektion.Title }}

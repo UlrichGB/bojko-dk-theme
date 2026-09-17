@@ -1,8 +1,14 @@
 {{- /*
   {{< haendelse dato="2024-06-18" titel="…" url="…" >}} ... {{< /haendelse >}}
   Én hændelse i en tidslinje. dato er ISO; den danske gengivelse laves her.
+  Uden en læsbar dato standser bygningen og siger hvor.
 */ -}}
-{{- $dato := time.AsTime (.Get "dato") -}}
+{{- $raa := .Get "dato" -}}
+{{- $svar := try (time.AsTime $raa) -}}
+{{- with $svar.Err -}}
+  {{- errorf "{{< haendelse >}} vil have dato=\"ÅÅÅÅ-MM-DD\"; fik %q. %s" $raa $.Position -}}
+{{- end -}}
+{{- $dato := $svar.Value -}}
 <div class="haendelse">
   <div class="haendelse-hoved">
     <time datetime="{{ $dato.Format "2006-01-02" }}">{{ $dato | time.Format "2. January 2006" }}</time>

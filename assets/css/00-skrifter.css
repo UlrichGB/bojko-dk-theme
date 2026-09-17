@@ -1,10 +1,11 @@
 /* 00 — SKRIFTERNE
    @font-face for temaets tre selvhostede familier: Merriweather,
-   Source Sans 3 og Comfortaa. */
+   Source Sans 3 og Comfortaa. Filen køres gennem ExecuteAsTemplate i
+   _partials/stil.html, så hver src er en fingeraftrykt adresse. */
 
 @font-face {
   font-family: "Merriweather";
-  src: url("/fonts/Merriweather-Bold.woff2") format("woff2");
+  src: url("{{ (index .skrifter "Merriweather-Bold").RelPermalink }}") format("woff2");
   font-weight: 700; font-style: normal; font-display: swap;
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
     U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193,
@@ -12,7 +13,7 @@
 }
 @font-face {
   font-family: "Merriweather";
-  src: url("/fonts/Merriweather-Bold-latin-ext.woff2") format("woff2");
+  src: url("{{ (index .skrifter "Merriweather-Bold-latin-ext").RelPermalink }}") format("woff2");
   font-weight: 700; font-style: normal; font-display: swap;
   unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF,
     U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020,
@@ -20,7 +21,7 @@
 }
 @font-face {
   font-family: "Merriweather";
-  src: url("/fonts/Merriweather-BoldItalic.woff2") format("woff2");
+  src: url("{{ (index .skrifter "Merriweather-BoldItalic").RelPermalink }}") format("woff2");
   font-weight: 700; font-style: italic; font-display: swap;
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
     U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193,
@@ -28,7 +29,7 @@
 }
 @font-face {
   font-family: "Merriweather";
-  src: url("/fonts/Merriweather-BoldItalic-latin-ext.woff2") format("woff2");
+  src: url("{{ (index .skrifter "Merriweather-BoldItalic-latin-ext").RelPermalink }}") format("woff2");
   font-weight: 700; font-style: italic; font-display: swap;
   unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF,
     U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020,
@@ -38,7 +39,7 @@
 
 @font-face {
   font-family: "Source Sans 3";
-  src: url("/fonts/SourceSans3.woff2") format("woff2");
+  src: url("{{ (index .skrifter "SourceSans3").RelPermalink }}") format("woff2");
   font-weight: 400 700; font-style: normal; font-display: swap;
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
     U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193,
@@ -46,7 +47,7 @@
 }
 @font-face {
   font-family: "Source Sans 3";
-  src: url("/fonts/SourceSans3-latin-ext.woff2") format("woff2");
+  src: url("{{ (index .skrifter "SourceSans3-latin-ext").RelPermalink }}") format("woff2");
   font-weight: 400 700; font-style: normal; font-display: swap;
   unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF,
     U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020,
@@ -54,7 +55,7 @@
 }
 @font-face {
   font-family: "Source Sans 3";
-  src: url("/fonts/SourceSans3-Italic.woff2") format("woff2");
+  src: url("{{ (index .skrifter "SourceSans3-Italic").RelPermalink }}") format("woff2");
   font-weight: 400 700; font-style: italic; font-display: swap;
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
     U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193,
@@ -62,7 +63,7 @@
 }
 @font-face {
   font-family: "Source Sans 3";
-  src: url("/fonts/SourceSans3-Italic-latin-ext.woff2") format("woff2");
+  src: url("{{ (index .skrifter "SourceSans3-Italic-latin-ext").RelPermalink }}") format("woff2");
   font-weight: 400 700; font-style: italic; font-display: swap;
   unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF,
     U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020,
@@ -72,7 +73,7 @@
 
 @font-face {
   font-family: "Comfortaa";
-  src: url("/fonts/Comfortaa-Bold.woff2") format("woff2");
+  src: url("{{ (index .skrifter "Comfortaa-Bold").RelPermalink }}") format("woff2");
   font-weight: 700; font-style: normal; font-display: swap;
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
     U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193,
@@ -80,7 +81,7 @@
 }
 @font-face {
   font-family: "Comfortaa";
-  src: url("/fonts/Comfortaa-Bold-latin-ext.woff2") format("woff2");
+  src: url("{{ (index .skrifter "Comfortaa-Bold-latin-ext").RelPermalink }}") format("woff2");
   font-weight: 700; font-style: normal; font-display: swap;
   unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF,
     U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020,

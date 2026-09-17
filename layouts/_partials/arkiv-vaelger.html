@@ -17,7 +17,11 @@
 <nav class="arch-modes" aria-label="Arkivets visninger">
   {{- range $i, $v := $veje }}
     {{- if $i }}<span class="sep" aria-hidden="true">|</span>{{ end }}
-    <a class="arch-mode" href="{{ $v.url }}"{{ if eq $v.id $nu }} aria-current="page"{{ end }}>{{ $v.navn }}</a>
+    {{- if eq $v.id $nu }}
+    <span class="arch-mode" aria-current="page">{{ $v.navn }}</span>
+    {{- else }}
+    <a class="arch-mode" href="{{ $v.url }}">{{ $v.navn }}</a>
+    {{- end }}
   {{- end }}
 </nav>
 {{- end }}

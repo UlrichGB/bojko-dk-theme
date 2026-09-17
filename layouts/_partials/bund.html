@@ -27,7 +27,7 @@
     {{- with site.RegularPages.ByDate.Reverse }}{{ $til = (index . 0).Date.Year }}{{ end }}<span>
       {{- with site.Params.maerke | default site.Title }}{{ . }}{{ end }}
       {{ with $fra }}{{ . }}{{ if ne (string $fra) (string $til) }}–{{ $til }}{{ end }}{{ else }}{{ $til }}{{ end }}
-      <a class="foot-link" href="{{ "/om/" | relURL }}"><strong>{{ site.Params.author }}</strong></a>
+      {{- with site.Params.author }} <a class="foot-link" href="{{ "/om/" | relURL }}"><strong>{{ . }}</strong></a>{{ end }}
       {{- with site.Params.licens }} <span class="sep" aria-hidden="true">·</span> <a class="foot-link" href="{{ .url }}" rel="license noopener">{{ .navn }}</a>{{ end }}
     </span>
     <span>Bygget med <a class="foot-link" href="https://gohugo.io/" rel="noopener"><strong>Hugo</strong></a>.</span>

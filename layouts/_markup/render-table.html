@@ -1,8 +1,9 @@
 {{- /*
   TABEL-RENDER-HOOK. Kaldes for hver markdown-tabel og lægger den i
-  .tabel-ramme, så den altid kan rulles vandret.
+  .tabel-ramme, så den altid kan rulles vandret. Står tabellen allerede i
+  et {{< bred >}}, udelades wide: udbruddet må kun regnes én gang.
 */ -}}
-<div class="tabel-ramme wide">
+<div class="tabel-ramme{{ if not (.Page.Store.Get "i-bred") }} wide{{ end }}">
   <table>
     <thead>
       {{- range .THead }}

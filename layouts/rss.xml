@@ -38,9 +38,9 @@
       {{- range .GetTerms "tags" }}
       <category>{{ .LinkTitle }}</category>
       {{- end }}
-      <description>{{ .Description | default .Summary | plainify | chomp | html }}</description>
+      <description>{{ .Description | default (partial "uden-anker.html" .Summary) | plainify | chomp | html }}</description>
       {{- if $hele }}
-      <content:encoded>{{ .Content | transform.XMLEscape | safeHTML }}</content:encoded>
+      <content:encoded>{{ partial "uden-anker.html" .Content | transform.XMLEscape | safeHTML }}</content:encoded>
       {{- end }}
     </item>
     {{- end }}

@@ -1,7 +1,8 @@
 {{- /*
   {{< fakta >}} ... {{< /fakta >}}
-  Den lille faktaboks.
+  Den lille faktaboks. <aside>, fordi den står ved siden af argumentet og
+  skal kunne læses for sig, også løftet ud af siden.
 */ -}}
-<div class="fakta">
+<aside class="fakta">
 {{ .Page.RenderString (dict "display" "block") .Inner }}
-</div>
+</aside>

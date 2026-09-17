@@ -152,7 +152,7 @@
 }
 .related time {
   font-size: var(--lille);
-  color: var(--color-neutral-600);
+  color: var(--color-neutral-700);
   font-variant-numeric: tabular-nums;
 }
 

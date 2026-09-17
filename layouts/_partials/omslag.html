@@ -7,19 +7,22 @@
   {{- $org   := . }}
   {{- $alt   := $.Params.cover.alt }}
   {{- $tekst := $.Params.cover.caption }}
+  {{- if not $alt }}
+    {{- warnf "omslag.html: %q har et omslag uden cover.alt — billedet går ud med alt=\"\"" $.Path }}
+  {{- end }}
   {{- $saet  := slice }}
   {{- range (slice 480 800 1200 1600 2000 2400) }}
     {{- if ge $org.Width . }}
       {{- $saet = $saet | append (printf "%s %dw" ($org.Resize (printf "%dx webp q82" .)).RelPermalink .) }}
     {{- end }}
   {{- end }}
-  {{- $vist := $org.Resize "1600x webp q82" }}
+  {{- $vist := $org.Resize (printf "%dx webp q82" (cond (gt $org.Width 1600) 1600 $org.Width)) }}
   <figure class="featured">
     <img class="washed"
          src="{{ $vist.RelPermalink }}"
          {{ with $saet }}srcset="{{ delimit . ", " }}"
          sizes="(min-width: 1120px) 1120px, 100vw"{{ end }}
-         width="{{ $org.Width }}" height="{{ $org.Height }}"
+         width="{{ $vist.Width }}" height="{{ $vist.Height }}"
          alt="{{ $alt }}">
     {{- with $tekst }}<figcaption>{{ . | markdownify }}</figcaption>{{ end }}
   </figure>
