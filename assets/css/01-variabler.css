@@ -79,8 +79,10 @@
 
 
   --topbar-h: 4.5rem;
-  --band-h:   8.5rem;
-  --overlap:  6.25rem;
+
+  /* ★ BÅNDET ER VÆK. Hovedet er topbaren alene, og arket ligger ikke
+     længere op over noget — derfor hverken --band-h eller --overlap. */
+  --ark-top:  4.5rem;
 
   --topbar-total: var(--topbar-h);
 
@@ -110,7 +112,6 @@
     --brodtekst: 1.09375rem;
     --x:         1.6875rem;
     --h2:        1.4375rem;
-    --overlap:   4rem;
-    --band-h:    6.5rem;
+    --ark-top:   2.75rem;
   }
 }

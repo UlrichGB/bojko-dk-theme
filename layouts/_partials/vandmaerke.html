@@ -1,11 +1,28 @@
 {{- /*
-  VANDMÆRKET — artiklens forbogstav bag rubrikken. Står kun, når
-  artiklen ikke har et omslag.
+  VANDMÆRKET — artiklens forbogstav bag rubrikken.
+
+  Kaldes på to måder:
+
+      {{ partial "vandmaerke.html" . }}
+      {{ partial "vandmaerke.html" (dict "side" $p "uansetOmslag" true) }}
+
+  Uden flaget står bogstavet KUN, når artiklen ikke har et omslag: bogstavet
+  og omslaget er hinandens alternativer bag rubrikken, aldrig begge dele på
+  én gang. Forsiden sætter flaget, fordi den viser bogstavet I STEDET FOR
+  omslaget — se home.html.
 */ -}}
+{{- $side := . -}}
+{{- $uansetOmslag := false -}}
+{{- if reflect.IsMap . -}}
+  {{- $side = .side -}}
+  {{- $uansetOmslag = .uansetOmslag | default false -}}
+{{- end -}}
 {{- if site.Params.vandmaerke | default true -}}
-  {{- if not (partial "omslag-ressource.html" .) -}}
-    {{- $b := upper (substr .Title 0 1) -}}
-    {{- if findRE `^\pL$` $b -}}
+  {{- if or $uansetOmslag (not (partial "omslag-ressource.html" $side)) -}}
+    {{- $b := upper (substr $side.Title 0 1) -}}
+    {{- /* Bogstav ELLER ciffer: "1984 → 2048" skal også have sit vandmærke.
+           Tegnsætning og emoji skal stadig ikke stå 220px høje. */ -}}
+    {{- if findRE `^[\pL\pN]$` $b -}}
       <span class="wm" data-glyph="{{ $b }}" aria-hidden="true">{{ $b }}</span>
     {{- end -}}
   {{- end -}}

@@ -6,13 +6,7 @@
   margin-bottom: 2.5rem;
 }
 
-.post > .featured:first-child {
-  margin-top: calc(var(--overlap) * -1);
-}
 
-.post > .featured:first-child img {
-  border-radius: 0 0 var(--radius-xs) var(--radius-xs);
-}
 
 .featured img {
   width: 100%;

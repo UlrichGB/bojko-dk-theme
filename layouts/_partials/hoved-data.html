@@ -22,7 +22,10 @@
     {{- $titel = printf "Side %d — %s" $sidetal site.Title -}}
     {{- $kort = printf "Side %d af %d" $sidetal $ialt -}}
   {{- else -}}
-    {{- $titel = site.Title -}}
+    {{- /* Forsidens <title> må gerne sige hvad stedet ER: den bare titel
+           alene er et svagt søgeresultat og en intetsigende fane.
+           params.forsideTitel sætter den; uden den er alt som før. */ -}}
+    {{- $titel = site.Params.forsideTitel | default site.Title -}}
     {{- $kort = site.Title -}}
   {{- end -}}
 {{- else if eq .Kind "404" -}}

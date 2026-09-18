@@ -14,8 +14,14 @@
     {{- if $i }}<div class="col skille" aria-hidden="true"><span></span></div>{{ end }}
 
     <article class="col forside-indlaeg">
-      {{- partial "omslag.html" $p }}
-      {{ partial "vandmaerke.html" $p }}
+      {{- /*
+        ★ FORSIDEN VISER BOGSTAVET, IKKE OMSLAGET.
+        Bogstavet dér, hvor man skimmer; omslaget dér, hvor man læser (se
+        page.html). Vil du have omslagene tilbage på forsiden, så sæt
+        linjen med omslag.html ind igen og fjern "uansetOmslag" herunder —
+        men vis ikke begge dele: de står samme sted bag rubrikken.
+      */ -}}
+      {{ partial "vandmaerke.html" (dict "side" $p "uansetOmslag" true) }}
       <header class="post-hoved">
         <h2 class="post-h post-h--forside">
           <a class="title-link" href="{{ $p.RelPermalink }}">{{ $p.Title }}</a>
@@ -28,7 +34,12 @@
           {{ $p.Content }}
         {{- else }}
           <p>{{ $p.Description | default $p.Summary }}</p>
-          <p><a class="quiet" href="{{ $p.RelPermalink }}"><strong>Læs videre</strong> {{ partial "ikon.html" "pil-hoejre" }}</a></p>
+          {{- /* aria-label, fordi "Læs videre" alene ikke siger hvorhen, når
+                 man springer fra link til link med en skærmlæser. */ -}}
+          <p class="pille-rad">
+            <a class="pille" href="{{ $p.RelPermalink }}"
+               aria-label="Læs videre: {{ $p.Title }}">Læs videre {{ partial "ikon.html" "pil-hoejre" }}</a>
+          </p>
         {{- end }}
       </div>
     </article>

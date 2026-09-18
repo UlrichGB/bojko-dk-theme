@@ -11,6 +11,18 @@
   <title>{{ $hoved.titel }}</title>
   {{ with $hoved.beskrivelse }}<meta name="description" content="{{ . }}">{{ end }}
 
+  {{- /*
+    IKONERNE. Tre filer er nok i dag: SVG'en til alt moderne, .ico til
+    gamle faner og til /favicon.ico som browsere spørger efter uopfordret,
+    og apple-touch-icon til iOS' hjemmeskærm. Sitet leverer filerne i
+    static/ — temaet skriver kun linjerne, og kun hvis filerne er der, så
+    et site uden ikoner ikke får tre døde links.
+  */ -}}
+  {{ if os.FileExists "static/favicon.ico" }}<link rel="icon" href="{{ "favicon.ico" | relURL }}" sizes="32x32">
+  {{ end }}{{ if os.FileExists "static/icon.svg" }}<link rel="icon" href="{{ "icon.svg" | relURL }}" type="image/svg+xml">
+  {{ end }}{{ if os.FileExists "static/apple-touch-icon.png" }}<link rel="apple-touch-icon" href="{{ "apple-touch-icon.png" | relURL }}">
+  {{ end }}<meta name="theme-color" content="#EBEBDF">
+
   {{ partial "stil.html" . }}
 
   {{ with .OutputFormats.Get "rss" }}<link rel="alternate" type="application/rss+xml" title="{{ site.Params.feedTitle }}" href="{{ .Permalink }}">{{ end }}{{ partial "hoved-ekstra.html" . }}
@@ -40,8 +52,6 @@
     {{- end }}
   </nav>
 </header>
-
-<div class="baand" aria-hidden="true"></div>
 
 <main id="indhold">
   {{ block "main" . }}{{ end }}

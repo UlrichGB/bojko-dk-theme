@@ -15,7 +15,10 @@ body {
 
   margin: 0;
   overflow-x: clip;
-  background: var(--color-neutral-200);
+  /* ★ ÉN FLADE. Siden ER papiret — der er ikke et ark, der ligger oven på
+     en baggrund længere. neutral-200 lever videre som tonet fyld i kode,
+     arkiv og tidslinje, bare ikke som underlag. */
+  background: var(--color-neutral-100);
   color: var(--color-text);
   font-family: var(--font-read);
   font-size: var(--brodtekst);
@@ -30,10 +33,12 @@ body {
   top: 0;
   z-index: 10;
   flex: none;
-  background: var(--color-accent);
-  box-shadow:
-    0 1px 0 color-mix(in srgb, var(--color-neutral-100) 18%, transparent) inset,
-    var(--shadow-sm);
+  /* ★ ORANGE ER FLYTTET FRA FLADEN TIL SKRIFTEN.
+     Hovedet har sidens egen baggrund; mærket, menuen og ikonerne bærer
+     farven. En tynd streg i bunden i stedet for en slagskygge: baren skal
+     skille indholdet ad, ikke svæve over det. */
+  background: var(--color-neutral-100);
+  box-shadow: 0 1px 0 var(--color-divider);
 }
 
 .nav {
@@ -45,7 +50,7 @@ body {
   min-height: var(--topbar-h);
   margin: 0 auto;
   padding: 0;
-  color: var(--color-neutral-100);
+  color: var(--color-accent);
 }
 
 .nav-brand {
@@ -56,9 +61,12 @@ body {
   font-weight: 700;
   font-size: 2.625rem;
   letter-spacing: 0.01em;
+  /* Småt skrevet som ordmarke — men KUN i visningen. Navnet står med store
+     bogstaver i params.maerke, så det er det, en skærmlæser siger og det
+     aria-label bærer; det er kun øjet, der får den lave version. */
   text-transform: lowercase;
   text-decoration: none;
-  color: var(--color-neutral-100);
+  color: var(--color-accent);
 }
 
 .nav-brand span { opacity: .55; }
@@ -75,18 +83,18 @@ body {
   letter-spacing: 0.1em;
   text-transform: uppercase;
   text-decoration: none;
-  color: color-mix(in srgb, var(--color-neutral-100) 82%, transparent);
+  color: var(--color-accent);
   transition: color .15s, background .15s;
 }
 .nav-item:hover,
-.nav-item[aria-current="page"] { color: var(--color-neutral-100); }
+.nav-item[aria-current="page"] { color: var(--color-accent-700); }
 
 .nav-item::after {
   content: "";
   position: absolute;
   left: 1.28em; right: 1.28em; bottom: 1.375rem;
   height: 2px;
-  background: var(--color-neutral-100);
+  background: var(--color-accent);
   transform: scaleX(0);
   transform-origin: left;
   transition: transform .2s ease;
@@ -97,8 +105,8 @@ body {
 .nav-sep {
   width: 1px; height: 1.25rem;
   margin: 0 0.625rem 0 0.875rem;
-  background: var(--color-neutral-100);
-  opacity: .28;
+  background: var(--color-accent);
+  opacity: .32;
 }
 
 .nav-icon {
@@ -110,17 +118,10 @@ body {
   color: inherit;
   transition: background .15s;
 }
-.nav-icon:hover { background: color-mix(in srgb, var(--color-neutral-100) 14%, transparent); }
+.nav-icon:hover { background: var(--color-accent-100); }
 .nav-icon:last-child { margin-right: -14px; }
 
-.nav a:focus-visible { outline: 2px solid var(--color-neutral-100); outline-offset: 2px; }
-
-
-.baand {
-  flex: none;
-  height: var(--band-h);
-  background: var(--color-accent);
-}
+.nav a:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 2px; }
 
 
 main {
@@ -130,11 +131,9 @@ main {
   width: 100%;
   max-width: var(--sheet-max);
 
-  margin: calc(var(--overlap) * -1) auto 0;
-  padding: var(--overlap) var(--sheet-gutter) 0;
-
-  background: var(--color-neutral-100);
-  box-shadow: var(--shadow-md);
+  /* Arket ligger nu UNDER topbaren i stedet for op over et bånd. */
+  margin: 0 auto;
+  padding: var(--ark-top) var(--sheet-gutter) 0;
 
   container-type: inline-size;
 }
@@ -208,6 +207,37 @@ a:hover { color: var(--color-accent-600); }
 
 .title-link { color: inherit; text-decoration: none; }
 .title-link:hover { color: var(--color-accent-600); }
+
+
+/* PILLEN — "Læs videre" som knap.
+   Bevidst SAMME skrift, versaler og spatiering som menuen i topbaren: det
+   er den ene bogstavform, sitet bruger til at pege et sted hen, hvad enten
+   den står som orange tekst i hovedet eller hvid på orange hernede. */
+.pille {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6em;
+
+  padding: 0.85em 1.6em;
+  border-radius: 999px;
+
+  background: var(--color-accent);
+  color: var(--color-neutral-100);
+
+  font-family: var(--font-sub);
+  font-size: 0.84375rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-decoration: none;
+
+  transition: background .15s, color .15s;
+}
+.pille:hover  { background: var(--color-accent-600); color: var(--color-neutral-100); }
+.pille:active { background: var(--color-accent-700); }
+.pille svg    { margin-right: -0.15em; }
+
+.pille-rad { margin: calc(var(--x) * 0.75) 0 0; }
 
 .rule { height: 1px; margin: 0; border: 0; background: var(--color-neutral-300); }
 
