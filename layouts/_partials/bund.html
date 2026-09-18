@@ -2,6 +2,7 @@
   BUNDEN. Linkgrupperne fra menus.foot, en skillestreg og kolofonen.
 */ -}}
 <footer>
+  <div class="foot-skille" aria-hidden="true"><span></span></div>
 
   {{- with site.Menus.foot }}
   <div class="foot-grid">
@@ -19,18 +20,32 @@
     {{- end }}
   </div>
   {{- end }}
-  <div class="foot-skille" aria-hidden="true"><span></span></div>
 
   <div class="foot-bund">
     {{- $fra := site.Params.startaar }}
     {{- $til := now.Year }}
-    {{- with site.RegularPages.ByDate.Reverse }}{{ $til = (index . 0).Date.Year }}{{ end }}<span>
-      {{- with site.Params.maerke | default site.Title }}{{ . }}{{ end }}
-      {{ with $fra }}{{ . }}{{ if ne (string $fra) (string $til) }}–{{ $til }}{{ end }}{{ else }}{{ $til }}{{ end }}
-      {{- with site.Params.author }} <a class="foot-link" href="{{ "/om/" | relURL }}"><strong>{{ . }}</strong></a>{{ end }}
+    {{- with site.RegularPages.ByDate.Reverse }}{{ $til = (index . 0).Date.Year }}{{ end }}
+    {{- /*
+      ★ NAVNET ÉN GANG. Kolofonen skrev både bomærket og forfatteren, og
+      når de er den samme person — hvilket de er, når params.maerke er
+      navnet — stod der "Ulrich Bojko 2002-2026 Ulrich Bojko". Er de ens,
+      skrives navnet én gang som link. Er de forskellige (et sitenavn og
+      en forfatter), skrives begge som før.
+    */ -}}
+    {{- $navn := site.Params.maerke | default site.Title -}}
+    {{- $forfatter := site.Params.author -}}
+    {{- $aar := cond (ne (string $fra) "") (printf "%v%s" $fra (cond (ne (string $fra) (string $til)) (printf "–%v" $til) "")) (string $til) -}}
+    <span>
+      {{- /* Fast mellemrum efter tegnet, så "© 2002-2026" aldrig knækker
+             midt over ved en smal skærm. */ -}}
+      {{- if and $forfatter (eq $forfatter $navn) -}}
+        <a class="foot-link" href="{{ "/om/" | relURL }}"><strong>{{ $forfatter }}</strong></a> ©&nbsp;{{ $aar }}
+      {{- else -}}
+        {{ with $navn }}{{ . }} {{ end }}©&nbsp;{{ $aar }}
+        {{- with $forfatter }} <a class="foot-link" href="{{ "/om/" | relURL }}"><strong>{{ . }}</strong></a>{{ end }}
+      {{- end }}
       {{- with site.Params.licens }} <span class="sep" aria-hidden="true">·</span> <a class="foot-link" href="{{ .url }}" rel="license noopener">{{ .navn }}</a>{{ end }}
     </span>
-    <span>Bygget med <a class="foot-link" href="https://gohugo.io/" rel="noopener"><strong>Hugo</strong></a>.</span>
   </div>
   {{ partial "bund-ekstra.html" . }}
 </footer>

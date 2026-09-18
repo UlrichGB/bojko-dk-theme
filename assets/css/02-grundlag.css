@@ -383,10 +383,44 @@ a:hover { color: var(--color-accent-600); }
   justify-content: center;
   padding: var(--x) 0;
 }
+/* Samme figur som bundens streg, men dæmpet: prikken har LINJENS farve,
+   ikke mærkefarven. Orange hører til dér, hvor siden slutter — her skal
+   den bare markere, at det ene indlæg er forbi og det næste begynder.
+   Ringen har papirets farve og laver hullet, prikken ligger i. */
 .skille span {
+  position: relative;
   display: block;
   width: 50px; height: 1px;
   background: var(--color-neutral-400);
+}
+.skille span::after {
+  content: "";
+  position: absolute;
+  left: 50%; top: 50%;
+  transform: translate(-50%, -50%);
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: var(--color-neutral-400);
+  outline: 5px solid var(--color-neutral-100);
+}
+
+/* Slutmærket under en artikel. Prikken er orange, fordi det er en
+   slutning og ikke bare et skel (se noten i page.html), og stregen går
+   helt ud til spaltens kant: de 50px, der er nok mellem to indlæg på
+   forsiden, forsvinder simpelthen under 680px brødtekst.
+
+   Rangordenen holder stadig, fordi de tre ikke er ens:
+     mellem indlæg   50px, grå prik
+     slut på artikel spaltens bredde, orange prik
+     slut på sitet   hele bundens bredde, større orange prik */
+.skille--slut span {
+  width: 100%;
+  background: var(--color-neutral-300);
+}
+.skille--slut span::after {
+  width: 7px; height: 7px;
+  background: var(--color-accent);
+  outline: 6px solid var(--color-neutral-100);
 }
 
 .kun-skaerm {

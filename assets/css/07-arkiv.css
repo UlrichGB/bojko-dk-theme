@@ -158,7 +158,11 @@
 .tag {
   display: inline-flex;
   align-items: center;
-  padding: 0.46154em 1.07693em;
+  /* Samme højde og vandrette luft som .share: de to rækker står lige
+     under hinanden. Forskellen er fyld mod ramme, altså mærke mod
+     handling — ikke to tilfældigt forskellige knapper. */
+  min-height: 2.25rem;
+  padding: 0 1em;
   border-radius: var(--radius-xs);
   background: var(--color-neutral-200);
   color: var(--color-neutral-800);
@@ -197,7 +201,12 @@ a.tag:hover {
 }
 
 
+/* En fodnote til artiklen, ikke en afdeling. Den bar .post-efter og fik
+   derfor de 60px, der adskiller Del fra Relaterede fra Mærker. Den står
+   nu under brødteksten og over slutmærket, tæt nok på sidste afsnit til
+   at høre til teksten. */
 .opdateret {
+  margin: calc(var(--x) * 0.75) 0 0;
   font-family: var(--font-sub);
   font-size: var(--lille);
   color: var(--color-neutral-700);
@@ -220,7 +229,9 @@ a.tag:hover {
   font-size: var(--bitte);
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  text-align: center;
+  /* Ingen centrering: overskriften skal stå på samme kant som de links,
+     den hører til, ellers svæver den over sin egen spalte. Udeladt frem
+     for "left", så den følger tekstretningen. */
   color: var(--color-text);
 }
 .foot-grid ul {
@@ -246,9 +257,12 @@ a.tag:hover {
 }
 
 .foot-skille {
+  /* Bundens egen streg — den åbner hele footeren i stedet for at dele
+     den midt over. Luften over kommer fra footerens polstring; her står
+     kun luften ned til linkspalterne. */
   position: relative;
   height: 1px;
-  margin: 3rem 0 1.25rem;
+  margin: 0 0 3rem;
   background: var(--color-neutral-300);
 }
 .foot-skille span {
@@ -258,7 +272,10 @@ a.tag:hover {
   width: 10px; height: 10px;
   border-radius: 50%;
   background: var(--color-accent);
-  outline: 6px solid var(--color-neutral-200);
+  /* Ringen skal have SIDENS farve, så prikken ser ud til at ligge i et
+     hul i stregen. Den stod på neutral-200 fra dengang siden havde en
+     tonet baggrund bag et ark — papiret er neutral-100 nu. */
+  outline: 6px solid var(--color-neutral-100);
 }
 
 .foot-bund {

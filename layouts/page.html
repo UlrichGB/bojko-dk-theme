@@ -20,6 +20,23 @@
     <div class="body-copy">
       {{ .Content }}
     </div>
+
+    {{- /* Datoen hører til artiklen, ikke til tilbehøret: den står under
+           teksten og OVER slutmærket, så den er inde i det, mærket
+           lukker. */ -}}
+    {{- with .GitInfo }}
+    <p class="opdateret">Sidst opdateret <time datetime="{{ $.Lastmod.Format "2006-01-02" }}">{{ $.Lastmod | time.Format "2. January 2006" }}</time></p>
+    {{- end }}
+
+    {{- /*
+      SLUTMÆRKET. Samme figur som forsidens skillestreg og bundens, men
+      med den orange prik: her ER teksten forbi. Det, der kommer efter —
+      del, relaterede, mærker, naboer — er tilbehør, ikke artikel.
+      Rangordenen er: grå prik mellem indlæg, orange her hvor ét stykke
+      slutter, orange på tværs af hele bredden dér hvor sitet slutter.
+    */ -}}
+    <div class="col skille skille--slut" aria-hidden="true"><span></span></div>
+
     {{ partial "del.html" . }}
     {{- $rel := slice }}
     {{- range .GetTerms "tags" }}
@@ -29,7 +46,7 @@
     {{- end }}
     {{- with first 3 (sort ($rel | uniq) "Date" "desc") }}
     <section class="post-efter" aria-labelledby="relaterede">
-      <h2 class="post-h" id="relaterede">Relaterede</h2>
+      <h2 id="relaterede">Relaterede</h2>
       <div class="related">
         {{- range . }}
         <a class="quiet" href="{{ .RelPermalink }}">
@@ -60,9 +77,6 @@
       <a class="naeste" href="{{ .RelPermalink }}" rel="next"><span>{{ .Title }}</span>{{ partial "ikon.html" "nabo-hoejre" }}</a>
       {{- end }}
     </nav>
-    {{- end }}
-    {{- with .GitInfo }}
-    <p class="opdateret post-efter">Sidst opdateret <time datetime="{{ $.Lastmod.Format "2006-01-02" }}">{{ $.Lastmod | time.Format "2. January 2006" }}</time></p>
     {{- end }}
 
   </article>

@@ -74,6 +74,14 @@
       </div>
     </article>
   {{- end }}
+  {{- /*
+    SIDETALLET STÅR KUN, NÅR DER ER SIDER AT GÅ IMELLEM.
+    Med én side sagde den "Side 1 af 1" og pegede på "Hele arkivet" — et
+    tal uden betydning og et link, der allerede står i menuen. Rækken
+    forsvinder derfor helt, skillestregen over den med, indtil der faktisk
+    er mere end én side; så kommer frem/tilbage igen af sig selv.
+  */ -}}
+  {{- if gt $side.TotalPages 1 }}
   <div class="col skille" aria-hidden="true"><span></span></div>
   <nav class="col sidetal" aria-label="Sider">
     <span>Side {{ $side.PageNumber }} af {{ $side.TotalPages }}</span>
@@ -90,4 +98,5 @@
       {{- end }}
     </span>
   </nav>
+  {{- end }}
 {{ end }}
