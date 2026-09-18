@@ -183,8 +183,18 @@ main {
   --indlaeg-top: 3rem;
   padding: var(--indlaeg-top) 0 1.875rem;
 }
-.arkiv-side     { max-width: 47.5rem; margin-inline: auto; padding: 0 0 6rem; }
-.profil-side    { max-width: 55rem;   margin-inline: auto; padding: 0 0 6rem; }
+/* ★ ÉN SPALTEBREDDE. Arkivet stod i 760px, profilen i 880px og alt andet
+   i .col'ens 680px — tre mål, uden at siderne er tre forskellige slags
+   sider. Forskellen sås tydeligst mod topbaren, der er 1120px bred:
+   indholdet flugtede hverken med den eller med sig selv fra side til
+   side. De arver nu .col'ens bredde og er dermed samme spalte som
+   forsiden og artiklen. */
+.arkiv-side,
+.profil-side {
+  max-width: min(var(--col-max), var(--measure));
+  margin-inline: auto;
+  padding: 0 0 6rem;
+}
 
 
 .col {

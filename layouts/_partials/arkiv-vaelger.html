@@ -13,10 +13,12 @@
 {{- end }}
 
 {{- if gt (len $veje) 1 }}
-<p class="arch-intro">Udforsk {{ site.Params.maerke | default site.Title }} efter:</p>
+{{- /* Uden bomærket i sætningen: den blev skrevet, da mærket var
+       "bojko.dk" ("Udforsk bojko.dk efter"), og med et personnavn
+       indsat lyder den forkert. En etiket siger det samme kortere. */ -}}
+<p class="arch-intro">Udforsk efter</p>
 <nav class="arch-modes" aria-label="Arkivets visninger">
   {{- range $i, $v := $veje }}
-    {{- if $i }}<span class="sep" aria-hidden="true">|</span>{{ end }}
     {{- if eq $v.id $nu }}
     <span class="arch-mode" aria-current="page">{{ $v.navn }}</span>
     {{- else }}

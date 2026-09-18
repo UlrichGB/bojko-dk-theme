@@ -32,7 +32,12 @@
    hvor der er plads til én eller to. Spalten er allerede smal nok til at
    være en læsebredde — rubrikken behøver ikke en strammere. */
 .post-h--forside { font-size: var(--h-forside); }
-.post-h--indlaeg { font-size: var(--h-indlaeg); max-width: 14ch; }
+/* Heller ingen egen bredde på artiklens rubrik. 14ch var sat efter små
+   bogstaver; med versaler blev det til fem linjer og et ord brækket midt
+   over ("OVERRASKELS/EN"), fordi overflow-wrap måtte træde til for at få
+   ordet ned i en kasse, der var smallere end ordet selv. Spalten er
+   rubrikkens bredde. */
+.post-h--indlaeg { font-size: var(--h-indlaeg); }
 .post-h--arkiv   { font-size: var(--h-arkiv);   margin-bottom: 1.75rem; }
 .post-h--profil  { font-size: 1.875rem; margin-bottom: 0.375rem; }
 
@@ -89,8 +94,11 @@
 .wm[data-glyph="Y"], .wm[data-glyph="T"] { margin-left: -0.05em; }
 
 
+/* Ingen egen bundmargin: .post-hoved er en flex-kolonne med gap, og en
+   margin oveni gør afstanden ned til metalinjen større end afstanden op
+   til rubrikken. Rytmen i hovedet skal komme ét sted fra. */
 .lede {
-  margin: 0 0 1.25rem;
+  margin: 0;
   font-family: var(--font-sub);
   font-weight: 400;
   font-size: var(--lede);
@@ -123,6 +131,12 @@
 .body-copy > * { margin: 0; }
 .body-copy p { margin: 0; }
 
+
+/* Samme grund som .arch-gruppe: overskriftsankre i en artikel skal lande
+   under topbaren og ikke bag den. */
+.body-copy :is(h2, h3, h4)[id] {
+  scroll-margin-top: calc(var(--topbar-total) + 1rem);
+}
 
 .body-copy h2 {
   font-family: var(--font-display);
@@ -247,7 +261,9 @@
   margin-bottom: calc(var(--x) / 2);
 }
 
-.body-copy img { border-radius: var(--radius-xs); }
+/* Samme rundning som omslaget: det er den samme slags ting — et billede,
+   der ligger på papiret inde i en artikel. */
+.body-copy img { border-radius: var(--radius-sm); }
 
 .body-copy figcaption {
   margin-top: var(--space-1);

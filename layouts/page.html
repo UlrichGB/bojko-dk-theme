@@ -5,7 +5,6 @@
   */ -}}
   <article class="col post">
 
-    {{- partial "omslag.html" . }}
     {{ partial "vandmaerke.html" . }}
 
     <header class="post-hoved post-hoved--indlaeg">
@@ -16,6 +15,15 @@
 
       {{ partial "meta.html" . }}
     </header>
+
+    {{- /*
+      OMSLAGET STÅR EFTER HOVEDET, ikke før det. Så åbner ENHVER artikel ens:
+      rubrik, manchet, byline — og derefter enten et billede eller ingenting.
+      Stod det øverst, begyndte en artikel med omslag i 1120px og en uden med
+      et kæmpe forbogstav, og de to lignede ikke samme skabelon.
+      Bredden følger spalten af samme grund: siden har ét mål.
+    */ -}}
+    {{- partial "omslag.html" . }}
 
     <div class="body-copy">
       {{ .Content }}

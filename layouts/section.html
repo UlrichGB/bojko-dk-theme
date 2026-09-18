@@ -9,14 +9,16 @@
     {{- with .Pages }}
     {{ partial "arkiv-vaelger.html" (dict "side" $ "tilstand" "aar") }}
 
-    {{- range .GroupByDate "2006" }}
+    {{- range $i, $gruppe := .GroupByDate "2006" }}
       <div class="arch-gruppe">
         <div class="arch-gruppe-hoved">
-          <span>{{ .Key }}</span>
-          <a class="totop" href="#indhold">Til toppen</a>
+          <span>{{ $gruppe.Key }}</span>
+          {{- /* Ikke ved det første år: dér ER man i toppen, og linket
+                 peger på det sted, man allerede står. */ -}}
+          {{- if $i }}<a class="totop" href="#indhold">Til toppen</a>{{ end }}
         </div>
         <ul class="arch-liste">
-          {{- range .Pages }}
+          {{- range $gruppe.Pages }}
           <li>
             <time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date | time.Format "2. Jan" }}</time>
             <a class="arch-link" href="{{ .RelPermalink }}">{{ .Title }}</a>

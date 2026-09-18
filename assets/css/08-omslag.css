@@ -2,9 +2,22 @@
    Omslagsbåndet, metalinjen, delelinks, relaterede indlæg og
    forrige/næste. */
 
-.featured {
-  margin-bottom: 2.5rem;
+/* Omslaget i en artikel følger spalten. .featured bærer ellers den brede
+   udbruds-bredde fra 02 (sheet-inner), som gav mening dengang billedet lå
+   øverst og skulle spænde over arket; nu ligger det inde i teksten og skal
+   have tekstens mål. Udbruddet findes stadig til .wide inde i brødteksten,
+   hvor det er et bevidst valg pr. billede. */
+.post > .featured {
+  width: auto;
+  max-width: none;
+  margin-left: 0;
 }
+
+.featured {
+  margin-bottom: var(--x);
+}
+
+.post > .featured { margin: var(--x) 0 var(--x); }
 
 
 
@@ -16,7 +29,10 @@
   object-fit: cover;
   object-position: center;
 
-  border-radius: var(--radius-xs);
+  /* --radius-xs (3px) var sat, dengang omslaget lå op ad et bånd og kun
+     skulle tage kanten af hjørnet. Nu ligger det frit på papiret og må
+     gerne være rundet. Næste trin er --radius-md (16px). */
+  border-radius: var(--radius-sm);
 }
 
 .featured figcaption {

@@ -2,70 +2,124 @@
    Listerne: arkivet, emne- og produktoversigten, profilen, mærkerne,
    sidetallet og bunden. */
 
+/* Etiketten som DEL, RELATEREDE og bundens overskrifter. */
 .arch-intro {
-  margin: 0 0 0.5rem;
+  margin: var(--x) 0 0.75rem;
   font-family: var(--font-sub);
-  font-size: 1rem;
-  color: var(--color-neutral-700);
+  font-weight: 600;
+  font-size: var(--bitte);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-text);
 }
 
 .arch-modes {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 0.625rem;
-  margin-bottom: 2rem;
-  font-family: var(--font-sub);
-  font-size: 1rem;
-  font-weight: 600;
+  gap: 0.5rem;
+  margin-bottom: calc(var(--x) * 1.5);
 }
-.arch-modes .sep { color: var(--color-neutral-400); }
 
+/* Samme knap som Del-rækken under en artikel: ramme, 36px, versaler i
+   handlingens stemme, og en hover der fylder fladen med mærkefarven. To
+   understregede ord i brødtekststørrelse lignede ikke noget, man kunne
+   trykke på.
+   Den valgte visning er FYLDT, de øvrige har ramme — samme logik som
+   mærker mod delknapper: fyld = tilstand, ramme = handling. */
 .arch-mode {
-  color: var(--color-text);
-  text-decoration: underline;
-  text-decoration-color: var(--color-accent);
-  text-underline-offset: 4px;
-}
-.arch-mode:hover { color: var(--color-accent-600); }
-.arch-mode[aria-current="page"] {
-  color: var(--color-neutral-700);
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.25rem;
+  padding: 0 1em;
+  border: 1px solid var(--color-neutral-400);
+  border-radius: var(--radius-xs);
+
+  font-family: var(--font-sub);
+  font-size: var(--bitte);
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
   text-decoration: none;
+  color: var(--color-text);
+
+  transition: background .15s, border-color .15s, color .15s;
+}
+
+.arch-mode:hover,
+.arch-mode:focus-visible {
+  border-color: var(--color-accent);
+  background: var(--color-accent);
+  color: var(--color-neutral-100);
+}
+
+.arch-mode[aria-current="page"] {
+  border-color: var(--color-accent);
+  background: var(--color-accent);
+  color: var(--color-neutral-100);
+  cursor: default;
 }
 
 
+/* Venstrestillet som alt andet på siden. Indekset stod centreret, mens
+   overskrift, brødtekst og lister står på samme venstrekant. */
 .letters {
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
   gap: 0.375rem;
-  max-width: 45rem;
-  margin: 0 auto 2.5rem;
+  margin: 0 0 calc(var(--x) * 1.5);
 }
 
+/* ★ FYLD BETØD TILSTAND, OG DET BLEV BRUGT OMVENDT HER. Hvert bogstav
+   stod som en fyldt flade — også de bogstaver, der ikke fører nogen
+   steder hen — så forskellen på "kan trykkes" og "kan ikke" lå alene i
+   tekstens gråtone. Nu følger indekset resten af sitet: et bogstav med
+   emner er en RAMME (en handling, som delknapperne og Emner/År), og et
+   bogstav uden er slet ingen knap — bare et dæmpet tegn. */
 .letter {
   display: inline-grid;
   place-items: center;
   width: max(44px, 2.75rem); height: max(44px, 2.75rem);
-  background: var(--color-neutral-200);
+
+  border: 1px solid var(--color-neutral-400);
+  border-radius: var(--radius-xs);
+  background: none;
   color: var(--color-text);
+
   font-family: var(--font-sub);
   font-weight: 600;
   font-size: 0.9375rem;
   text-decoration: none;
-  border-radius: var(--radius-xs);
+
+  transition: background .15s, border-color .15s, color .15s;
 }
-.letter:hover {
-  background: var(--color-accent-100);
-  color: var(--color-accent-700);
+
+.letter:hover,
+.letter:focus-visible {
+  border-color: var(--color-accent);
+  background: var(--color-accent);
+  color: var(--color-neutral-100);
 }
+
 .letter[aria-disabled="true"] {
+  border-color: transparent;
+  background: none;
   color: var(--color-neutral-400);
   pointer-events: none;
 }
 
 
-.arch-gruppe { padding: 1.5rem 0 0.5rem; }
+/* ★ ET SPRING SKAL LANDE UNDER TOPBAREN, IKKE BAG DEN.
+   Topbaren er sticky og dækker de øverste ~72px. Uden scroll-margin
+   ruller browseren gruppens overskrift præcis derind, hvor baren står,
+   så man lander på listen med bogstavet skjult — og et indeks, der
+   tilsyneladende ikke gør noget, ser ud som om det er i stykker.
+   --topbar-total findes allerede til netop den slags og bruges andre
+   steder i temaet; her manglede den. */
+.arch-gruppe {
+  padding: 1.5rem 0 0.5rem;
+  scroll-margin-top: calc(var(--topbar-total) + 1rem);
+}
 
 .arch-gruppe-hoved {
   display: flex;
@@ -74,11 +128,15 @@
   padding-bottom: 0.625rem;
   border-bottom: 1px solid var(--color-neutral-300);
 }
+/* Årstallet er en sektionsoverskrift og skal se ud som en. Det stod i
+   vægt 400 med negativ sporing — altså som brødtekst i stor grad, mens
+   alle andre overskrifter er 700 med luft imellem. Versaler kan et
+   årstal ikke få, så vægten og sporingen må bære det. */
 .arch-gruppe-hoved > span {
-  font-family: var(--font-sub);
-  font-weight: 400;
+  font-family: var(--font-display);
+  font-weight: 700;
   font-size: 1.625rem;
-  letter-spacing: -0.02em;
+  letter-spacing: 0.04em;
   line-height: 1;
   font-variant-numeric: tabular-nums;
 }

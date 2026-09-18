@@ -28,12 +28,18 @@
         {{- end }}
       {{- end }}
     </nav>
+    {{- $vist := 0 }}
     {{- range $b := $alfabet }}
       {{- with index $grupper $b }}
       <div class="arch-gruppe" id="ark-{{ $b }}">
         <div class="arch-gruppe-hoved">
           <span>{{ $b }}</span>
-          <a class="totop" href="#indhold">Til toppen</a>
+          {{- /* Ikke ved den første gruppe, der faktisk vises: dér står
+                 man allerede i toppen. Tælleren er nødvendig, fordi
+                 løkken går hele alfabetet igennem og springer de tomme
+                 bogstaver over — $i ville tælle Q og R med. */ -}}
+          {{- if $vist }}<a class="totop" href="#indhold">Til toppen</a>{{ end }}
+          {{- $vist = add $vist 1 }}
         </div>
         <ul class="two-col">
           {{- range . }}
