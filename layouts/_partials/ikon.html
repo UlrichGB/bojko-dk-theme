@@ -17,7 +17,9 @@
 {{- else if eq $n "rss" -}}
   <path d="M4 11a9 9 0 0 1 9 9"></path><path d="M4 4a16 16 0 0 1 16 16"></path><circle cx="5" cy="19" r="1"></circle>
 {{- else if eq $n "linkedin" -}}
-  <path d="M4.5 9.5a4 4 0 0 1 4-4H15"></path><path d="M19.5 14.5a4 4 0 0 1-4 4H9"></path><path d="M8 12h8"></path>
+  {{- /* Et "in" i samme streg som resten. Det, der stod her før, var en
+         abstrakt kædeform, som ingen læste som LinkedIn. */ -}}
+  <path d="M6 6.5h0"></path><path d="M6 10.5V18"></path><path d="M11 18v-7.5"></path><path d="M11 14a3.5 3.5 0 0 1 7 0v4"></path>
 {{- else if eq $n "mastodon" -}}
   <path d="M12 3a9 9 0 1 0 9 9"></path><path d="M12 8v4l3 2"></path>
 {{- else if eq $n "bluesky" -}}

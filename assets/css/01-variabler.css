@@ -46,9 +46,24 @@
   --kode-streg:  #30363d;
 
 
-  --font-display: "Merriweather", Georgia, "Times New Roman", serif;
-  --font-read:    "Source Sans 3", system-ui, -apple-system, "Segoe UI", sans-serif;
-  --font-sub:     var(--font-read);
+  /* ★ PRØVEKØRSEL: rubrikkerne sat med sans.
+     Source Sans 3 ligger her i forvejen som VARIABEL skrift (400-700),
+     så skiftet koster ingen nye filer og rulles tilbage med én linje:
+     sæt --font-display til --font-serif igen.
+     Bemærk: det er en humanistisk sans, ikke den geometriske display-sans
+     forlægget bruger. Den skal hentes ind som en rigtig fil, hvis vi går
+     hele vejen. */
+  --font-display: "Source Sans 3", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-serif:   "Merriweather", Georgia, "Times New Roman", serif;
+  /* ★ TRE ROLLER, IKKE TO. Da rubrikkerne gik til sans, kunne --font-sub
+     ikke længere bare være --font-read: læseskriften er nu en serif, mens
+     menu, metalinje, billedtekster, tabeller og arkiv skal blive ved med
+     at være sans. Derfor står de hver for sig nu.
+       --font-display  rubrikker og vandmærke   (sans)
+       --font-read     brødtekst, lange stræk   (serif)
+       --font-sub      alt det korte, der peger (sans) */
+  --font-read:    "Merriweather", Georgia, "Times New Roman", serif;
+  --font-sub:     "Source Sans 3", system-ui, -apple-system, "Segoe UI", sans-serif;
   --font-body:    var(--font-read);
   --font-brand:   "Comfortaa", var(--font-read);
   --font-mono:    ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace;
@@ -57,7 +72,11 @@
   --x: 1.875rem;
 
 
-  --brodtekst:  1.1875rem;
+  /* Merriweather har en markant større x-højde end Source Sans, så den
+     ser større ud ved samme størrelse. Et hak ned holder den optiske
+     størrelse, og linjeafstanden (--x) bliver samtidig til det rundere
+     forhold, en serif vil have. */
+  --brodtekst:  1.125rem;
   --lede:       clamp(1.375rem, 2.6vw, 1.75rem);
   --h-forside:  clamp(1.875rem, 4vw, 2.625rem);
   --h-indlaeg:  clamp(2.125rem, 4.8vw, 3.25rem);
@@ -70,7 +89,21 @@
   --kode:       0.84375rem;
 
 
+  /* ★ TO MÅL, IKKE ET.
+     --measure er SPALTENS bredde: rubrik, metalinje, Læs mere, skillestreg.
+     --measure-brod er LÆSEBREDDEN for løbende tekst, og den skal være
+     smallere: 45-75 tegn pr. linje, helst omkring 66.
+
+     ★ ch LYVER, OG DET GJORDE DEN HER. ch er bredden af cifret 0, ikke af
+     et gennemsnitligt tegn. Målt på dansk brødtekst ved 18px:
+        Source Sans 3:  0 = 8,50px, gennemsnit = 7,00px  -> 62ch = 527px
+        Merriweather:   0 = 11,62px, gennemsnit = 8,49px -> 62ch = 721px
+     Da brødteksten skiftede til Merriweather, blev 62ch altså bredere end
+     spalten og holdt op med at gøre noget som helst — linjen voksede til
+     80 tegn uden at nogen regel så forkert ud. 48ch ≈ 558px ≈ 66 tegn.
+     Skiftes brødskriften igen, SKAL det her tal måles om. */
   --measure:      62ch;
+  --measure-brod: 48ch;
   --col-max:      42.5rem;
   --sheet-max:    1120px;
   --sheet-gutter: clamp(20px, 6vw, 100px);
@@ -109,7 +142,7 @@
 
 @media (max-width: 34rem) {
   :root {
-    --brodtekst: 1.09375rem;
+    --brodtekst: 1.0625rem;
     --x:         1.6875rem;
     --h2:        1.4375rem;
     --ark-top:   2.75rem;

@@ -50,6 +50,15 @@
     {{- with site.Home.OutputFormats.Get "rss" }}
       <a class="nav-icon" href="{{ .RelPermalink }}" aria-label="RSS-feed">{{ partial "ikon.html" "rss" }}</a>
     {{- end }}
+    {{- /* Profilen, ikke et delelink: samme håndtag som del.html bruger, så
+           et platformskifte stadig kun er ét ord i params. rel="me" siger,
+           at de to sider er den samme person — det er dét, der binder
+           navnet sammen på tværs. */ -}}
+    {{- with site.Params.social.linkedin }}
+      <a class="nav-icon" href="https://www.linkedin.com/in/{{ . }}"
+         target="_blank" rel="me noopener"
+         aria-label="{{ site.Params.maerke | default site.Title }} på LinkedIn">{{ partial "ikon.html" "linkedin" }}</a>
+    {{- end }}
   </nav>
 </header>
 

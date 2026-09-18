@@ -33,12 +33,42 @@
         {{- if $hele }}
           {{ $p.Content }}
         {{- else }}
-          <p>{{ $p.Description | default $p.Summary }}</p>
-          {{- /* aria-label, fordi "Læs videre" alene ikke siger hvorhen, når
-                 man springer fra link til link med en skærmlæser. */ -}}
-          <p class="pille-rad">
-            <a class="pille" href="{{ $p.RelPermalink }}"
-               aria-label="Læs videre: {{ $p.Title }}">Læs videre {{ partial "ikon.html" "pil-hoejre" }}</a>
+          {{- /*
+            UDDRAGET. Beskrivelsen er skrevet til søgeresultatet og er
+            derfor kort — halvanden linje her. Listen læser i stedet
+            artiklens egen begyndelse.
+
+            ★ FØRSTE AFSNIT SPRINGES OVER, NÅR DET KUN ER KURSIV. Serierne
+            åbner med *Del 3 af 3 i trilogien …*, og det er en etiket, ikke
+            en indledning; uden det her ville hvert uddrag begynde med den
+            samme linje i stedet for med artiklens krog.
+
+            Vil du selv bestemme, hvor et uddrag klippes, så sæt <!--more-->
+            i artiklen: så bruger Hugo dit snit frem for det her.
+          */ -}}
+          {{- $uddrag := $p.Description -}}
+          {{- with $p.Content -}}
+            {{- $krop := . -}}
+            {{- /* Etiketten øverst: *Del 3 af 3 …* */ -}}
+            {{- $krop = replaceRE `(?s)^\s*<p>\s*<em>.*?</em>\s*</p>` "" $krop -}}
+            {{- /* Og et åbnende citat: det er artiklens anslag, men uden
+                   sine anførselstegn og sin ombrydning løber det bare ind
+                   i næste afsnit. Uddraget begynder ved brødteksten. */ -}}
+            {{- $krop = replaceRE `(?s)^\s*<blockquote>.*?</blockquote>` "" $krop -}}
+            {{- /* Mellemrum HVOR EN BLOK SLUTTER. Uden det her sætter
+                   plainify sidste ord i ét afsnit op ad første ord i det
+                   næste, og uddraget får ord, der ikke findes. */ -}}
+            {{- $krop = replaceRE `(?s)</(p|h[1-6]|blockquote|li|figcaption)>` " " $krop -}}
+            {{- $ren := partial "uden-anker.html" $krop | plainify | htmlUnescape
+                        | replaceRE `\s+` " " | strings.TrimSpace -}}
+            {{- with $ren }}{{ $uddrag = . | truncate 340 }}{{ end -}}
+          {{- end }}
+          <p>{{ $uddrag }}</p>
+          {{- /* aria-label, fordi "Læs mere" alene ikke siger hvorhen, når man
+                 springer fra link til link med en skærmlæser. */ -}}
+          <p class="laes-mere-rad">
+            <a class="laes-mere" href="{{ $p.RelPermalink }}"
+               aria-label="Læs mere: {{ $p.Title }}"><span data-tekst="Læs mere">Læs mere</span>{{ partial "ikon.html" "pil-hoejre" }}</a>
           </p>
         {{- end }}
       </div>

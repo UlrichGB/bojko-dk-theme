@@ -8,6 +8,9 @@
   .nav-item,
   .nav-item::after,
   .nav-icon,
+  .laes-mere,
+  .laes-mere span,
+  .laes-mere svg,
   .kopi-knap,
   .share {
     transition: none;

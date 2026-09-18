@@ -2,35 +2,82 @@
    Artiklen selv: rubrik, underrubrik, vandmærke, afsnit, lister, citater
    og billeder. */
 
+/* RUBRIKKEN — versaler med luft imellem.
+   Tre ting følges ad, når en rubrik sættes med store bogstaver, og den
+   ser forkert ud, hvis man kun gør det første:
+     1. Sporingen vender. Små bogstaver strammes (-0.02em); versaler skal
+        have luft (+0.05em), ellers klumper de.
+     2. Linjeafstanden kan strammes. Versaler har hverken over- eller
+        underlængder, så 1.12 bliver til et hul mellem linjerne.
+     3. Der er plads til færre tegn. Et versal-M fylder langt mere end et
+        lille m, så ch-målene skal ned, eller rubrikken bliver til en mur.
+   Den optiske indrykning til venstre ryger også: den var sat efter de
+   små bogstavers runde former. */
 .post-h {
   font-family: var(--font-display);
   font-weight: 700;
-  line-height: 1.12;
-  letter-spacing: -0.02em;
-  margin: 0 0 0 -0.04em;
+  line-height: 1.06;
+  letter-spacing: 0.05em;
+  /* Sporingen lægger luft EFTER sidste bogstav; den trækkes fra igen, så
+     rubrikken flugter med teksten under den. */
+  margin: 0 -0.05em 0 0;
   color: var(--color-text);
-  text-transform: none;
+  text-transform: uppercase;
 
   overflow-wrap: break-word;
 }
 
-.post-h--forside { font-size: var(--h-forside); max-width: 22ch; }
-.post-h--indlaeg { font-size: var(--h-indlaeg); max-width: 18ch; }
+/* Ingen egen bredde på forsidens rubrik: den må bruge hele spalten.
+   ch-målet var sat efter små bogstaver og holdt rubrikken på tre linjer,
+   hvor der er plads til én eller to. Spalten er allerede smal nok til at
+   være en læsebredde — rubrikken behøver ikke en strammere. */
+.post-h--forside { font-size: var(--h-forside); }
+.post-h--indlaeg { font-size: var(--h-indlaeg); max-width: 14ch; }
 .post-h--arkiv   { font-size: var(--h-arkiv);   margin-bottom: 1.75rem; }
 .post-h--profil  { font-size: 1.875rem; margin-bottom: 0.375rem; }
 
 
-.wm {
-  position: absolute;
-  left: -0.36em;
-  top: -0.12em;
-  z-index: 0;
+/* VANDMÆRKET placeres efter RUBRIKKEN, ikke efter blokken.
+   Toppen af bogstavet skal stå --wm-luft over toppen af rubrikken.
 
+   ★ TO STØRRELSER SKAL TRÆKKES FRA, og det er derfor tallet ikke bare er
+     15px:
+     1. Blokkens egen toppolstring. Rubrikken begynder dér, ikke i toppen
+        af artiklen; --indlaeg-top bærer det tal, så de to ikke kan komme
+        fra hinanden.
+     2. Luften inde i tekstboksen. Et bogstav står ikke i toppen af sin
+        egen linje — der er et stykke fra boksens kant ned til versalens
+        top. --wm-optisk er dét stykke, sat efter Merriweather.
+
+   Er bogstavet en anelse for højt eller lavt, er det --wm-optisk, der
+   skal skrues på, ikke --wm-luft. */
+.wm {
+  --wm-luft:   15px;
+  --wm-optisk: 0.26em;
+
+  /* ★ BOGSTAVET LIGGER BAG ALT ANDET, OG DET GØR DET IKKE AF SIG SELV.
+     Et absolut placeret element males i et SENERE lag end almindelig
+     tekst i flowet — også når det står før teksten i markup'en. Derfor
+     lå foden af "1" hen over det første ord.
+     z-index -1 lægger det under. Det blev valgt frem for at løfte
+     teksten til z-index 1, fordi et positioneret .post-hoved ville tage
+     imod det dækkende link (se .title-link::after i 02) og spærre det
+     inde i rubrikkens egen boks i stedet for hele blokken. */
+  position: absolute;
+  left: var(--wm-venstre, -0.36em);
+  top: calc(-1 * (var(--wm-luft) + var(--wm-optisk)));
+  z-index: -1;
+
+  /* Samme skrift som rubrikken, den står bag — ikke brødtekstens. */
+  font-family: var(--font-display);
   font-size: clamp(110px, 34vw, 220px);
   font-weight: 700;
   line-height: 1;
   letter-spacing: -0.03em;
-  color: var(--color-neutral-200);
+  /* En anelse mørkere end papirets nabotone. Skru på procenten alene:
+     0% = den gamle, næsten usynlige; 100% = neutral-300, klart for meget
+     bag en rubrik. */
+  color: color-mix(in srgb, var(--color-neutral-300) 45%, var(--color-neutral-200));
   pointer-events: none;
   user-select: none;
 }
@@ -58,8 +105,16 @@
   flex-direction: column;
   gap: var(--x);
 
-  max-width: var(--measure);
+  max-width: var(--measure-brod);
   font-family: var(--font-read);
+
+  /* Dansk sætter lange sammensatte ord — "beskedtjenester",
+     "datacenterregion" — og en smal spalte får store huller i højre kant
+     uden orddeling. <html lang="da"> er sat, så browseren har mønstrene.
+     Grænserne holder den fra at dele små ord og efterlade én stavelse. */
+  hyphens: auto;
+  -webkit-hyphens: auto;
+  hyphenate-limit-chars: 7 4 3;
   font-size: var(--brodtekst);
   line-height: var(--x);
   color: var(--color-neutral-900);
@@ -196,7 +251,9 @@
 
 .body-copy figcaption {
   margin-top: var(--space-1);
-  font-size: 0.6875rem;
+  /* 11px var under det, man kan læse behageligt; --bitte er 13px og
+     bruges allerede til den brede billedtekst. */
+  font-size: var(--bitte);
   color: var(--color-neutral-700);
 }
 .body-copy .wide figcaption {
@@ -225,8 +282,20 @@
 
 @supports (text-box: trim-both cap alphabetic) {
   .post-h        { text-box: trim-both cap alphabetic; }
+  /* Når boksen er skåret til versalhøjde, ER kanten bogstavets top — så
+     skal der ikke gættes på en optisk korrektion, og --wm-luft er præcis
+     de 15px, den lover. Skønnet ovenfor er kun for de browsere, der
+     endnu ikke kan skære. */
+  .wm            { text-box: trim-both cap alphabetic; --wm-optisk: 0px; }
   .body-copy h2  { text-box: trim-both cap alphabetic;
                    margin: var(--x) 0 calc(var(--x) / -2); }
   .body-copy h3  { text-box: trim-both cap alphabetic;
                    margin: calc(var(--x) / 2) 0 calc(var(--x) / -2); }
 }
+
+/* Forsiden polstrer blokken foroven; artiklen gør ikke. Vandmærket skal
+   stå det samme sted i forhold til RUBRIKKEN begge steder. */
+.forside-indlaeg > .wm {
+  top: calc(var(--indlaeg-top) - var(--wm-luft) - var(--wm-optisk));
+}
+
