@@ -94,11 +94,17 @@
 .wm[data-glyph="Y"], .wm[data-glyph="T"] { margin-left: -0.05em; }
 
 
-/* Ingen egen bundmargin: .post-hoved er en flex-kolonne med gap, og en
-   margin oveni gør afstanden ned til metalinjen større end afstanden op
-   til rubrikken. Rytmen i hovedet skal komme ét sted fra. */
+/* ★ MANCHETTEN SKAL HAVE LUFT UNDER SIG — MEN IKKE ALLE STEDER.
+   I artiklens hoved ligger den i en flex-kolonne med gap, og en margin
+   oveni gør afstanden ned til metalinjen større end afstanden op til
+   rubrikken; dér nulstilles den nedenfor.
+   På profilen står den derimod alene foran .body-copy uden nogen
+   forælder, der giver afstand — nulstilles den dér, løber manchetten
+   direkte ind i første afsnit. Derfor: margin som standard, undtagelsen
+   scopet til hovedet og ikke omvendt.
+   var(--x) er sidens rytme, altså samme afstand som mellem to afsnit. */
 .lede {
-  margin: 0;
+  margin: 0 0 var(--x);
   font-family: var(--font-sub);
   font-weight: 400;
   font-size: var(--lede);
@@ -106,6 +112,9 @@
   letter-spacing: -0.015em;
   color: var(--color-text);
 }
+
+/* Undtagelsen: i artiklens hoved kommer afstanden fra flex-gap'et. */
+.post-hoved .lede { margin: 0; }
 
 
 .body-copy {
@@ -253,6 +262,11 @@
 }
 
 
+/* .washed dæmpede billeder, så de faldt ind i den tonede palet. Hverken
+   portrættet eller omslaget bruger den længere — et ansigt og et omslag
+   skal stå i deres egen styrke. Klassen bliver stående som et redskab,
+   man kan sætte på et enkelt billede i en artikel, hvor et foto stjæler
+   for meget. Fjern den, hvis den stadig er ubrugt om et halvt år. */
 .washed { filter: saturate(0.6) contrast(0.85) brightness(1.1) opacity(0.94); }
 
 .body-copy figure,

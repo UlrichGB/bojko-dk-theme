@@ -10,7 +10,7 @@
         {{- with $.Resources.GetMatch . }}
           {{- $p := .Fill "400x400 webp q82 Center" }}
           <div class="portraet">
-            <img class="washed" src="{{ $p.RelPermalink }}" width="200" height="200"
+            <img src="{{ $p.RelPermalink }}" width="200" height="200"
                  alt="Portræt af {{ site.Params.author | default $.Title }}">
             <span class="portraet-prik" aria-hidden="true"></span>
           </div>
@@ -23,7 +23,11 @@
       </div>
       {{- $kontakt := slice }}
       {{- with site.Params.email }}{{ $kontakt = $kontakt | append (dict "navn" . "url" (printf "mailto:%s" .)) }}{{ end }}
-      {{- with site.Params.social.linkedin }}{{ $kontakt = $kontakt | append (dict "navn" "LinkedIn" "url" (printf "https://www.linkedin.com/in/%s" .)) }}{{ end }}
+      {{- /* LinkedIn står IKKE her. Profilen er fjerde gang, det samme link
+             ville optræde: ikonet i topbaren, "Følg mig" i bunden og
+             teksten i selve profilen peger allerede derhen. E-mail,
+             Mastodon og Bluesky bliver stående — de har ingen anden
+             plads i sitet. */ -}}
       {{- with site.Params.social.mastodon }}{{ $kontakt = $kontakt | append (dict "navn" "Mastodon" "url" (printf "https://%s" .)) }}{{ end }}
       {{- with site.Params.social.bluesky }}{{ $kontakt = $kontakt | append (dict "navn" "Bluesky" "url" (printf "https://bsky.app/profile/%s" .)) }}{{ end }}
       {{- with $kontakt }}

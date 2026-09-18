@@ -18,8 +18,7 @@
   {{- end }}
   {{- $vist := $org.Resize (printf "%dx webp q82" (cond (gt $org.Width 1600) 1600 $org.Width)) }}
   <figure class="featured">
-    <img class="washed"
-         src="{{ $vist.RelPermalink }}"
+    <img src="{{ $vist.RelPermalink }}"
          {{ with $saet }}srcset="{{ delimit . ", " }}"
          sizes="(min-width: 1120px) 1120px, 100vw"{{ end }}
          width="{{ $vist.Width }}" height="{{ $vist.Height }}"

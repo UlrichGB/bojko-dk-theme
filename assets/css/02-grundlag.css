@@ -183,15 +183,24 @@ main {
   --indlaeg-top: 3rem;
   padding: var(--indlaeg-top) 0 1.875rem;
 }
-/* ★ ÉN SPALTEBREDDE. Arkivet stod i 760px, profilen i 880px og alt andet
-   i .col'ens 680px — tre mål, uden at siderne er tre forskellige slags
-   sider. Forskellen sås tydeligst mod topbaren, der er 1120px bred:
-   indholdet flugtede hverken med den eller med sig selv fra side til
-   side. De arver nu .col'ens bredde og er dermed samme spalte som
-   forsiden og artiklen. */
-.arkiv-side,
-.profil-side {
+/* Arkivet og emnesiden er ÉN spalte som forsiden og artiklen, og de stod
+   uden grund i 760px. De arver nu .col'ens bredde. */
+.arkiv-side {
   max-width: min(var(--col-max), var(--measure));
+  margin-inline: auto;
+  padding: 0 0 6rem;
+}
+
+/* ★ PROFILEN ER TO SPALTER OG SKAL VÆRE BREDERE. Den er ikke en spalte
+   tekst, men et portrætkort (16.25rem) ved siden af en tekstspalte, med
+   et mellemrum imellem. Sætter man siden til 680px som de øvrige, får
+   TEKSTEN kun ~320px, og så deler dansk sig i "leve-rancer" og
+   "SharePo-int" hele vejen ned.
+   Regnestykket bagud: læsebredden (~558px) + kortet (260px) +
+   mellemrummet ≈ 55rem. Bredden er altså afledt af tekstens mål og ikke
+   valgt frit — det er derfor den ikke må slås sammen med de andre. */
+.profil-side {
+  max-width: 55rem;
   margin-inline: auto;
   padding: 0 0 6rem;
 }
