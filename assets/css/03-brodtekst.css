@@ -38,6 +38,9 @@
    ordet ned i en kasse, der var smallere end ordet selv. Spalten er
    rubrikkens bredde. */
 .post-h--indlaeg { font-size: var(--h-indlaeg); }
+/* Noten i forsidens strøm: mindre rubrik, og uden vandmærkets toppolstring,
+   fordi der ikke er noget bogstav at give plads til. */
+.post-h--note    { font-size: var(--h-note); }
 .post-h--arkiv   { font-size: var(--h-arkiv);   margin-bottom: 1.75rem; }
 .post-h--profil  { font-size: 1.875rem; margin-bottom: 0.375rem; }
 

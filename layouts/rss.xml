@@ -8,7 +8,14 @@
 {{- if not $besk }}{{ $besk = printf "Nye artikler fra %s." $navn }}{{ end -}}
 {{- $hele := site.Params.fuldeIndlaeg | default true -}}
 {{- $sider := .RegularPages -}}
-{{- if .IsHome }}{{ $sider = site.RegularPages }}{{ end -}}
+{{- /* ★ HOVEDFEEDET ER DET SAMME SOM FORSIDEN, og det kommer fra samme
+       kilde, så de to ikke kan komme fra hinanden: det, man ser, er det,
+       man abonnerer på — artikler og noter imellem hinanden.
+       site.RegularPages ville tage ALT med, også de løse sider som
+       "Om siden" og de juridiske, som ingen skal have i en feedlæser.
+       Noterne har stadig deres eget feed på /noter/index.xml for dem, der
+       kun vil have opslagene. */ -}}
+{{- if .IsHome }}{{ $sider = partial "forsidens-indlaeg.html" . }}{{ end -}}
 {{- $graense := site.Config.Services.RSS.Limit -}}
 {{- if ge $graense 1 }}{{ $sider = first $graense $sider }}{{ end -}}
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/">

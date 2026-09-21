@@ -183,6 +183,11 @@ main {
   --indlaeg-top: 3rem;
   padding: var(--indlaeg-top) 0 1.875rem;
 }
+
+/* En note har intet vandmærke, så toppolstringen — der udelukkende er der
+   for at give bogstavet plads — kan falde bort. Det strammer strømmen om
+   de korte indslag, som hos forlægget. */
+.forside-indlaeg--note { --indlaeg-top: 1.25rem; }
 /* Arkivet og emnesiden er ÉN spalte som forsiden og artiklen, og de stod
    uden grund i 760px. De arver nu .col'ens bredde. */
 .arkiv-side {

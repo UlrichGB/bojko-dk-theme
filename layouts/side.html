@@ -1,0 +1,29 @@
+{{ define "main" }}
+  {{- /*
+    EN ALMINDELIG SIDE. Vælges med `layout: side` i frontmatter.
+
+    Forskellen fra page.html er hvad der IKKE er her: intet vandmærke, intet
+    omslag, ingen metalinje med forfatter og læsetid, ingen del-række, ingen
+    relaterede og ingen naboer. En kolofon eller en politik er ikke et indlæg
+    i en strøm — den har ingen dato, der betyder noget, og ingen næste side.
+
+    Kun "sidst opdateret" bliver stående, fordi det er dét, der fortæller om
+    en sådan side stadig passer.
+  */ -}}
+  <article class="col post">
+
+    <header class="post-hoved post-hoved--indlaeg">
+      <h1 class="post-h post-h--indlaeg">{{ .Title }}</h1>
+      {{- with .Description }}<p class="lede">{{ . | markdownify }}</p>{{ end }}
+    </header>
+
+    <div class="body-copy">
+      {{ .Content }}
+    </div>
+
+    {{- with .GitInfo }}
+    <p class="opdateret">Sidst opdateret <time datetime="{{ $.Lastmod.Format "2006-01-02" }}">{{ $.Lastmod | time.Format "2. January 2006" }}</time></p>
+    {{- end }}
+
+  </article>
+{{ end }}

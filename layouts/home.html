@@ -13,7 +13,7 @@
   {{- range $i, $p := $side.Pages }}
     {{- if $i }}<div class="col skille" aria-hidden="true"><span></span></div>{{ end }}
 
-    <article class="col forside-indlaeg">
+    <article class="col forside-indlaeg{{ if eq $p.Section "noter" }} forside-indlaeg--note{{ end }}">
       {{- /*
         ★ FORSIDEN VISER BOGSTAVET, IKKE OMSLAGET.
         Bogstavet dér, hvor man skimmer; omslaget dér, hvor man læser (se
@@ -21,9 +21,14 @@
         linjen med omslag.html ind igen og fjern "uansetOmslag" herunder —
         men vis ikke begge dele: de står samme sted bag rubrikken.
       */ -}}
-      {{ partial "vandmaerke.html" (dict "side" $p "uansetOmslag" true) }}
+      {{- /* ★ VANDMÆRKET ER ARTIKLENS MÆRKE. En note får det ikke: det er
+             dét, plus rubrikkens størrelse, der fortæller læseren hvilken
+             slags ting hun kigger på, uden at strømmen skal deles i to
+             afdelinger med hver sin overskrift. */ -}}
+      {{- $note := eq $p.Section "noter" }}
+      {{- if not $note }}{{ partial "vandmaerke.html" (dict "side" $p "uansetOmslag" true) }}{{ end }}
       <header class="post-hoved">
-        <h2 class="post-h post-h--forside">
+        <h2 class="post-h {{ if $note }}post-h--note{{ else }}post-h--forside{{ end }}">
           <a class="title-link" href="{{ $p.RelPermalink }}">{{ $p.Title }}</a>
         </h2>
         {{ partial "meta.html" $p }}

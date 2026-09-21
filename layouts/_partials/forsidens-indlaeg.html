@@ -1,6 +1,21 @@
 {{- /*
-  Forsidens artikelliste som en værdi:
+  Forsidens strøm som en værdi:
 
       {{ $liste := partial "forsidens-indlaeg.html" . }}
+
+  ★ ÉN STRØM, TO SLAGS INDHOLD. Artikler og noter står imellem hinanden i
+  ren datoorden — ikke i hver sin bunke. Det er ikke fordi de er det samme:
+  en artikel er skrevet færdig på en dato, en note bliver ved med at blive
+  rettet. De står sammen, fordi det er dét, der giver en side, der ligner
+  nogen, der arbejder, frem for en, der udgiver kvartalsvis.
+
+  Forskellen bæres af FORMEN (se home.html): artiklen har vandmærket og den
+  store rubrik, noten har hverken eller. Ikke af en overskrift, der deler
+  strømmen i to.
+
+  Sorteringen er .Date for begge. Noternes .Lastmod hører til inde PÅ noten,
+  hvor den siger noget om, hvorvidt indholdet stadig gælder; herude ville den
+  lade en gammel note hoppe til toppen, hver gang en stavefejl blev rettet.
 */ -}}
-{{- return (where site.RegularPages "Section" "artikler").ByDate.Reverse -}}
+{{- $sektioner := slice "artikler" "noter" -}}
+{{- return (where site.RegularPages "Section" "in" $sektioner).ByDate.Reverse -}}

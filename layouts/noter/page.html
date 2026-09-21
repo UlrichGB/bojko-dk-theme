@@ -1,0 +1,38 @@
+{{ define "main" }}
+  {{- /*
+    ÉN NOTE. Bevidst magrere end en artikel: intet omslag, intet vandmærke,
+    ingen del-række og ingen relaterede. En note er et opslag, man er kommet
+    til for at slå noget op — ikke et stykke, man er kommet for at læse.
+
+    Datoen er SIDST ÆNDRET og ikke udgivelsesdato, fordi det er den, der
+    afgør om en note stadig er værd at stole på.
+  */ -}}
+  <article class="col post">
+
+    <header class="post-hoved post-hoved--indlaeg">
+      <h1 class="post-h post-h--indlaeg">{{ .Title }}</h1>
+      {{- with .Description }}<p class="lede">{{ . | markdownify }}</p>{{ end }}
+
+      <div class="meta">
+        <span>Opdateret <time datetime="{{ .Lastmod.Format "2006-01-02" }}">{{ .Lastmod | time.Format "2. January 2006" }}</time></span>
+        {{- with .GetTerms "tags" }}
+          {{- range . }}<span class="sep" aria-hidden="true">/</span><span><a class="quiet" href="{{ .RelPermalink }}">{{ .LinkTitle }}</a></span>{{ end }}
+        {{- end }}
+        {{- if and (site.Params.laesetid | default true) .ReadingTime }}
+          <span class="sep" aria-hidden="true">/</span><span>{{ .ReadingTime }} min. læsning</span>
+        {{- end }}
+      </div>
+    </header>
+
+    <div class="body-copy">
+      {{ .Content }}
+    </div>
+
+    <div class="col skille skille--slut" aria-hidden="true"><span></span></div>
+
+    <p class="noter-tilbage">
+      <a class="laes-mere" href="{{ .Parent.RelPermalink }}"
+         aria-label="Tilbage til alle noter">{{ partial "ikon.html" "pil-venstre" }}<span data-tekst="Alle noter">Alle noter</span></a>
+    </p>
+  </article>
+{{ end }}
