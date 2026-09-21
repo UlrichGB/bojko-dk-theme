@@ -8,7 +8,7 @@
 {{- with site.GetPage "/tags" }}
   {{- $veje = $veje | append (dict "navn" "Emner" "url" .RelPermalink "id" "emner") }}
 {{- end }}
-{{- with site.GetPage "/artikler" }}
+{{- with (partial "skrivesektion.html" .).arkiv }}
   {{- $veje = $veje | append (dict "navn" "År" "url" .RelPermalink "id" "aar") }}
 {{- end }}
 

@@ -34,15 +34,16 @@
     */ -}}
     {{- $navn := site.Params.maerke | default site.Title -}}
     {{- $forfatter := site.Params.author -}}
+    {{- $profil := site.Params.profilside | default "/om/" -}}
     {{- $aar := cond (ne (string $fra) "") (printf "%v%s" $fra (cond (ne (string $fra) (string $til)) (printf "–%v" $til) "")) (string $til) -}}
     <span>
       {{- /* Fast mellemrum efter tegnet, så "© 2002-2026" aldrig knækker
              midt over ved en smal skærm. */ -}}
       {{- if and $forfatter (eq $forfatter $navn) -}}
-        <a class="foot-link" href="{{ "/om/" | relURL }}"><strong>{{ $forfatter }}</strong></a> ©&nbsp;{{ $aar }}
+        <a class="foot-link" href="{{ $profil | relURL }}"><strong>{{ $forfatter }}</strong></a> ©&nbsp;{{ $aar }}
       {{- else -}}
         {{ with $navn }}{{ . }} {{ end }}©&nbsp;{{ $aar }}
-        {{- with $forfatter }} <a class="foot-link" href="{{ "/om/" | relURL }}"><strong>{{ . }}</strong></a>{{ end }}
+        {{- with $forfatter }} <a class="foot-link" href="{{ $profil | relURL }}"><strong>{{ . }}</strong></a>{{ end }}
       {{- end }}
       {{- with site.Params.licens }} <span class="sep" aria-hidden="true">·</span> <a class="foot-link" href="{{ .url }}" rel="license noopener">{{ .navn }}</a>{{ end }}
     </span>

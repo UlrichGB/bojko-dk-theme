@@ -17,5 +17,5 @@
   hvor den siger noget om, hvorvidt indholdet stadig gælder; herude ville den
   lade en gammel note hoppe til toppen, hver gang en stavefejl blev rettet.
 */ -}}
-{{- $sektioner := slice "artikler" "noter" -}}
+{{- $sektioner := (partial "skrivesektion.html" .).sektioner -}}
 {{- return (where site.RegularPages "Section" "in" $sektioner).ByDate.Reverse -}}

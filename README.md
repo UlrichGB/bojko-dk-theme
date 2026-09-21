@@ -61,6 +61,35 @@ et plausibelt gæt ud, som ville se ud som en beslutning.
 | `params.ogBillede` | konfiguration + `static/` | sider uden omslagsbillede får intet `og:image`. Artikler bruger deres eget omslag |
 | `favicon.svg`, `apple-touch-icon.png`, webmanifest | `static/` | ingen ikoner. Temaet kan ikke levere dem uden at gætte på et bomærke |
 
+## Hvad sitet HEDDER
+
+Temaet kender ikke sitets mapper. To navne, det ellers ville skulle gætte,
+står i konfigurationen — med en standard, så et site, der ikke sætter dem,
+stadig virker.
+
+| Hvad | Standard | Hvad den styrer |
+|---|---|---|
+| `params.skrivesektion` | `["blog", "noter"]` | sektionerne i forsidens strøm — som også er hovedfeedet og 404-sidens "Nyeste indlæg". Den FØRSTE af dem er arkivet: "Hele arkivet" og "År" peger på den |
+| `params.profilside` | `/om/` | siden bag bylinen `Af …`, bag navnet i kolofonen og i JSON-LD'ens `author.url` |
+
+`skrivesektion` tager begge former:
+
+```toml
+skrivesektion = ["blog", "noter"]   # en strøm af flere sektioner
+skrivesektion = "blog"              # kun én — samme som ["blog"]
+```
+
+★ **En standard, der er uenig med sitet, siger ikke fra.** Hedder sektionen
+noget andet end `blog`, bygger sitet uden en eneste fejl — forsiden er bare
+tom. Sæt derfor navnene udtrykkeligt, også når de er standarden:
+
+```toml
+# config/_default/params.toml
+skrivesektion = ["blog", "noter"]
+```
+
+Rækkefølgen betyder noget: artiklerne først, fordi arkivet er deres.
+
 ## Skrifterne
 
 De tre familier i `assets/fonts/` — Merriweather, Source Sans 3 og Comfortaa —

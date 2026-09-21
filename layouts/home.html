@@ -97,7 +97,7 @@
       {{- with $side.Next }}
       <a class="quiet" href="{{ .URL }}">Ældre indlæg {{ partial "ikon.html" "pil-hoejre" }}</a>
       {{- else }}
-      {{- with site.GetPage "/artikler" }}
+      {{- with (partial "skrivesektion.html" .).arkiv }}
       <a class="quiet" href="{{ .RelPermalink }}">Hele arkivet {{ partial "ikon.html" "pil-hoejre" }}</a>
       {{- end }}
       {{- end }}

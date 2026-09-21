@@ -1,0 +1,14 @@
+{{- /*
+  Forsidestrømmens sektioner og arkivsiden:
+
+      {{ $skriv := partial "skrivesektion.html" . }}
+
+  params.skrivesektion tager ét navn ("blog") eller en liste
+  (["blog", "noter"]). Standarden er begge. .arkiv er den FØRSTE af dem —
+  det er den, "Hele arkivet" og "År" peger på; noterne er ikke arkivet.
+*/ -}}
+{{- $sektioner := site.Params.skrivesektion | default (slice "blog" "noter") -}}
+{{- if not (reflect.IsSlice $sektioner) -}}{{- $sektioner = slice $sektioner -}}{{- end -}}
+{{- $arkiv := false -}}
+{{- if $sektioner -}}{{- $arkiv = site.GetPage (printf "/%v" (index $sektioner 0)) -}}{{- end -}}
+{{- return dict "sektioner" $sektioner "arkiv" $arkiv -}}

@@ -76,7 +76,7 @@
 {{- if not .Date.IsZero }}{{ $ld = merge $ld (dict "datePublished" (.Date.Format "2006-01-02T15:04:05-07:00")) }}{{ end -}}
 {{- if not .Lastmod.IsZero }}{{ $ld = merge $ld (dict "dateModified" (.Lastmod.Format "2006-01-02T15:04:05-07:00")) }}{{ end -}}
 {{- with $forfatter -}}
-  {{- $ld = merge $ld (dict "author" (dict "@type" "Person" "name" . "url" ("/om/" | absURL))) -}}
+  {{- $ld = merge $ld (dict "author" (dict "@type" "Person" "name" . "url" (site.Params.profilside | default "/om/" | absURL))) -}}
   {{- $ld = merge $ld (dict "publisher" (dict "@type" "Person" "name" . "url" (absURL "/"))) -}}
 {{- end -}}
 {{- with $billede }}{{ $ld = merge $ld (dict "image" (slice .)) }}{{ end -}}

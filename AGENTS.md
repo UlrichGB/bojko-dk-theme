@@ -28,6 +28,40 @@ længere i brug som tekstfarve nogen steder; dæmpet tekst bruger
 `--color-neutral-700` (`#5F5F52`, 5,96:1). Tokenet bliver stående i
 `01-variabler.css` til ikke-tekstbrug.
 
+### Temaet kender ikke sitets mapper (2026-09-21)
+
+Temaet hardkodede sektionsnavnet `artikler` fem steder. Da `bojko-dk` omdøbte
+sektionen til `blog`, byggede sitet uden en eneste fejl og mistede tavst
+forsidens fire teasere, 404-sidens "Nyeste indlæg" og "Hele arkivet" samt hele
+arkivvælgeren. Navnene ligger nu i konfigurationen — se tabellen i `README.md`
+og `_partials/skrivesektion.html`.
+
+**Prøven, når du finder en streng mere:** ville et ANDET site gå i stykker
+eller blive tvunget til at hedde det samme? Ellers står den, hvor den står.
+Efterprøvet mod hele `layouts/` 2026-09-21, og disse faldt med vilje IKKE ud:
+
+- `tags` (`.GetTerms "tags"`, `site.GetPage "/tags"`) er Hugos EGEN standard-
+  taksonomi. Et site, der intet sætter, får den. Og fladen omkring den er
+  temaets dansk — "Emner", "Alle emner".
+- `series` i `_partials/hoved-data.html` vælger kun en ordlyd i en udledt
+  `<meta description>`. Et site uden den taksonomi rammer aldrig grenen.
+- `static/favicon.ico` m.fl. i `baseof.html` antager Hugos standard-`staticDir`.
+  Hugo giver ingen skabelonadgang til den indstilling, så den kan ikke læses.
+- `site.Language.Lang "da"` i `llms.txt` spørger om sitets FAKTISKE sprog.
+- CSS-klasser, partial-navne, menunavnene `main`/`foot` og `layout: profil` er
+  temaets eget ordforråd, ikke sitets struktur.
+
+`noter` er af samme grund heller ikke en parameter. Temaet ejer den type: den
+har sine egne skabeloner i `layouts/noter/`, og Hugo slår dem op på `.Type`.
+Et site får notesbogen ved at hedde `noter` eller sætte `type: noter` —
+præcis som `layout: profil` og `layout: side`. Derfor må `home.html` gerne
+spørge `eq $p.Section "noter"` om, hvad der er en note.
+
+**Rækkefølgen i `skrivesektion` betyder noget.** Den første sektion er
+ARKIVET: det er den, "Hele arkivet" og "År" peger på. Noterne er ikke et
+arkiv, og en liste, der begynder med dem, sender de tre knapper det forkerte
+sted hen.
+
 ### Andre valg, der ikke skal genåbnes
 
 Se `README.md` for hvad sitet selv skal levere, og

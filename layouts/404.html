@@ -11,13 +11,15 @@
     <div class="body-copy">
       <p>
         <a class="btn btn-secondary" href="{{ "/" | relURL }}">Til forsiden</a>
-        {{- with site.GetPage "/artikler" }}
+        {{- with (partial "skrivesektion.html" .).arkiv }}
         <a class="btn btn-secondary" href="{{ .RelPermalink }}">Hele arkivet</a>
         {{- end }}
       </p>
     </div>
 
-    {{- with first 3 (where site.RegularPages "Section" "artikler").ByDate.Reverse }}
+    {{- /* Samme strøm som forsiden og hovedfeedet, fra samme kilde: de tre
+           nyeste er de tre nyeste, uanset om det er artikler eller noter. */ -}}
+    {{- with first 3 (partial "forsidens-indlaeg.html" .) }}
     <section class="post-efter" aria-labelledby="nyeste">
       <h2 class="post-h" id="nyeste">Nyeste indlæg</h2>
       <div class="related">

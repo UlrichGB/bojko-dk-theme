@@ -3,9 +3,10 @@
   skråstreger.
 */ -}}
 {{- $dele := slice -}}
+{{- $profil := site.Params.profilside | default "/om/" -}}
 
 {{- with site.Params.author -}}
-  {{- $dele = $dele | append (printf `Af <a class="quiet" href="%s" rel="author">%s</a>` ("/om/" | relURL) .) -}}
+  {{- $dele = $dele | append (printf `Af <a class="quiet" href="%s" rel="author">%s</a>` ($profil | relURL) .) -}}
 {{- end -}}
 
 {{- with .GetTerms "tags" -}}
