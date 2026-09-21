@@ -5,7 +5,7 @@
 {{- $navn := site.Params.maerke | default site.Title -}}
 # {{ site.Title }}
 
-{{ with site.Home.Description }}> {{ . | plainify | chomp }}
+{{ with site.Home.Description }}> {{ . | plainify | partial "uden-epost.html" | chomp }}
 
 {{ end -}}
 {{- $intro := slice -}}

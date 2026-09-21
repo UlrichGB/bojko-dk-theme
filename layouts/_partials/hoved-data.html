@@ -65,4 +65,4 @@
   {{- $besk = printf "%s (side %d af %d)" $besk $sidetal $ialt -}}
 {{- end -}}
 
-{{- return dict "titel" $titel "kort" $kort "beskrivelse" $besk "kanonisk" $kanonisk "sidetal" $sidetal "ialt" $ialt -}}
+{{- return dict "titel" $titel "kort" $kort "beskrivelse" (partial "uden-epost.html" $besk) "kanonisk" $kanonisk "sidetal" $sidetal "ialt" $ialt -}}

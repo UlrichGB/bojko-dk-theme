@@ -22,7 +22,10 @@
         {{- with .Params.rolle }}<p class="profil-rolle">{{ . }}{{ with $.Params.sted }}<br>{{ . }}{{ end }}</p>{{ end }}
       </div>
       {{- $kontakt := slice }}
-      {{- with site.Params.email }}{{ $kontakt = $kontakt | append (dict "navn" . "url" (printf "mailto:%s" .)) }}{{ end }}
+      {{- with site.Params.email }}
+        {{- $e := partial "epost.html" . }}
+        {{- $kontakt = $kontakt | append (dict "navn" . "html" (printf `<a class="quiet" %s>%s</a>` $e.attr $e.tekst | safeHTML)) }}
+      {{- end }}
       {{- /* LinkedIn står IKKE her. Profilen er fjerde gang, det samme link
              ville optræde: ikonet i topbaren, "Følg mig" i bunden og
              teksten i selve profilen peger allerede derhen. E-mail,
@@ -32,7 +35,7 @@
       {{- with site.Params.social.bluesky }}{{ $kontakt = $kontakt | append (dict "navn" "Bluesky" "url" (printf "https://bsky.app/profile/%s" .)) }}{{ end }}
       {{- with $kontakt }}
       <ul class="profil-kontakt">
-        {{- range . }}<li><a class="quiet" href="{{ .url }}">{{ .navn }}</a></li>{{ end }}
+        {{- range . }}<li>{{ with .html }}{{ . }}{{ else }}<a class="quiet" href="{{ .url }}">{{ .navn }}</a>{{ end }}</li>{{ end }}
       </ul>
       {{- end }}
 
@@ -43,7 +46,7 @@
 
     <div class="profil-krop">
       <div>
-        {{- with .Description }}<p class="lede">{{ . | markdownify }}</p>{{ end }}
+        {{- with .Description }}<p class="lede">{{ . | markdownify | partial "epost-i-html.html" }}</p>{{ end }}
         <div class="body-copy profil-tekst">{{ .Content }}</div>
       </div>
 

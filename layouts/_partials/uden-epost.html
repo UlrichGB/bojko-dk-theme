@@ -1,0 +1,10 @@
+{{- /*
+  Ren tekst uden en skrabeklar e-postadresse. plainify og htmlUnescape
+  pakker talentiteterne fra epost.html ud igen, så alt, der læser .Content
+  eller .Summary som tekst — meta-beskrivelser, JSON-LD, feed, llms.txt —
+  skal herigennem, ellers står adressen i kilden alligevel. @ bliver til
+  "snabel-a": et menneske kan læse det, et regulært udtryk kan ikke.
+
+      {{ partial "uden-epost.html" $tekst }}
+*/ -}}
+{{- return (replaceRE `([A-Za-z0-9._%+-]+)@([A-Za-z0-9-]+(?:\.[A-Za-z0-9-]+)+)` "${1} snabel-a ${2}" .) -}}

@@ -10,7 +10,7 @@
     <header class="post-hoved post-hoved--indlaeg">
       <h1 class="post-h post-h--indlaeg">{{ .Title }}</h1>
       {{- with .Description }}
-        <p class="lede">{{ . | markdownify }}</p>
+        <p class="lede">{{ . | markdownify | partial "epost-i-html.html" }}</p>
       {{- end }}
 
       {{ partial "meta.html" . }}

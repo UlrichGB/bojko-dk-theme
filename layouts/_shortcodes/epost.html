@@ -1,0 +1,20 @@
+{{- /*
+  {{< epost >}} — adressen fra params.email, kodet af epost.html.
+  {{< epost "kontakt@bojko.dk" >}} for en anden adresse,
+  {{< epost "kontakt@bojko.dk" "Skriv til mig" >}} for en anden lænketekst.
+*/ -}}
+{{- $adr := site.Params.email -}}
+{{- $tekst := "" -}}
+{{- if reflect.IsMap .Params -}}
+  {{- with .Get "adresse" }}{{ $adr = . }}{{ end -}}
+  {{- with .Get "tekst" }}{{ $tekst = . }}{{ end -}}
+{{- else -}}
+  {{- with .Get 0 }}{{ $adr = . }}{{ end -}}
+  {{- with .Get 1 }}{{ $tekst = . }}{{ end -}}
+{{- end -}}
+{{- with $adr -}}
+  {{- $e := partial "epost.html" . -}}
+  <a {{ $e.attr }}>{{ with $tekst }}{{ . }}{{ else }}{{ $e.tekst }}{{ end }}</a>
+{{- else -}}
+  {{- errorf "epost: ingen adresse. Sæt params.email, eller giv shortcoden en: %s" .Position -}}
+{{- end -}}

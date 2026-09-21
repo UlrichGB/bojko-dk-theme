@@ -1,0 +1,16 @@
+{{- /*
+  Færdig HTML, hvor enhver læselig e-postadresse er byttet ud med en kodet
+  lænke fra epost.html — også den, Goldmark selv har gjort til en mailto.
+  Til de steder, hvor temaet gør forfatterens tekst til HTML uden for
+  .Content, og hvor en shortcode derfor ikke kan stå: manchetten.
+
+      {{ .Description | markdownify | partial "epost-i-html.html" }}
+*/ -}}
+{{- $h := . | string -}}
+{{- range $a := findRE `[A-Za-z0-9._%+-]+@[A-Za-z0-9-]+(?:\.[A-Za-z0-9-]+)+` $h -}}
+  {{- $e := partial "epost.html" $a -}}
+  {{- $anker := printf `<a %s>%s</a>` $e.attr $e.tekst -}}
+  {{- $h = replace $h (printf `<a href="mailto:%s">%s</a>` $a $a) $anker -}}
+  {{- $h = replace $h $a $anker -}}
+{{- end -}}
+{{- return ($h | safeHTML) -}}

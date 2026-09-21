@@ -70,7 +70,7 @@
       "mainEntityOfPage" (dict "@type" "WebPage" "@id" .Permalink)
       "wordCount" .WordCount
 -}}
-{{- $krop := replaceRE `<span class="ln">[^<]*</span>` "" (partial "uden-anker.html" .Content) | plainify | htmlUnescape | chomp -}}
+{{- $krop := replaceRE `<span class="ln">[^<]*</span>` "" (partial "uden-anker.html" .Content) | plainify | htmlUnescape | partial "uden-epost.html" | chomp -}}
 {{- $ld = merge $ld (dict "articleBody" $krop) -}}
 {{- with $h.beskrivelse }}{{ $ld = merge $ld (dict "description" .) }}{{ end -}}
 {{- if not .Date.IsZero }}{{ $ld = merge $ld (dict "datePublished" (.Date.Format "2006-01-02T15:04:05-07:00")) }}{{ end -}}

@@ -22,7 +22,7 @@
   <channel>
     <title>{{ if .IsHome }}{{ $titel }}{{ else }}{{ .Title }} — {{ site.Title }}{{ end }}</title>
     <link>{{ .Permalink }}</link>
-    <description>{{ if .IsHome }}{{ $besk | plainify | chomp }}{{ else }}{{ printf "%s på %s." .Title $navn }}{{ end }}</description>
+    <description>{{ if .IsHome }}{{ $besk | plainify | partial "uden-epost.html" | chomp }}{{ else }}{{ printf "%s på %s." .Title $navn }}{{ end }}</description>
     <language>{{ site.Language.Locale | default site.Language.Lang }}</language>
     {{- with site.Params.author }}
     <copyright>{{ . }}</copyright>
@@ -45,7 +45,7 @@
       {{- range .GetTerms "tags" }}
       <category>{{ .LinkTitle }}</category>
       {{- end }}
-      <description>{{ .Description | default (partial "uden-anker.html" .Summary) | plainify | chomp | html }}</description>
+      <description>{{ .Description | default (partial "uden-anker.html" .Summary) | plainify | htmlUnescape | partial "uden-epost.html" | chomp | html }}</description>
       {{- if $hele }}
       <content:encoded>{{ partial "uden-anker.html" .Content | transform.XMLEscape | safeHTML }}</content:encoded>
       {{- end }}

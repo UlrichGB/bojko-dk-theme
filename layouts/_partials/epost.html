@@ -1,0 +1,39 @@
+{{- /*
+  E-POSTADRESSEN, hvert tegn som en talentitet. Ikke JavaScript:
+  privatlivspolitikken lover ét script og beskriver præcis, hvad det gør, og
+  den sætning skal blive ved med at være sand. Entiteter standser de
+  regex-skrabere, mængden består af, og koster hverken klik, kopi eller
+  skærmlæser.
+
+  Adressen kodes to gange — én gang til href, én gang til den synlige tekst.
+  De to omgange skifter mellem titals- og sekstentalsform i modfase, så de
+  aldrig bliver den samme streng. Ellers kunne et mønster genkende parret.
+
+      {{ $e := partial "epost.html" "navn@eksempel.dk" }}
+      <a {{ $e.attr }}>{{ $e.tekst }}</a>
+*/ -}}
+{{- $adr := . | string -}}
+{{- $lav := ` !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_` -}}
+{{- $hoej := `abcdefghijklmnopqrstuvwxyz{|}~` -}}
+{{- $ud := dict -}}
+{{- range $n, $s := slice "mailto:" $adr $adr -}}
+  {{- $akk := "" -}}
+  {{- range $i, $c := split $s "" -}}
+    {{- $k := 0 -}}
+    {{- range $j, $x := split $lav "" -}}{{- if eq $x $c -}}{{- $k = add 32 $j -}}{{- end -}}{{- end -}}
+    {{- range $j, $x := split $hoej "" -}}{{- if eq $x $c -}}{{- $k = add 97 $j -}}{{- end -}}{{- end -}}
+    {{- if $k -}}
+      {{- if eq (mod (add $i $n) 2) 0 -}}
+        {{- $akk = printf "%s&#%d;" $akk $k -}}
+      {{- else -}}
+        {{- $akk = printf "%s&#x%x;" $akk $k -}}
+      {{- end -}}
+    {{- else -}}
+      {{- $akk = printf "%s%s" $akk $c -}}
+    {{- end -}}
+  {{- end -}}
+  {{- $ud = merge $ud (dict (printf "%d" $n) $akk) -}}
+{{- end -}}
+{{- return (dict
+      "attr" (printf "href=%q" (printf "%s%s" (index $ud "0") (index $ud "1")) | safeHTMLAttr)
+      "tekst" (index $ud "2" | safeHTML)) -}}

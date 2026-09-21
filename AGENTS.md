@@ -61,6 +61,21 @@ spørge `eq $p.Section "noter"` om, hvad der er en note.
 ARKIVET: det er den, "Hele arkivet" og "År" peger på. Noterne er ikke et
 arkiv, og en liste, der begynder med dem, sender de tre knapper det forkerte
 sted hen.
+### E-postadressen kodes med entiteter, ikke JavaScript (2026-09-21)
+
+`_partials/epost.html` skriver adressen ud tegn for tegn som talentiteter, og
+`_shortcodes/epost.html` er indgangen fra indhold. Valget er truffet:
+privatlivspolitikken lover ét script og beskriver præcis, hvad det gør, og den
+sætning er sitets mest efterprøvelige. En JavaScript-samlet adresse ville koste
+den for ingenting — skrabere har kørt JavaScript i årevis. CSS-omvending er
+også fravalgt: den ødelægger kopi og skærmlæser.
+
+Lav den derfor ikke om til et script. Den eneste rigtige test er den byggede
+HTML, ikke skabelonen:
+
+    grep -rE '[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}' public/
+
+`_partials/del.html` beholder sin `mailto:?subject=` — den bærer ingen adresse.
 
 ### Andre valg, der ikke skal genåbnes
 
@@ -73,6 +88,12 @@ Mørkt tema er bevidst ubygget; `theme.toml` lover det ikke.
 - **Kommentarstil:** hver fil har ét kort hoved på to-tre linjer og ellers
   ingen kommentarer (commit `21c9002`). Skriv ikke inline-kommentarer tilbage
   ind; tal, der skal begrundes, hører til her eller i `README.md`.
+- **Alt, der `plainify`r `.Content` eller `.Summary`, pakker entiteterne ud
+  igen** og lægger adressen skrabeklar i kilden. Hver sådan udgang går derfor
+  gennem `_partials/uden-epost.html` (meta, JSON-LD, feed, llms.txt,
+  forsidens uddrag). Gør temaet forfatterens tekst til HTML uden for
+  `.Content` — manchetten — er det `_partials/epost-i-html.html` i stedet.
+  En ny udgang med `plainify` skal skrives ind ét af de to steder.
 - **`assets/css/00-skrifter.css` er en skabelon**, ikke ren CSS. Den køres
   gennem `resources.ExecuteAsTemplate` i `_partials/stil.html` med
   `_partials/skrifter.html` som kontekst. `resources.Get` alene på den fil

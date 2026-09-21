@@ -51,7 +51,7 @@
             Vil du selv bestemme, hvor et uddrag klippes, så sæt <!--more-->
             i artiklen: så bruger Hugo dit snit frem for det her.
           */ -}}
-          {{- $uddrag := $p.Description -}}
+          {{- $uddrag := partial "uden-epost.html" $p.Description -}}
           {{- with $p.Content -}}
             {{- $krop := . -}}
             {{- /* Etiketten øverst: *Del 3 af 3 …* */ -}}
@@ -65,6 +65,7 @@
                    næste, og uddraget får ord, der ikke findes. */ -}}
             {{- $krop = replaceRE `(?s)</(p|h[1-6]|blockquote|li|figcaption)>` " " $krop -}}
             {{- $ren := partial "uden-anker.html" $krop | plainify | htmlUnescape
+                        | partial "uden-epost.html"
                         | replaceRE `\s+` " " | strings.TrimSpace -}}
             {{- with $ren }}{{ $uddrag = . | truncate 340 }}{{ end -}}
           {{- end }}
