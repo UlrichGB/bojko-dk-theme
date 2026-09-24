@@ -342,23 +342,17 @@ a:hover { color: var(--color-accent-600); }
 .laes-mere:hover svg,
 .laes-mere:focus-visible svg { transform: translateX(0.3em); stroke-width: 3.25; }
 
-/* Læs mere hører til afsnittet over den, ikke til luften under.
-   ★ .body-copy er en flex-kolonne med gap: var(--x) — de 30px ligger der
-     ALLEREDE mellem uddraget og den her linje. Den gamle margin lagde
-     22px oveni, og så svævede linket for sig selv midt i ingenting.
-     Den negative margin trækker fra flex-gap'et, så der står omkring en
-     halv linje mellem tekst og link: tæt nok til at høre sammen. */
-/* ★ TO KLASSER, IKKE EN. .body-copy p og .body-copy > * nulstiller margin
-   på ALT i brødteksten — begge er mere specifikke end .laes-mere-rad
-   alene og står i en senere fil. En margin sat på klassen for sig blev
-   derfor tavst kasseret. .body-copy .laes-mere-rad vinder over begge.
-
-   line-height: 1 fjerner den halve linjeafstand, afsnittet ellers har
-   over og under sit indhold — det var en del af hullet, ikke kun gap'et. */
-.body-copy .laes-mere-rad {
-  margin: calc(var(--x) * -0.85) 0 0;
-  line-height: 1;
-  text-align: right;
+/* Læs mere står på uddragets sidste linje, helt ude til højre.
+   ★ EN FLOAT, IKKE FLEX. En float i slutningen af en linje lægges på SAMME
+     linje, når der er plads tilbage, og ryger ellers ned på næste linje —
+     præcis den ombrydning, vi vil have. flow-root holder den inde i
+     afsnittet, så skillestregen under ikke rykker op.
+     line-height arves fra afsnittet, så linket flugter med teksten. */
+.body-copy .uddrag { display: flow-root; }
+.uddrag .laes-mere {
+  float: right;
+  margin-left: 1.5em;
+  line-height: inherit;
 }
 
 

@@ -69,10 +69,9 @@
                         | replaceRE `\s+` " " | strings.TrimSpace -}}
             {{- with $ren }}{{ $uddrag = . | truncate 340 }}{{ end -}}
           {{- end }}
-          <p>{{ $uddrag }}</p>
           {{- /* aria-label, fordi "Læs mere" alene ikke siger hvorhen, når man
-                 springer fra link til link med en skærmlæser. */ -}}
-          <p class="laes-mere-rad">
+                 springer fra link til link med en skærmlæser. */}}
+          <p class="uddrag">{{ $uddrag }}
             <a class="laes-mere" href="{{ $p.RelPermalink }}"
                aria-label="Læs mere: {{ $p.Title }}"><span data-tekst="Læs mere">Læs mere</span>{{ partial "ikon.html" "pil-hoejre" }}</a>
           </p>
