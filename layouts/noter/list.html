@@ -1,16 +1,16 @@
 {{ define "main" }}
   {{- /*
-    NOTERNE. Notesbogen: opslag, der bliver opdateret, i modsætning til
-    artikler, der bliver udgivet én gang. Derfor sorteres der efter SIDST
-    ÆNDRET og ikke efter udgivelsesdato, og datoen i listen er den samme.
+    NOTERNE. Listen er et udgivelsesregister ligesom forsiden: den sorteres
+    og dateres efter udgivelsesdato. At en note lever, viser "Opdateret" på
+    notens egen side (noter/page.html), som stadig læser .Lastmod.
   */ -}}
   <section class="arkiv-side">
     <h1 class="post-h post-h--arkiv">{{ .Title }}</h1>
 
     {{- with .Content }}<div class="body-copy">{{ . }}</div>{{ end }}
 
-    {{- with .Pages.ByLastmod.Reverse }}
-    {{- range $i, $gruppe := .GroupByLastmod "2006" }}
+    {{- with .Pages.ByDate.Reverse }}
+    {{- range $i, $gruppe := .GroupByDate "2006" }}
       <div class="arch-gruppe" id="noter-{{ $gruppe.Key }}">
         <div class="arch-gruppe-hoved">
           <span>{{ $gruppe.Key }}</span>
@@ -19,7 +19,7 @@
         <ul class="arch-liste">
           {{- range $gruppe.Pages }}
           <li>
-            <time datetime="{{ .Lastmod.Format "2006-01-02" }}">{{ .Lastmod | time.Format "2. Jan" }}</time>
+            <time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date | time.Format "2. Jan" }}</time>
             <a class="arch-link" href="{{ .RelPermalink }}">{{ .Title }}</a>
           </li>
           {{- end }}
