@@ -1,6 +1,7 @@
 {{ define "main" }}
   {{- /*
-    ÉT MÆRKE — alle indlæg under ét emne eller én serie, grupperet efter år.
+    ÉT MÆRKE — alle indlæg under ét emne eller én serie, artikler og noter
+    sammen, grupperet efter år og udgivelsesdato. Noterne får en etiket.
   */ -}}
   <section class="arkiv-side">
     <h1 class="post-h post-h--arkiv">{{ .Title }}</h1>
@@ -12,7 +13,7 @@
       {{- with site.GetPage "/tags" }} <a class="arch-mode" href="{{ .RelPermalink }}">Alle emner</a>{{ end }}
     </p>
 
-    {{- range .Pages.GroupByDate "2006" }}
+    {{- range .Pages.ByDate.Reverse.GroupByDate "2006" }}
       <div class="arch-gruppe">
         <div class="arch-gruppe-hoved">
           <span>{{ .Key }}</span>
@@ -22,7 +23,10 @@
           {{- range .Pages }}
           <li>
             <time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date | time.Format "2. Jan" }}</time>
-            <a class="arch-link" href="{{ .RelPermalink }}">{{ .Title }}</a>
+            <span>
+              <a class="arch-link" href="{{ .RelPermalink }}">{{ .Title }}</a>
+              {{- if eq .Section "noter" }} <span class="arch-type">Note</span>{{ end }}
+            </span>
           </li>
           {{- end }}
         </ul>

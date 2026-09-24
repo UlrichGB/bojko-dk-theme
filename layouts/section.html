@@ -1,12 +1,18 @@
 {{ define "main" }}
   {{- /*
-    ARKIVET. Sektionens indlæg grupperet efter år, med arkivvælgeren over.
+    ARKIVET. Artikler og noter fra alle skrivesektionerne grupperet efter
+    år og udgivelsesdato, med arkivvælgeren over. Noterne får en etiket.
   */ -}}
+  {{- $skriv := partial "skrivesektion.html" . }}
+  {{- $sider := .Pages }}
+  {{- with $skriv.arkiv }}{{ if eq .Section $.Section }}
+    {{- $sider = where site.RegularPages "Section" "in" $skriv.sektioner }}
+  {{- end }}{{ end }}
   <section class="arkiv-side">
     <h1 class="post-h post-h--arkiv">{{ .Title }}</h1>
 
     {{- with .Content }}<div class="body-copy">{{ . }}</div>{{ end }}
-    {{- with .Pages }}
+    {{- with $sider.ByDate.Reverse }}
     {{ partial "arkiv-vaelger.html" (dict "side" $ "tilstand" "aar") }}
 
     {{- range $i, $gruppe := .GroupByDate "2006" }}
@@ -21,7 +27,10 @@
           {{- range $gruppe.Pages }}
           <li>
             <time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date | time.Format "2. Jan" }}</time>
-            <a class="arch-link" href="{{ .RelPermalink }}">{{ .Title }}</a>
+            <span>
+              <a class="arch-link" href="{{ .RelPermalink }}">{{ .Title }}</a>
+              {{- if eq .Section "noter" }} <span class="arch-type">Note</span>{{ end }}
+            </span>
           </li>
           {{- end }}
         </ul>

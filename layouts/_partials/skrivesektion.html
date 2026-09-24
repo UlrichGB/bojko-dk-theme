@@ -5,7 +5,7 @@
 
   params.skrivesektion tager ét navn ("blog") eller en liste
   (["blog", "noter"]). Standarden er begge. .arkiv er den FØRSTE af dem —
-  det er den, "Hele arkivet" og "År" peger på; noterne er ikke arkivet.
+  det er den, "Hele arkivet" og "År" peger på, og arkivet viser dem ALLE.
 */ -}}
 {{- $sektioner := site.Params.skrivesektion | default (slice "blog" "noter") -}}
 {{- if not (reflect.IsSlice $sektioner) -}}{{- $sektioner = slice $sektioner -}}{{- end -}}

@@ -189,6 +189,12 @@
   font-variant-numeric: tabular-nums;
 }
 
+.arch-type {
+  margin-left: 0.5rem;
+  font-size: var(--bitte);
+  color: var(--color-neutral-700);
+}
+
 .arch-link {
   font-family: var(--font-sub);
   font-weight: 600;
