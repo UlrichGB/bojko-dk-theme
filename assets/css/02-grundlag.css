@@ -171,17 +171,14 @@ main {
 /* Toppolstringen er IKKE pynt: vandmærket sidder absolut placeret oppe i
    den, så skæres den væk, skæres bogstavet af. Bunden er derimod bare
    luft og må gerne være mindre end toppen. */
-/* Rytmen omkring skillestregen skal være nogenlunde symmetrisk: der var
-   60px op til stregen og 105px ned til næste rubrik, fordi toppolstringen
-   engang skulle give plads til vandmærket. Det skal den ikke længere —
-   bogstavet måles nu fra RUBRIKKEN og er absolut placeret, så det gerne
-   må rage op over blokkens polstring. 3rem giver 60px over stregen og
-   78px under, og bogstavet har stadig ~30px luft op til stregen.
-   Vandmærket regner med tallet (se .wm i 03) — hold dem sammen. */
+/* Rytmen omkring skillestregen: ingen bundpolstring, og stregen får
+   --space-6 på hver side. Fra uddragets sidste linje ned til stregen er
+   der ~75px (før ~125px), og Læs mere står nærmere sit uddrag end
+   stregen. Vandmærket regner med --indlaeg-top (se .wm i 03). */
 .forside-indlaeg{
   position: relative;
-  --indlaeg-top: 3rem;
-  padding: var(--indlaeg-top) 0 1.875rem;
+  --indlaeg-top: var(--space-8);
+  padding: var(--indlaeg-top) 0 0;
 }
 
 /* En note har intet vandmærke, så toppolstringen — der udelukkende er der
@@ -359,7 +356,7 @@ a:hover { color: var(--color-accent-600); }
    line-height: 1 fjerner den halve linjeafstand, afsnittet ellers har
    over og under sit indhold — det var en del af hullet, ikke kun gap'et. */
 .body-copy .laes-mere-rad {
-  margin: calc(var(--x) * -0.45) 0 0;
+  margin: calc(var(--x) * -0.85) 0 0;
   line-height: 1;
   text-align: right;
 }
@@ -407,6 +404,7 @@ a:hover { color: var(--color-accent-600); }
   justify-content: center;
   padding: var(--x) 0;
 }
+.forside-indlaeg + .skille { padding-block: var(--space-6); }
 /* Samme figur som bundens streg, men dæmpet: prikken har LINJENS farve,
    ikke mærkefarven. Orange hører til dér, hvor siden slutter — her skal
    den bare markere, at det ene indlæg er forbi og det næste begynder.
