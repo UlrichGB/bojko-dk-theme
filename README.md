@@ -54,7 +54,7 @@ et plausibelt gæt ud, som ville se ud som en beslutning.
 
 | Hvad | Hvor | Uden den |
 |---|---|---|
-| `params.author` | konfiguration | ingen byline under rubrikken, ingen forfatter i JSON-LD og ingen `dc:creator` i feedet |
+| `params.author` | konfiguration | ingen forfatter i `<meta name="author">` og JSON-LD og ingen `dc:creator` i feedet |
 | `params.feedTitle` | konfiguration | feedet hedder det samme som sitet |
 | `params.description` | konfiguration | sidste udvej for `<meta name="description">`. Temaet udleder selv en til mærkesider, arkiv og indlæg, så den er sjældent i brug |
 | `params.licens` (`navn`, `url`) | konfiguration | kolofonen står uden licensled. Det er en gyldig kolofon |
@@ -70,7 +70,7 @@ stadig virker.
 | Hvad | Standard | Hvad den styrer |
 |---|---|---|
 | `params.skrivesektion` | `["blog", "noter"]` | sektionerne i forsidens strøm — som også er hovedfeedet og 404-sidens "Nyeste indlæg". Den FØRSTE af dem er arkivet: "Hele arkivet" og "År" peger på den |
-| `params.profilside` | `/om/` | siden bag bylinen `Af …`, bag navnet i kolofonen og i JSON-LD'ens `author.url` |
+| `params.profilside` | `/om/` | siden bag navnet i kolofonen og i JSON-LD'ens `author.url` |
 
 `skrivesektion` tager begge former:
 

@@ -1,13 +1,8 @@
 {{- /*
-  METALINJEN: forfatter, første mærke, dato og læsetid, adskilt af
-  skråstreger.
+  METALINJEN: første mærke, dato og læsetid, adskilt af skråstreger.
+  Ingen byline: forfatteren står i kolofonen og i sidens maskindata.
 */ -}}
 {{- $dele := slice -}}
-{{- $profil := site.Params.profilside | default "/om/" -}}
-
-{{- with site.Params.author -}}
-  {{- $dele = $dele | append (printf `Af <a class="quiet" href="%s" rel="author">%s</a>` ($profil | relURL) .) -}}
-{{- end -}}
 
 {{- with .GetTerms "tags" -}}
   {{- $t := index . 0 -}}

@@ -364,8 +364,8 @@ a:hover { color: var(--color-accent-600); }
    blokken musen er, hvilket netop viser at hele feltet kan klikkes.
 
    ★ ALT, DER SKAL KUNNE KLIKKES FOR SIG, SKAL LØFTES OVER DÆKKET.
-   Metalinjen har to rigtige links (forfatteren og mærket), og Læs mere har
-   sin egen hover. Uden løftet herunder ville dækket sluge dem alle tre.
+   Metalinjen har et rigtigt link (mærket), og Læs mere har sin egen
+   hover. Uden løftet herunder ville dækket sluge dem begge.
 
    Prisen er kendt: tekst inde i blokken kan ikke længere markeres med
    musen. Det er byttet for at hele feltet kan klikkes. */
