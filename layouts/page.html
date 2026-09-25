@@ -72,7 +72,7 @@
     <section class="post-efter" aria-labelledby="maerker">
       <h2 id="maerker">Tags</h2>
       <ul class="tags">
-        {{- range . }}<li><a class="tag" href="{{ .RelPermalink }}">{{ .LinkTitle }}</a></li>{{ end }}
+        {{- range . }}<li><a class="tag" href="{{ .RelPermalink }}">{{ strings.FirstUpper .LinkTitle }}</a></li>{{ end }}
       </ul>
     </section>
     {{- end }}

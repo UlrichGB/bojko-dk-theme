@@ -20,9 +20,9 @@
 {{- if ge $graense 1 }}{{ $sider = first $graense $sider }}{{ end -}}
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
-    <title>{{ if .IsHome }}{{ $titel }}{{ else }}{{ .Title }} — {{ site.Title }}{{ end }}</title>
+    <title>{{ if .IsHome }}{{ $titel }}{{ else }}{{ cond (eq .Kind "term") (strings.FirstUpper .Title) .Title }} — {{ site.Title }}{{ end }}</title>
     <link>{{ .Permalink }}</link>
-    <description>{{ if .IsHome }}{{ $besk | plainify | partial "uden-epost.html" | chomp }}{{ else }}{{ printf "%s på %s." .Title $navn }}{{ end }}</description>
+    <description>{{ if .IsHome }}{{ $besk | plainify | partial "uden-epost.html" | chomp }}{{ else }}{{ printf "%s på %s." (cond (eq .Kind "term") (strings.FirstUpper .Title) .Title) $navn }}{{ end }}</description>
     <language>{{ site.Language.Locale | default site.Language.Lang }}</language>
     {{- with site.Params.author }}
     <copyright>{{ . }}</copyright>
@@ -43,7 +43,7 @@
       <dc:creator>{{ . }}</dc:creator>
       {{- end }}
       {{- range .GetTerms "tags" }}
-      <category>{{ .LinkTitle }}</category>
+      <category>{{ strings.FirstUpper .LinkTitle }}</category>
       {{- end }}
       <description>{{ .Description | default (partial "uden-anker.html" .Summary) | plainify | htmlUnescape | partial "uden-epost.html" | chomp | html }}</description>
       {{- if $hele }}

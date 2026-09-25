@@ -49,7 +49,7 @@
   <meta property="article:author" content="{{ . }}">
 {{- end }}
 {{- range .GetTerms "tags" }}
-  <meta property="article:tag" content="{{ .LinkTitle }}">
+  <meta property="article:tag" content="{{ strings.FirstUpper .LinkTitle }}">
 {{- end }}
 {{- end }}
   <meta name="twitter:card" content="{{ if $billede }}summary_large_image{{ else }}summary{{ end }}">
@@ -81,7 +81,7 @@
 {{- end -}}
 {{- with $billede }}{{ $ld = merge $ld (dict "image" (slice .)) }}{{ end -}}
 {{- $maerker := slice -}}
-{{- range .GetTerms "tags" }}{{ $maerker = $maerker | append .LinkTitle }}{{ end -}}
+{{- range .GetTerms "tags" }}{{ $maerker = $maerker | append (strings.FirstUpper .LinkTitle) }}{{ end -}}
 {{- with $maerker }}{{ $ld = merge $ld (dict "keywords" .) }}{{ end }}
   <script type="application/ld+json">{{ $ld | jsonify (dict "indent" "  ") | safeJS }}</script>
 {{- end }}

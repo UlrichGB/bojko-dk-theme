@@ -4,7 +4,7 @@
     sammen, grupperet efter år og udgivelsesdato. Noterne får en etiket.
   */ -}}
   <section class="arkiv-side">
-    <h1 class="post-h post-h--arkiv">{{ .Title }}</h1>
+    <h1 class="post-h post-h--arkiv">{{ strings.FirstUpper .Title }}</h1>
 
     {{- with .Content }}<div class="body-copy">{{ . }}</div>{{ end }}
 

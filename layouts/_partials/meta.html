@@ -11,7 +11,7 @@
 
 {{- with .GetTerms "tags" -}}
   {{- $t := index . 0 -}}
-  {{- $dele = $dele | append (printf `<a class="quiet" href="%s">%s</a>` $t.RelPermalink $t.LinkTitle) -}}
+  {{- $dele = $dele | append (printf `<a class="quiet" href="%s">%s</a>` $t.RelPermalink (strings.FirstUpper $t.LinkTitle)) -}}
 {{- end -}}
 
 {{- if not .Date.IsZero -}}

@@ -32,8 +32,9 @@
   {{- $titel = printf "Siden findes ikke — %s" site.Title -}}
   {{- $kort = "Siden findes ikke" -}}
 {{- else -}}
-  {{- $titel = printf "%s — %s" .Title site.Title -}}
   {{- $kort = .Title -}}
+  {{- if eq .Kind "term" }}{{ $kort = strings.FirstUpper .Title }}{{ end -}}
+  {{- $titel = printf "%s — %s" $kort site.Title -}}
 {{- end -}}
 {{- $besk := .Description -}}
 {{- if not $besk -}}
@@ -41,9 +42,9 @@
     {{- $n := len .Pages -}}
     {{- $ord := cond (eq $n 1) "artikel" "artikler" -}}
     {{- if eq .Data.Plural "series" -}}
-      {{- $besk = printf "%d %s i serien %s på %s." $n $ord .LinkTitle $navn -}}
+      {{- $besk = printf "%d %s i serien %s på %s." $n $ord (strings.FirstUpper .LinkTitle) $navn -}}
     {{- else -}}
-      {{- $besk = printf "%d %s om %s på %s." $n $ord .LinkTitle $navn -}}
+      {{- $besk = printf "%d %s om %s på %s." $n $ord (strings.FirstUpper .LinkTitle) $navn -}}
     {{- end -}}
   {{- else if eq .Kind "taxonomy" -}}
     {{- $besk = printf "Alle %s på %s. %d i alt." (lower .Title) $navn (len .Pages) -}}

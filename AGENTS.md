@@ -108,6 +108,10 @@ Mørkt tema er bevidst ubygget; `theme.toml` lover det ikke.
   i dag siden og læsetiden i `meta.html`. Feed, JSON-LD, llms.txt og
   `.Lastmod` kender kun `index.md`. En billedsti i en hændelse slås op i
   bundlet, ikke i hændelsen (`_markup/render-image.html`).
+- **Et mærkes titel vises altid gennem `strings.FirstUpper`** — sitets
+  term-filer skriver dem med småt (`title: "datasuverænitet"`). Aldrig
+  `title`: resten står som skrevet. En ny udgang for et mærkes titel skal
+  gøre det samme.
 - **Byg altid mod et rigtigt site.** Temaet har ingen `exampleSite/`:
   `HUGO_MODULE_REPLACEMENTS="github.com/UlrichGB/bojko-dk-theme -> <sti>" hugo`
   fra `bojko-dk`.

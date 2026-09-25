@@ -44,7 +44,7 @@
         <ul class="two-col">
           {{- range . }}
           <li>
-            <a class="arch-link" href="{{ .RelPermalink }}">{{ .LinkTitle }}</a>
+            <a class="arch-link" href="{{ .RelPermalink }}">{{ strings.FirstUpper .LinkTitle }}</a>
             <span class="antal">{{ len .Pages }}</span>
           </li>
           {{- end }}

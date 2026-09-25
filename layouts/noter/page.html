@@ -16,7 +16,7 @@
       <div class="meta">
         <span>Opdateret <time datetime="{{ .Lastmod.Format "2006-01-02" }}">{{ .Lastmod | time.Format "2. January 2006" }}</time></span>
         {{- with .GetTerms "tags" }}
-          {{- range . }}<span class="sep" aria-hidden="true">/</span><span><a class="quiet" href="{{ .RelPermalink }}">{{ .LinkTitle }}</a></span>{{ end }}
+          {{- range . }}<span class="sep" aria-hidden="true">/</span><span><a class="quiet" href="{{ .RelPermalink }}">{{ strings.FirstUpper .LinkTitle }}</a></span>{{ end }}
         {{- end }}
         {{- if and (site.Params.laesetid | default true) .ReadingTime }}
           <span class="sep" aria-hidden="true">/</span><span>{{ .ReadingTime }} min. læsning</span>
