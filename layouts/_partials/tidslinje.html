@@ -1,0 +1,42 @@
+{{- /*
+  Tidslinjen i et leaf bundle med `tidslinje: true`: hver .md ved siden af
+  index.md er én hændelse, sorteret efter dato. Uden dato standser bygningen;
+  en kladde vises kun under hugo server.
+*/ -}}
+{{- $haendelser := slice -}}
+{{- range .Resources.Match "*.md" -}}
+  {{- if or (not .Draft) hugo.IsServer }}{{ $haendelser = $haendelser | append . }}{{ end -}}
+  {{- if .Date.IsZero -}}
+    {{- errorf "Hændelsen %s i tidslinjen %s mangler date: ÅÅÅÅ-MM-DD" .File.LogicalName $.File.Dir -}}
+  {{- end -}}
+{{- end -}}
+{{- with sort $haendelser "Date" }}
+<div class="tidslinje">
+  {{- range . }}
+  <section class="haendelse" id="{{ .File.ContentBaseName | anchorize }}">
+    <div class="haendelse-hoved">
+      <time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date | time.Format "2. January 2006" }}</time>
+      {{- with .Params.type }}
+      <span class="haendelse-type">{{ . }}</span>
+      {{- end }}
+    </div>
+    <div class="haendelse-krop">
+      <h2>{{ .Title }}</h2>
+      {{ .Content }}
+      {{- $kilder := slice }}
+      {{- range .Params.kilder }}{{ if .url }}{{ $kilder = $kilder | append . }}{{ end }}{{ end }}
+      {{- with $kilder }}
+      <div class="haendelse-kilder">
+        <span>{{ cond (gt (len .) 1) "Kilder" "Kilde" }}</span>
+        <ul>
+          {{- range . }}
+          <li><a href="{{ .url }}">{{ .titel | default .url }}</a></li>
+          {{- end }}
+        </ul>
+      </div>
+      {{- end }}
+    </div>
+  </section>
+  {{- end }}
+</div>
+{{- end -}}

@@ -27,6 +27,7 @@
 
     <div class="body-copy">
       {{ .Content }}
+      {{- if .Params.tidslinje }}{{ partial "tidslinje.html" . }}{{ end }}
     </div>
 
     {{- /* Datoen hører til artiklen, ikke til tilbehøret: den står under

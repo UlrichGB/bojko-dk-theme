@@ -18,8 +18,14 @@
   {{- $dele = $dele | append (printf `<time datetime="%s">%s</time>` (.Date.Format "2006-01-02") (.Date | time.Format "2. January 2006")) -}}
 {{- end -}}
 
-{{- if and (site.Params.laesetid | default true) .ReadingTime -}}
-  {{- $dele = $dele | append (printf `%d min. læsning` .ReadingTime) -}}
+{{- $laesetid := .ReadingTime -}}
+{{- if .Params.tidslinje -}}
+  {{- $ord := .WordCount -}}
+  {{- range .Resources.Match "*.md" }}{{ $ord = add $ord .WordCount }}{{ end -}}
+  {{- $laesetid = div (add $ord 212) 213 -}}
+{{- end -}}
+{{- if and (site.Params.laesetid | default true) $laesetid -}}
+  {{- $dele = $dele | append (printf `%d min. læsning` $laesetid) -}}
 {{- end -}}
 
 {{- with $dele }}

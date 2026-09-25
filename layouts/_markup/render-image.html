@@ -11,7 +11,9 @@
 
 {{- $r := "" -}}
 {{- if not (urls.Parse .Destination).IsAbs -}}
-  {{- with .PageInner.Resources.GetMatch .Destination }}{{ $r = . }}{{ end -}}
+  {{- $side := .PageInner -}}
+  {{- with $side.Parent }}{{ if eq .BundleType "leaf" }}{{ $side = . }}{{ end }}{{ end -}}
+  {{- with $side.Resources.GetMatch .Destination }}{{ $r = . }}{{ end -}}
 {{- end -}}
 {{- $kan := false -}}
 {{- with $r -}}

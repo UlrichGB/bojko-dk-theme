@@ -90,6 +90,16 @@ skrivesektion = ["blog", "noter"]
 
 Rækkefølgen betyder noget: artiklerne først, fordi arkivet er deres.
 
+## Tidslinjer
+
+En tidslinje er ét leaf bundle: en mappe med `index.md`, der har
+`tidslinje: true` og indledningen, og ved siden af den én fil pr. hændelse,
+`ÅÅÅÅ-MM-DD-slug.md`, med `title`, `date`, `type` (ét dansk ord) og `kilder`
+(en liste af `titel` og `url`) i hovedet og et til tre korte afsnit som tekst.
+Billeder ligger i samme mappe, uden undermapper. Siden viser indledningen og
+derefter hændelserne i datoorden; hændelserne bliver aldrig sider for sig.
+En ny hændelse: `hugo new content --kind haendelse blog/<tidslinje>/ÅÅÅÅ-MM-DD-slug.md`.
+
 ## Skrifterne
 
 De tre familier i `assets/fonts/` — Merriweather, Source Sans 3 og Comfortaa —

@@ -103,6 +103,11 @@ Mørkt tema er bevidst ubygget; `theme.toml` lover det ikke.
 - **`_markup/render-heading.html` sætter en `#`-ankerlænke i hver overskrift.**
   Alt, der læser `.Content` som tekst (JSON-LD `articleBody`, feedets
   `content:encoded`), skal gå gennem `_partials/uden-anker.html` først.
+- **En tidslinjes hændelser er page resources, ikke sider** (`_partials/tidslinje.html`).
+  Kun det, der udtrykkeligt løber `.Resources.Match "*.md"` igennem, ser dem:
+  i dag siden og læsetiden i `meta.html`. Feed, JSON-LD, llms.txt og
+  `.Lastmod` kender kun `index.md`. En billedsti i en hændelse slås op i
+  bundlet, ikke i hændelsen (`_markup/render-image.html`).
 - **Byg altid mod et rigtigt site.** Temaet har ingen `exampleSite/`:
   `HUGO_MODULE_REPLACEMENTS="github.com/UlrichGB/bojko-dk-theme -> <sti>" hugo`
   fra `bojko-dk`.
