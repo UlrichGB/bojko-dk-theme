@@ -9,11 +9,12 @@
   {{- errorf "{{< haendelse >}} vil have dato=\"ÅÅÅÅ-MM-DD\"; fik %q. %s" $raa $.Position -}}
 {{- end -}}
 {{- $dato := $svar.Value -}}
-<div class="haendelse">
+<li class="haendelse">
   <div class="haendelse-hoved">
     <time datetime="{{ $dato.Format "2006-01-02" }}">{{ $dato | time.Format "2. January 2006" }}</time>
+  </div>
+  <div class="haendelse-krop">
     <h3>{{ with .Get "url" }}<a href="{{ . }}">{{ $.Get "titel" }}</a>{{ else }}{{ .Get "titel" }}{{ end }}</h3>
+    {{ .Page.RenderString (dict "display" "block") .Inner }}
   </div>
-  <div class="haendelse-krop">{{ .Page.RenderString (dict "display" "block") .Inner }}
-  </div>
-</div>
+</li>

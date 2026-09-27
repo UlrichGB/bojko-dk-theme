@@ -46,6 +46,5 @@
 
   .washed { filter: none; }
 
-  .haendelse-hoved { position: static; }
   .haendelse { break-inside: avoid; }
 }

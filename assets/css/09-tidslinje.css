@@ -1,41 +1,101 @@
 /* 09 — FORLØB
-   Tidslinjen med den klæbende datoskinne, faktaboksen og
-   flow-diagrammet. */
+   Tidslinjen med kort skiftevis til venstre og højre for én streg,
+   faktaboksen og flow-diagrammet. */
 
-.tidslinje {
+.body-copy .tidslinje {
+  --tl-bredde: min(100cqw, 60rem);
+  --tl-col: min(var(--col-max), var(--measure), 100cqw);
+  --tl-mellem: 4rem;
+  --tl-streg: 2px;
+  --tl-maerke: 0.75rem;
+  --tl-luft: var(--space-4);
+  --tl-top: calc(var(--tl-luft) + 0.875rem);
 
-  --skinne: 10rem;
-  --skinne-luft: 1.25rem;
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: var(--tl-mellem);
+  row-gap: var(--space-6);
 
+  width: var(--tl-bredde);
   max-width: none;
+  margin-left: calc((var(--tl-col) - var(--tl-bredde)) / 2);
+  padding: 0;
+  list-style: none;
+}
+
+.tidslinje::before {
+  content: "";
+  position: absolute;
+  top: var(--tl-top);
+  bottom: 0;
+  left: calc(50% - var(--tl-streg) / 2);
+  width: var(--tl-streg);
+  background: var(--color-neutral-400);
 }
 
 
 .haendelse {
-  display: grid;
-  grid-template-columns: var(--skinne) minmax(0, 1fr);
-  gap: var(--skinne-luft);
-  padding: 1.375rem 0;
-  border-top: 1px solid var(--color-neutral-300);
-}
-
-
-.haendelse-hoved {
-  position: sticky;
-  top: calc(var(--topbar-total) + 1.25rem);
+  position: relative;
+  grid-column: 1;
+  grid-row: span 2;
   align-self: start;
 
   display: flex;
   flex-direction: column;
-  gap: 0.375rem;
+  gap: 0.625rem;
+  padding: var(--tl-luft) 1.25rem 1.25rem;
+  background: var(--color-neutral-200);
+  border: 1px solid var(--color-neutral-300);
+  border-radius: var(--radius-sm);
+  scroll-margin-top: calc(var(--topbar-total) + 1rem);
+}
+.haendelse:nth-child(even) { grid-column: 2; }
+.haendelse:nth-child(2) { grid-row: 2 / span 2; }
+
+.haendelse::before,
+.haendelse::after {
+  content: "";
+  position: absolute;
+}
+.haendelse::before {
+  top: calc(var(--tl-top) - 0.5px);
+  left: 100%;
+  width: calc(var(--tl-mellem) / 2);
+  height: 1px;
+  background: var(--color-neutral-400);
+}
+.haendelse::after {
+  top: calc(var(--tl-top) - var(--tl-maerke) / 2);
+  left: calc(100% + var(--tl-mellem) / 2 - var(--tl-maerke) / 2);
+  width: var(--tl-maerke);
+  height: var(--tl-maerke);
+  background: var(--color-accent);
+  box-shadow: 0 0 0 3px var(--color-neutral-100);
+}
+.haendelse:nth-child(even)::before { left: auto; right: 100%; }
+.haendelse:nth-child(even)::after {
+  left: auto;
+  right: calc(100% + var(--tl-mellem) / 2 - var(--tl-maerke) / 2);
+}
+
+
+.haendelse-hoved {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.25rem 0.75rem;
 }
 
 .haendelse time {
-  font-family: var(--font-sub);
-  font-size: var(--lille);
-  color: var(--color-neutral-700);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.375rem;
+  line-height: 1.75rem;
+  letter-spacing: -0.01em;
+  color: var(--color-text);
   font-variant-numeric: tabular-nums;
-  padding-top: 0.1875rem;
 }
 
 .haendelse h3 {
@@ -163,22 +223,32 @@
   .flow { grid-template-columns: 1fr; }
 }
 
+@media print, (max-width: 52rem) {
+  .body-copy .tidslinje {
+    --tl-mellem: 2.5rem;
+
+    grid-template-columns: minmax(0, 1fr);
+    width: auto;
+    margin-left: 0;
+    padding-left: var(--tl-mellem);
+  }
+  .tidslinje::before { left: calc(var(--tl-mellem) / 2 - var(--tl-streg) / 2); }
+  .haendelse,
+  .haendelse:nth-child(even),
+  .haendelse:nth-child(2) {
+    grid-column: 1;
+    grid-row: auto;
+  }
+  .haendelse::before,
+  .haendelse:nth-child(even)::before { left: auto; right: 100%; }
+  .haendelse::after,
+  .haendelse:nth-child(even)::after {
+    left: auto;
+    right: calc(100% + var(--tl-mellem) / 2 - var(--tl-maerke) / 2);
+  }
+}
+
 @media (max-width: 34rem) {
-  .haendelse {
-    grid-template-columns: 1fr;
-    gap: 0.625rem;
-  }
-  .haendelse-hoved {
-    position: static;
-    flex-direction: column;
-    gap: 0.125rem;
-  }
-  .haendelse-hoved:has(.haendelse-type) {
-    flex-direction: row;
-    flex-wrap: wrap;
-    align-items: baseline;
-    gap: 0.75rem;
-  }
-  .haendelse time { padding-top: 0; }
+  .haendelse { padding-inline: 1rem; }
   .fakta { padding: var(--space-3) var(--space-4); }
 }

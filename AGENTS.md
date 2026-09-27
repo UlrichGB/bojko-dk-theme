@@ -117,6 +117,10 @@ Mørkt tema er bevidst ubygget; `theme.toml` lover det ikke.
   i dag siden og læsetiden i `meta.html`. Feed, JSON-LD, llms.txt og
   `.Lastmod` kender kun `index.md`. En billedsti i en hændelse slås op i
   bundlet, ikke i hændelsen (`_markup/render-image.html`).
+- **Tidslinjens forskudte kort er ren grid-autoplacering** (`09-tidslinje.css`):
+  hvert kort spænder to rækker, ulige i kolonne 1, lige i kolonne 2, og kun
+  kort nr. 2 får `grid-row: 2 / span 2`. Resten falder selv på plads et
+  halvt kort nede. Sæt ikke rækkenumre på de øvrige og intet inline-`style`.
 - **Et mærkes titel vises altid gennem `strings.FirstUpper`** — sitets
   term-filer skriver dem med småt (`title: "datasuverænitet"`). Aldrig
   `title`: resten står som skrevet. En ny udgang for et mærkes titel skal

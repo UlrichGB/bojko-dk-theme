@@ -11,9 +11,9 @@
   {{- end -}}
 {{- end -}}
 {{- with sort $haendelser "Date" }}
-<div class="tidslinje">
+<ol class="tidslinje">
   {{- range . }}
-  <section class="haendelse" id="{{ .File.ContentBaseName | anchorize }}">
+  <li class="haendelse" id="{{ .File.ContentBaseName | anchorize }}">
     <div class="haendelse-hoved">
       <time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date | time.Format "2. January 2006" }}</time>
       {{- with .Params.type }}
@@ -36,7 +36,7 @@
       </div>
       {{- end }}
     </div>
-  </section>
+  </li>
   {{- end }}
-</div>
+</ol>
 {{- end -}}
