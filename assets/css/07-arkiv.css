@@ -13,6 +13,19 @@
   color: var(--color-text);
 }
 
+/* Arkivets to afsnit, Emner og År: etiketten som overskrift, og et spring
+   til dem lander under topbaren. */
+.arch-afsnit {
+  margin: calc(var(--x) * 1.5) 0 1rem;
+  font-family: var(--font-sub);
+  font-weight: 600;
+  font-size: var(--bitte);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-text);
+  scroll-margin-top: calc(var(--topbar-total) + 1rem);
+}
+
 .arch-modes {
   display: flex;
   flex-wrap: wrap;
@@ -208,6 +221,29 @@
 .arch-link:hover {
   color: var(--color-accent-600);
   text-decoration-color: var(--color-accent);
+}
+
+/* ÉT EMNE: under hvert år indlæggene nyeste først med rubrik, dato og
+   uddrag, skilt af en hårstreg. Hele blokken er et link, som på forsiden. */
+.emne-liste { padding: 0 0 1rem; }
+
+.emne-indlaeg {
+  position: relative;
+  padding: 1.75rem 0 1.5rem;
+}
+.emne-indlaeg + .emne-indlaeg { border-top: 1px solid var(--color-neutral-300); }
+.emne-indlaeg .post-h { margin-bottom: 0.625rem; }
+.emne-indlaeg .meta { margin: 0 0 0.875rem; }
+.emne-indlaeg .uddrag { margin: 0; }
+
+.emne-indlaeg .title-link::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+}
+.emne-indlaeg .laes-mere {
+  position: relative;
+  z-index: 1;
 }
 
 .tags {

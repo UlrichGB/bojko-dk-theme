@@ -1,0 +1,28 @@
+{{- /*
+  Et indlægs uddrag som ren tekst, til forsiden og emnesiderne:
+
+      {{ $uddrag := partial "uddrag.html" $p }}
+
+  Beskrivelsen er skrevet til søgeresultatet og er derfor kort; uddraget
+  læser i stedet indlæggets egen begyndelse og klipper efter 340 tegn.
+
+  ★ FØRSTE AFSNIT SPRINGES OVER, NÅR DET KUN ER KURSIV. Serierne åbner med
+  *Del 3 af 3 i trilogien …*, og det er en etiket, ikke en indledning. Et
+  åbnende citat springes over af samme grund: uden sine anførselstegn og
+  sin ombrydning løber det bare ind i næste afsnit.
+
+  Mellemrummet, hvor en blok slutter, er nødvendigt: uden det sætter
+  plainify sidste ord i ét afsnit op ad første ord i det næste.
+*/ -}}
+{{- $uddrag := partial "uden-epost.html" .Description -}}
+{{- with .Content -}}
+  {{- $krop := . -}}
+  {{- $krop = replaceRE `(?s)^\s*<p>\s*<em>.*?</em>\s*</p>` "" $krop -}}
+  {{- $krop = replaceRE `(?s)^\s*<blockquote>.*?</blockquote>` "" $krop -}}
+  {{- $krop = replaceRE `(?s)</(p|h[1-6]|blockquote|li|figcaption)>` " " $krop -}}
+  {{- $ren := partial "uden-anker.html" $krop | plainify | htmlUnescape
+              | partial "uden-epost.html"
+              | replaceRE `\s+` " " | strings.TrimSpace -}}
+  {{- with $ren }}{{ $uddrag = . | truncate 340 }}{{ end -}}
+{{- end -}}
+{{- return $uddrag -}}

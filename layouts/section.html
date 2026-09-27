@@ -1,27 +1,34 @@
 {{ define "main" }}
   {{- /*
-    ARKIVET. Artikler og noter fra alle skrivesektionerne grupperet efter
-    år og udgivelsesdato, med arkivvælgeren over. Noterne får en etiket.
+    ARKIVET. Emnerne først, derefter artikler og noter fra alle
+    skrivesektionerne efter år. Andre sektioner viser kun deres år.
   */ -}}
   {{- $skriv := partial "skrivesektion.html" . }}
   {{- $sider := .Pages }}
+  {{- $emner := false }}
+  {{- $tilstand := "aar" }}
   {{- with $skriv.arkiv }}{{ if eq .Section $.Section }}
     {{- $sider = where site.RegularPages "Section" "in" $skriv.sektioner }}
+    {{- with site.GetPage "/tags" }}{{ if .Pages }}{{ $emner = . }}{{ $tilstand = "emner" }}{{ end }}{{ end }}
   {{- end }}{{ end }}
   <section class="arkiv-side">
     <h1 class="post-h post-h--arkiv">{{ .Title }}</h1>
 
     {{- with .Content }}<div class="body-copy">{{ . }}</div>{{ end }}
     {{- with $sider.ByDate.Reverse }}
-    {{ partial "arkiv-vaelger.html" (dict "side" $ "tilstand" "aar") }}
+    {{ partial "arkiv-vaelger.html" (dict "side" $ "tilstand" $tilstand) }}
+
+    {{- with $emner }}
+    <h2 class="arch-afsnit" id="emner">Emner</h2>
+    {{ partial "emneoversigt.html" . }}
+    <h2 class="arch-afsnit" id="aar">År</h2>
+    {{- end }}
 
     {{- range $i, $gruppe := .GroupByDate "2006" }}
       <div class="arch-gruppe">
         <div class="arch-gruppe-hoved">
           <span>{{ $gruppe.Key }}</span>
-          {{- /* Ikke ved det første år: dér ER man i toppen, og linket
-                 peger på det sted, man allerede står. */ -}}
-          {{- if $i }}<a class="totop" href="#indhold">Til toppen</a>{{ end }}
+          {{- if or $i $emner }}<a class="totop" href="#indhold">Til toppen</a>{{ end }}
         </div>
         <ul class="arch-liste">
           {{- range $gruppe.Pages }}

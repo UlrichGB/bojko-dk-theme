@@ -1,7 +1,7 @@
 {{ define "main" }}
   {{- /*
     ÉT MÆRKE — alle indlæg under ét emne eller én serie, artikler og noter
-    sammen, grupperet efter år og udgivelsesdato. Noterne får en etiket.
+    sammen, efter år og nyeste først, hver med dato og uddrag.
   */ -}}
   <section class="arkiv-side">
     <h1 class="post-h post-h--arkiv">{{ strings.FirstUpper .Title }}</h1>
@@ -19,17 +19,25 @@
           <span>{{ .Key }}</span>
           <a class="totop" href="#indhold">Til toppen</a>
         </div>
-        <ul class="arch-liste">
+        <div class="emne-liste">
           {{- range .Pages }}
-          <li>
-            <time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date | time.Format "2. Jan" }}</time>
-            <span>
-              <a class="arch-link" href="{{ .RelPermalink }}">{{ .Title }}</a>
-              {{- if eq .Section "noter" }} <span class="arch-type">Note</span>{{ end }}
-            </span>
-          </li>
+          <article class="emne-indlaeg">
+            <h2 class="post-h post-h--note">
+              <a class="title-link" href="{{ .RelPermalink }}">{{ .Title }}</a>
+            </h2>
+            <div class="meta">
+              {{- with .Date }}{{ if not .IsZero }}<span><time datetime="{{ .Format "2006-01-02" }}">{{ . | time.Format "2. January 2006" }}</time></span>{{ end }}{{ end }}
+              {{- if eq .Section "noter" }}<span class="sep" aria-hidden="true">/</span><span>Note</span>{{ end }}
+            </div>
+            <div class="body-copy">
+              <p class="uddrag">{{ partial "uddrag.html" . }}
+                <a class="laes-mere" href="{{ .RelPermalink }}"
+                   aria-label="Læs mere: {{ .Title }}"><span data-tekst="Læs mere">Læs mere</span>{{ partial "ikon.html" "pil-hoejre" }}</a>
+              </p>
+            </div>
+          </article>
           {{- end }}
-        </ul>
+        </div>
       </div>
     {{- end }}
   </section>

@@ -1,15 +1,20 @@
 {{- /*
-  Vælgeren over arkivlisterne: "Udforsk bojko.dk efter: Emner | År".
-  Kaldes med (dict "side" . "tilstand" "aar") eller "emner".
+  Vælgeren over arkivlisterne: "Udforsk efter: Emner | År".
+  Kaldes med (dict "side" . "tilstand" "aar") eller "emner". Står
+  emnerne øverst i arkivet, peger "År" på årene under dem.
 */ -}}
 {{- $side := .side }}
 {{- $nu := .tilstand }}
 {{- $veje := slice }}
+{{- $aarUnder := false }}
 {{- with site.GetPage "/tags" }}
   {{- $veje = $veje | append (dict "navn" "Emner" "url" .RelPermalink "id" "emner") }}
+  {{- $aarUnder = gt (len .Pages) 0 }}
 {{- end }}
 {{- with (partial "skrivesektion.html" .).arkiv }}
-  {{- $veje = $veje | append (dict "navn" "År" "url" .RelPermalink "id" "aar") }}
+  {{- $url := .RelPermalink }}
+  {{- if $aarUnder }}{{ $url = cond (eq . $side) "#aar" (printf "%s#aar" $url) }}{{ end }}
+  {{- $veje = $veje | append (dict "navn" "År" "url" $url "id" "aar") }}
 {{- end }}
 
 {{- if gt (len $veje) 1 }}

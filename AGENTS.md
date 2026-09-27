@@ -77,6 +77,15 @@ HTML, ikke skabelonen:
 
 `_partials/del.html` beholder sin `mailto:?subject=` — den bærer ingen adresse.
 
+### Arkivet åbner på Emner (2026-09-27)
+
+Sitets menu "Arkiv" peger på arkivsektionen, og temaet kan ikke flytte den.
+Derfor viser `section.html` for arkivet emneoversigten først
+(`_partials/emneoversigt.html`, samme som `/tags/`) og årene under den;
+vælgerens "År" peger på `#aar`. Emnesiden (`term.html`) viser hvert indlæg
+med dato og uddrag under året. Uddraget er ét sted: `_partials/uddrag.html`,
+brugt af både forsiden og emnesiden.
+
 ### Andre valg, der ikke skal genåbnes
 
 Se `README.md` for hvad sitet selv skal levere, og
