@@ -114,7 +114,8 @@ Mørkt tema er bevidst ubygget; `theme.toml` lover det ikke.
   `content:encoded`), skal gå gennem `_partials/uden-anker.html` først.
 - **En tidslinjes hændelser er page resources, ikke sider** (`_partials/tidslinje.html`).
   Kun det, der udtrykkeligt løber `.Resources.Match "*.md"` igennem, ser dem:
-  i dag siden og læsetiden i `meta.html`. Feed, JSON-LD, llms.txt og
+  i dag siden, læsetiden i `meta.html` og `tidslinje-indeks.html`, der giver
+  indlæggenes "Del af tidslinjen"-boks. Feed, JSON-LD, llms.txt og
   `.Lastmod` kender kun `index.md`. En billedsti i en hændelse slås op i
   bundlet, ikke i hændelsen (`_markup/render-image.html`).
 - **Tidslinjens forskudte kort er ren grid-autoplacering** (`09-tidslinje.css`):
