@@ -12,7 +12,8 @@
   .laes-mere span,
   .laes-mere svg,
   .kopi-knap,
-  .share {
+  .share,
+  .i-tidslinje-forloeb a::before {
     transition: none;
   }
 }

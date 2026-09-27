@@ -14,11 +14,11 @@
     {{- $anker := printf "%s#%s" $tl.RelPermalink (.File.ContentBaseName | anchorize) -}}
     {{- $indlaeg := "" -}}
     {{- with .Params.indlaeg }}{{ $indlaeg = . }}{{ with site.GetPage . }}{{ $indlaeg = .RelPermalink }}{{ end }}{{ end -}}
-    {{- $led = $led | append (dict "titel" .Title "anker" $anker "indlaeg" $indlaeg "href" ($indlaeg | default $anker)) -}}
+    {{- $led = $led | append (dict "titel" .Title "dato" .Date "anker" $anker "indlaeg" $indlaeg "href" ($indlaeg | default $anker)) -}}
   {{- end -}}
   {{- range $i, $h := $led -}}
     {{- if and $h.indlaeg (not (index $indeks $h.indlaeg)) -}}
-      {{- $plads := dict "tidslinje" $tl "haendelse" $h "n" (add $i 1) "total" (len $led) -}}
+      {{- $plads := dict "tidslinje" $tl "haendelse" $h "n" (add $i 1) "total" (len $led) "led" $led -}}
       {{- if $i }}{{ $plads = merge $plads (dict "forrige" (index $led (sub $i 1))) }}{{ end -}}
       {{- if lt (add $i 1) (len $led) }}{{ $plads = merge $plads (dict "naeste" (index $led (add $i 1))) }}{{ end -}}
       {{- $indeks = merge $indeks (dict $h.indlaeg $plads) -}}

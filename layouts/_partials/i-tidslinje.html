@@ -1,8 +1,9 @@
 {{- /*
   Boksen øverst i et indlæg, som en hændelse i en tidslinje peger på:
-  hvilken tidslinje, hvilken plads, og forrige og næste hændelse.
+  hvilken tidslinje, én streg pr. hændelse med dette indlægs plads, og naboerne.
 */ -}}
 {{- with index (partialCached "tidslinje-indeks.html" site) .RelPermalink }}
+{{- $n := .n }}
 <nav class="i-tidslinje" aria-label="Tidslinjen {{ .tidslinje.LinkTitle }}">
   <p>Del af tidslinjen <a href="{{ .haendelse.anker }}">{{ .tidslinje.LinkTitle }}</a> <span aria-hidden="true">·</span> {{ .n }} af {{ .total }}</p>
   {{- if or .forrige .naeste }}
@@ -15,5 +16,12 @@
     {{- end }}
   </div>
   {{- end }}
+  <ol class="i-tidslinje-forloeb">
+    {{- range $i, $h := .led }}
+    {{- $plads := add $i 1 }}
+    {{- $navn := printf "%s: %s" ($h.dato | time.Format "2. January 2006") $h.titel }}
+    <li><a class="{{ if lt $plads $n }}forbi forbi-{{ div (mul $i 3) (sub $n 1) }}{{ else if eq $plads $n }}nu{{ else }}senere{{ end }}" href="{{ $h.href }}" title="{{ $navn }}" aria-label="{{ $navn }}"{{ if eq $plads $n }} aria-current="page"{{ end }}></a></li>
+    {{- end }}
+  </ol>
 </nav>
 {{- end -}}

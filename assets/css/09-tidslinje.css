@@ -243,7 +243,6 @@
   margin-bottom: var(--x);
   padding: var(--space-3) var(--space-4);
   background: var(--color-neutral-200);
-  border-left: 3px solid var(--color-accent);
   border-radius: var(--radius-sm);
 
   font-family: var(--font-sub);
@@ -265,6 +264,49 @@
   font-weight: 600;
 }
 .i-tidslinje-naboer svg { flex: none; }
+
+.i-tidslinje-forloeb {
+  display: flex;
+  align-items: flex-end;
+  flex-basis: 100%;
+  height: 2rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.i-tidslinje-forloeb li {
+  flex: 1 1 0;
+  min-width: 0;
+  max-width: 1.5rem;
+  height: 100%;
+}
+.i-tidslinje-forloeb a {
+  --streg: var(--color-neutral-400);
+
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  height: 100%;
+  padding-inline: 1px;
+}
+.i-tidslinje-forloeb a::before {
+  content: "";
+  width: 100%;
+  max-width: 0.625rem;
+  height: 1.25rem;
+  border-radius: 2px;
+  background: var(--streg);
+  print-color-adjust: exact;
+  transition: background .15s, height .15s;
+}
+.i-tidslinje-forloeb .forbi-0 { --streg: var(--color-accent-500); }
+.i-tidslinje-forloeb .forbi-1 { --streg: var(--color-accent-600); }
+.i-tidslinje-forloeb .forbi-2 { --streg: var(--color-accent-700); }
+.i-tidslinje-forloeb .nu { --streg: var(--color-accent-800); }
+.i-tidslinje-forloeb .nu::before { height: 2rem; }
+.i-tidslinje-forloeb a:hover::before { height: 1.625rem; }
+.i-tidslinje-forloeb .senere:hover { --streg: var(--color-neutral-600); }
+.i-tidslinje-forloeb .nu:hover::before { height: 2rem; }
 
 
 @media (max-width: 45rem) {
