@@ -59,6 +59,7 @@ et plausibelt gæt ud, som ville se ud som en beslutning.
 | `params.description` | konfiguration | sidste udvej for `<meta name="description">`. Temaet udleder selv en til mærkesider, arkiv og indlæg, så den er sjældent i brug |
 | `params.licens` (`navn`, `url`) | konfiguration | kolofonen står uden licensled. Det er en gyldig kolofon |
 | `params.ogBillede` | konfiguration + `static/` | sider uden omslagsbillede får intet `og:image`. Artikler bruger deres eget omslag |
+| en side med `layout: aar`, fx `content/blog/aar/_index.md` med `outputs: ["html"]` | indhold | arkivet viser årene under emnerne i stedet for på deres egen side |
 | `favicon.svg`, `apple-touch-icon.png`, webmanifest | `static/` | ingen ikoner. Temaet kan ikke levere dem uden at gætte på et bomærke |
 
 ## Hvad sitet HEDDER
@@ -69,7 +70,7 @@ stadig virker.
 
 | Hvad | Standard | Hvad den styrer |
 |---|---|---|
-| `params.skrivesektion` | `["blog", "noter"]` | sektionerne i forsidens strøm — som også er hovedfeedet og 404-sidens "Nyeste indlæg". Den FØRSTE af dem er arkivet: "Hele arkivet" og "År" peger på den |
+| `params.skrivesektion` | `["blog", "noter"]` | sektionerne i forsidens strøm — som også er hovedfeedet og 404-sidens "Nyeste indlæg". Den FØRSTE af dem er arkivet: "Hele arkivet" peger på den |
 | `params.profilside` | `/om/` | siden bag navnet i kolofonen og i JSON-LD'ens `author.url` |
 
 `skrivesektion` tager begge former:

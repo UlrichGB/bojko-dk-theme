@@ -5,10 +5,12 @@
 
   params.skrivesektion tager ét navn ("blog") eller en liste
   (["blog", "noter"]). Standarden er begge. .arkiv er den FØRSTE af dem —
-  det er den, "Hele arkivet" og "År" peger på, og arkivet viser dem ALLE.
+  det er den, "Hele arkivet" peger på, og arkivet viser dem ALLE. .aar er
+  siden med `layout: aar`, hvis sitet har en.
 */ -}}
 {{- $sektioner := site.Params.skrivesektion | default (slice "blog" "noter") -}}
 {{- if not (reflect.IsSlice $sektioner) -}}{{- $sektioner = slice $sektioner -}}{{- end -}}
 {{- $arkiv := false -}}
 {{- if $sektioner -}}{{- $arkiv = site.GetPage (printf "/%v" (index $sektioner 0)) -}}{{- end -}}
-{{- return dict "sektioner" $sektioner "arkiv" $arkiv -}}
+{{- $aar := index (where site.Pages "Layout" "aar") 0 -}}
+{{- return dict "sektioner" $sektioner "arkiv" $arkiv "aar" $aar -}}

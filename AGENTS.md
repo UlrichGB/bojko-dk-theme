@@ -58,7 +58,7 @@ præcis som `layout: profil` og `layout: side`. Derfor må `home.html` gerne
 spørge `eq $p.Section "noter"` om, hvad der er en note.
 
 **Rækkefølgen i `skrivesektion` betyder noget.** Den første sektion er
-ARKIVET: det er den, "Hele arkivet" og "År" peger på. Noterne er ikke et
+ARKIVET: det er den, "Hele arkivet" og "Emner" peger på. Noterne er ikke et
 arkiv, og en liste, der begynder med dem, sender de tre knapper det forkerte
 sted hen.
 ### E-postadressen kodes med entiteter, ikke JavaScript (2026-09-21)
@@ -77,14 +77,18 @@ HTML, ikke skabelonen:
 
 `_partials/del.html` beholder sin `mailto:?subject=` — den bærer ingen adresse.
 
-### Arkivet åbner på Emner (2026-09-27)
+### Arkivet åbner på Emner, årene har deres egen side (2026-09-27)
 
 Sitets menu "Arkiv" peger på arkivsektionen, og temaet kan ikke flytte den.
-Derfor viser `section.html` for arkivet emneoversigten først
-(`_partials/emneoversigt.html`, samme som `/tags/`) og årene under den;
-vælgerens "År" peger på `#aar`. Emnesiden (`term.html`) viser hvert indlæg
-med dato og uddrag under året. Uddraget er ét sted: `_partials/uddrag.html`,
-brugt af både forsiden og emnesiden.
+Derfor viser `section.html` for arkivet kun emneoversigten
+(`_partials/emneoversigt.html`, samme som `/tags/`). Årene står på en side
+med `layout: aar` (`aar.html`), som sitet lægger UNDER arkivet
+(`content/da/blog/aar/_index.md`, `outputs: ["html"]`), så menuens "Arkiv"
+forbliver markeret. Et outputformat var ikke en vej: `[outputs]` flettes ikke
+fra et tema. Findes siden ikke, står årene under emnerne med `#aar` som før.
+Vælgerens "Emner" peger så på arkivet, ikke `/tags/`. Emnesiden (`term.html`)
+viser hvert indlæg med et uddrag på højst to linjer; uddraget er ét sted,
+`_partials/uddrag.html`, og springer kodeblokke over.
 
 ### Andre valg, der ikke skal genåbnes
 

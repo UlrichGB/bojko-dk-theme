@@ -1,0 +1,17 @@
+{{ define "main" }}
+  {{- /*
+    ARKIVET EFTER ÅR. Vælges med `layout: aar` på en listeside, typisk
+    <arkiv>/aar/_index.md: alle skrivesektionernes indlæg efter år.
+  */ -}}
+  {{- $skriv := partial "skrivesektion.html" . }}
+  {{- $sider := where site.RegularPages "Section" "in" $skriv.sektioner }}
+  <section class="arkiv-side">
+    <h1 class="post-h post-h--arkiv">{{ .Title }}</h1>
+
+    {{- with .Content }}<div class="body-copy">{{ . }}</div>{{ end }}
+    {{- with $sider }}
+    {{ partial "arkiv-vaelger.html" (dict "side" $ "tilstand" "aar") }}
+    {{ partial "aarsliste.html" (dict "sider" . "totop" false) }}
+    {{- end }}
+  </section>
+{{ end }}

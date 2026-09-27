@@ -1,7 +1,7 @@
 {{ define "main" }}
   {{- /*
-    ARKIVET. Emnerne først, derefter artikler og noter fra alle
-    skrivesektionerne efter år. Andre sektioner viser kun deres år.
+    ARKIVET åbner på emnerne; årene står på siden med `layout: aar` og
+    under emnerne, så længe sitet ikke har en. Andre sektioner viser år.
   */ -}}
   {{- $skriv := partial "skrivesektion.html" . }}
   {{- $sider := .Pages }}
@@ -15,33 +15,21 @@
     <h1 class="post-h post-h--arkiv">{{ .Title }}</h1>
 
     {{- with .Content }}<div class="body-copy">{{ . }}</div>{{ end }}
-    {{- with $sider.ByDate.Reverse }}
+    {{- with $sider }}
     {{ partial "arkiv-vaelger.html" (dict "side" $ "tilstand" $tilstand) }}
 
     {{- with $emner }}
+      {{- if $skriv.aar }}
+    {{ partial "emneoversigt.html" . }}
+      {{- else }}
     <h2 class="arch-afsnit" id="emner">Emner</h2>
     {{ partial "emneoversigt.html" . }}
     <h2 class="arch-afsnit" id="aar">År</h2>
+      {{- end }}
     {{- end }}
 
-    {{- range $i, $gruppe := .GroupByDate "2006" }}
-      <div class="arch-gruppe">
-        <div class="arch-gruppe-hoved">
-          <span>{{ $gruppe.Key }}</span>
-          {{- if or $i $emner }}<a class="totop" href="#indhold">Til toppen</a>{{ end }}
-        </div>
-        <ul class="arch-liste">
-          {{- range $gruppe.Pages }}
-          <li>
-            <time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date | time.Format "2. Jan" }}</time>
-            <span>
-              <a class="arch-link" href="{{ .RelPermalink }}">{{ .Title }}</a>
-              {{- if eq .Section "noter" }} <span class="arch-type">Note</span>{{ end }}
-            </span>
-          </li>
-          {{- end }}
-        </ul>
-      </div>
+    {{- if or (not $emner) (not $skriv.aar) }}
+    {{ partial "aarsliste.html" (dict "sider" $sider "totop" $emner) }}
     {{- end }}
     {{- end }}
   </section>

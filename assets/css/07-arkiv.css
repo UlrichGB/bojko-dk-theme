@@ -236,6 +236,21 @@
 .emne-indlaeg .meta { margin: 0 0 0.875rem; }
 .emne-indlaeg .uddrag { margin: 0; }
 
+/* Uddraget er højst to linjer, og Læs mere står ud for den sidste. */
+.body-copy .uddrag--kort {
+  display: flex;
+  align-items: flex-end;
+}
+.uddrag--kort .uddrag-tekst {
+  flex: 1;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  overflow: hidden;
+}
+.uddrag--kort .laes-mere { float: none; flex: none; }
+
 .emne-indlaeg .title-link::after {
   content: "";
   position: absolute;

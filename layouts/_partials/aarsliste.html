@@ -1,0 +1,24 @@
+{{- /*
+  Indlæg grupperet efter år, nyeste først. Kaldes med
+  (dict "sider" $sider "totop" true), når der står noget over listen.
+*/ -}}
+{{- $totop := .totop }}
+{{- range $i, $gruppe := .sider.ByDate.Reverse.GroupByDate "2006" }}
+  <div class="arch-gruppe">
+    <div class="arch-gruppe-hoved">
+      <span>{{ $gruppe.Key }}</span>
+      {{- if or $i $totop }}<a class="totop" href="#indhold">Til toppen</a>{{ end }}
+    </div>
+    <ul class="arch-liste">
+      {{- range $gruppe.Pages }}
+      <li>
+        <time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date | time.Format "2. Jan" }}</time>
+        <span>
+          <a class="arch-link" href="{{ .RelPermalink }}">{{ .Title }}</a>
+          {{- if eq .Section "noter" }} <span class="arch-type">Note</span>{{ end }}
+        </span>
+      </li>
+      {{- end }}
+    </ul>
+  </div>
+{{- end }}
