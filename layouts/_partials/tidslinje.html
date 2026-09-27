@@ -1,50 +1,25 @@
 {{- /*
-  Tidslinjen i et leaf bundle med `tidslinje: true`: hver .md ved siden af
-  index.md er én hændelse, sorteret efter dato. Uden dato standser bygningen;
-  en kladde vises kun under hugo server. Med `indlaeg` viser kortet kun et
-  uddrag og peger på indlægget; uden viser det hele hændelsen.
+  Tidslinjen på en side med `tidslinje: true`: et kort pr. led fra
+  `tidslinje-led.html`. Et indlæg viser sin description og peger på sig selv;
+  en hændelse med `indlaeg` viser et uddrag, en uden viser hele teksten.
 */ -}}
-{{- $haendelser := slice -}}
-{{- range .Resources.Match "*.md" -}}
-  {{- if or (not .Draft) hugo.IsServer }}{{ $haendelser = $haendelser | append . }}{{ end -}}
-  {{- if .Date.IsZero -}}
-    {{- errorf "Hændelsen %s i tidslinjen %s mangler date: ÅÅÅÅ-MM-DD" .File.LogicalName $.File.Dir -}}
-  {{- end -}}
-{{- end -}}
-{{- with sort $haendelser "Date" }}
+{{- with partialCached "tidslinje-led.html" . .RelPermalink }}
 <ol class="tidslinje">
   {{- range . }}
-  {{- $indlaeg := "" }}
-  {{- with .Params.indlaeg }}{{ $indlaeg = . }}{{ with site.GetPage . }}{{ $indlaeg = .RelPermalink }}{{ end }}{{ end }}
-  <li class="haendelse{{ if $indlaeg }} haendelse--uddrag{{ end }}" id="{{ .File.ContentBaseName | anchorize }}">
+  <li class="haendelse{{ if .indlaeg }} haendelse--uddrag{{ end }}" id="{{ .id }}">
     <div class="haendelse-hoved">
-      <time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date | time.Format "2. January 2006" }}</time>
-      {{- with .Params.type }}
-      <span class="haendelse-type">{{ . }}</span>
-      {{- end }}
+      <time datetime="{{ .dato.Format "2006-01-02" }}">{{ .dato | time.Format "2. January 2006" }}</time>
     </div>
     <div class="haendelse-krop">
-      {{- if $indlaeg }}
-      <h2><a class="title-link" href="{{ $indlaeg }}">{{ .Title }}</a></h2>
-      <p class="uddrag">{{ partial "uddrag.html" . }}
-        <a class="laes-mere" href="{{ $indlaeg }}"
-           aria-label="Læs mere: {{ .Title }}"><span data-tekst="Læs mere">Læs mere</span>{{ partial "ikon.html" "pil-hoejre" }}</a>
+      {{- if .indlaeg }}
+      <h2><a class="title-link" href="{{ .indlaeg }}">{{ .titel }}</a></h2>
+      <p class="uddrag">{{ if .beskrivelse }}{{ partial "uden-epost.html" .side.Description | default (partial "uddrag.html" .side) }}{{ else }}{{ partial "uddrag.html" .side }}{{ end }}
+        <a class="laes-mere" href="{{ .indlaeg }}"
+           aria-label="Læs mere: {{ .titel }}"><span data-tekst="Læs mere">Læs mere</span>{{ partial "ikon.html" "pil-hoejre" }}</a>
       </p>
       {{- else }}
-      <h2>{{ .Title }}</h2>
-      {{ .Content }}
-      {{- end }}
-      {{- $kilder := slice }}
-      {{- range .Params.kilder }}{{ if .url }}{{ $kilder = $kilder | append . }}{{ end }}{{ end }}
-      {{- with $kilder }}
-      <div class="haendelse-kilder">
-        <span>{{ cond (gt (len .) 1) "Kilder" "Kilde" }}</span>
-        <ul>
-          {{- range . }}
-          <li><a href="{{ .url }}">{{ .titel | default .url }}</a></li>
-          {{- end }}
-        </ul>
-      </div>
+      <h2>{{ .titel }}</h2>
+      {{ .side.Content }}
       {{- end }}
     </div>
   </li>

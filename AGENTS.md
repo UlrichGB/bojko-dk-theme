@@ -116,12 +116,14 @@ Mørkt tema er bevidst ubygget; `theme.toml` lover det ikke.
 - **`_markup/render-heading.html` sætter en `#`-ankerlænke i hver overskrift.**
   Alt, der læser `.Content` som tekst (JSON-LD `articleBody`, feedets
   `content:encoded`), skal gå gennem `_partials/uden-anker.html` først.
-- **En tidslinjes hændelser er page resources, ikke sider** (`_partials/tidslinje.html`).
-  Kun det, der udtrykkeligt løber `.Resources.Match "*.md"` igennem, ser dem:
-  i dag siden, læsetiden i `meta.html` og `tidslinje-indeks.html`, der giver
-  indlæggenes "Del af tidslinjen"-boks. Feed, JSON-LD, llms.txt og
-  `.Lastmod` kender kun `index.md`. En billedsti i en hændelse slås op i
-  bundlet, ikke i hændelsen (`_markup/render-image.html`).
+- **En tidslinjes led findes ét sted: `_partials/tidslinje-led.html`.** Den
+  fletter indlæggene med samme `timeline` og bundlets hændelsesfiler (page
+  resources, ikke sider) efter dato. Siden, læsetiden i `meta.html` og
+  `tidslinje-indeks.html` (indlæggenes boks) læser alle den; kald den med
+  `partialCached "tidslinje-led.html" . .RelPermalink`. Feed, JSON-LD,
+  llms.txt og `.Lastmod` kender kun `index.md`. En billedsti i en hændelse
+  slås op i bundlet, ikke i hændelsen (`_markup/render-image.html`).
+  Kortene viser ingen type og ingen kilder (besluttet 2026-09-27).
 - **Tidslinjens forskudte kort er ren grid-autoplacering** (`09-tidslinje.css`):
   hvert kort spænder to rækker, ulige i kolonne 1, lige i kolonne 2, og kun
   kort nr. 2 får `grid-row: 2 / span 2`. Resten falder selv på plads et

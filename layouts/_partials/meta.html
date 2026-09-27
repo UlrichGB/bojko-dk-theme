@@ -16,7 +16,7 @@
 {{- $laesetid := .ReadingTime -}}
 {{- if .Params.tidslinje -}}
   {{- $ord := .WordCount -}}
-  {{- range .Resources.Match "*.md" }}{{ $ord = add $ord .WordCount }}{{ end -}}
+  {{- range partialCached "tidslinje-led.html" . .RelPermalink }}{{ $ord = add $ord .ord }}{{ end -}}
   {{- $laesetid = div (add $ord 212) 213 -}}
 {{- end -}}
 {{- if and (site.Params.laesetid | default true) $laesetid -}}

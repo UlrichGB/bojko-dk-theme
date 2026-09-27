@@ -1,0 +1,30 @@
+{{- /*
+  En tidslinjes led i datoorden: indlæggene med samme `timeline` som siden og
+  hændelsesfilerne i bundlet. Kaldes med partialCached . .RelPermalink.
+*/ -}}
+{{- $tl := . -}}
+{{- $navn := .Params.timeline | default (strings.TrimSuffix ": en tidslinje" .Title) -}}
+{{- $led := slice -}}
+{{- range .Resources.Match "*.md" -}}
+  {{- if .Date.IsZero -}}
+    {{- errorf "Hændelsen %s i tidslinjen %s mangler date: ÅÅÅÅ-MM-DD" .File.LogicalName $tl.File.Dir -}}
+  {{- end -}}
+  {{- if or (not .Draft) hugo.IsServer -}}
+    {{- $indlaeg := "" -}}
+    {{- $flyttet := false -}}
+    {{- with .Params.indlaeg }}{{ $indlaeg = . }}{{ with site.GetPage . }}{{ $indlaeg = .RelPermalink }}{{ $flyttet = .Params.timeline }}{{ end }}{{ end -}}
+    {{- if not $flyttet -}}
+      {{- $id := .File.ContentBaseName | anchorize -}}
+      {{- $led = $led | append (dict "titel" .Title "dato" .Date "id" $id "anker" (printf "%s#%s" $tl.RelPermalink $id) "indlaeg" $indlaeg "side" . "ord" .WordCount) -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+{{- range where site.RegularPages "Params.timeline" $navn -}}
+  {{- if not .Params.tidslinje -}}
+    {{- $id := path.Base (strings.TrimSuffix "/" .RelPermalink) | anchorize -}}
+    {{- $led = $led | append (dict "titel" .Title "dato" .Date "id" $id "anker" (printf "%s#%s" $tl.RelPermalink $id) "indlaeg" .RelPermalink "side" . "beskrivelse" true "ord" (countwords .Description)) -}}
+  {{- end -}}
+{{- end -}}
+{{- $sorteret := slice -}}
+{{- range $led }}{{ $sorteret = $sorteret | append (merge . (dict "href" (.indlaeg | default .anker) "orden" (printf "%s %s" (.dato.Format "2006-01-02T15:04:05") .titel))) }}{{ end -}}
+{{- return sort $sorteret "orden" -}}

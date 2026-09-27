@@ -93,19 +93,35 @@ Rækkefølgen betyder noget: artiklerne først, fordi arkivet er deres.
 
 ## Tidslinjer
 
-En tidslinje er ét leaf bundle: en mappe med `index.md`, der har
-`tidslinje: true` og indledningen, og ved siden af den én fil pr. hændelse,
-`ÅÅÅÅ-MM-DD-slug.md`, med `title`, `date`, `type` (ét dansk ord) og `kilder`
-(en liste af `titel` og `url`) i hovedet og et til tre korte afsnit som tekst.
-Har hændelsen sit eget indlæg, peger `indlaeg: "/blog/<slug>/"` på det: så
-viser kortet et uddrag af teksten med Læs mere og kilderne under, og rubrikken
-linker til indlægget. Indlægget selv får øverst en boks, "Del af tidslinjen
-… · 5 af 13", med Forrige og Næste; temaet finder den selv ud fra `indlaeg`,
-så indlægget skal intet have i sit hoved. Boksen bruger tidslinjens
+En tidslinje er en side med `tidslinje: true` og indledningen som tekst.
+Et indlæg kommer med i den ved at skrive samme navn i sit eget hoved:
+
+```yaml
+# blog/microsoft-recall-tidslinje/index.md
+tidslinje: true
+timeline: Microsoft Recall
+
+# blog/<indlæg>/index.md
+timeline: Microsoft Recall
+```
+
+Navnene skal være ens tegn for tegn. Har tidslinjesiden ingen `timeline`,
+er dens navn `title` uden et afsluttende ": en tidslinje", så
+"Microsoft Recall: en tidslinje" hedder `Microsoft Recall`.
+
+Siden viser indledningen og derefter ét kort pr. indlæg i datoorden: dato,
+rubrik med link til indlægget, indlæggets `description` som tekst og Læs
+mere. Indlægget selv får øverst en boks, "Del af tidslinjen … · 5 af 13",
+med én streg pr. kort, Forrige og Næste. Boksen bruger tidslinjens
 `linkTitle`, hvis den har en, ellers `title`.
-Billeder ligger i samme mappe, uden undermapper. Siden viser indledningen og
-derefter hændelserne i datoorden; hændelserne bliver aldrig sider for sig.
-En ny hændelse: `hugo new content --kind haendelse blog/<tidslinje>/ÅÅÅÅ-MM-DD-slug.md`.
+
+Indtil videre læses også hændelsesfiler i tidslinjens bundle,
+`ÅÅÅÅ-MM-DD-slug.md` ved siden af `index.md` med `title` og `date` og et til
+tre korte afsnit. Har en hændelse `indlaeg: "/blog/<slug>/"`, viser kortet et
+uddrag og linker til indlægget; har det indlæg selv `timeline`, springes
+hændelsen over, så intet står der to gange. Hændelser og indlæg flettes efter
+dato; billeder til dem ligger i samme mappe, uden undermapper. En ny hændelse:
+`hugo new content --kind haendelse blog/<tidslinje>/ÅÅÅÅ-MM-DD-slug.md`.
 
 ## Skrifterne
 
