@@ -1,0 +1,19 @@
+{{- /*
+  Boksen øverst i et indlæg, som en hændelse i en tidslinje peger på:
+  hvilken tidslinje, hvilken plads, og forrige og næste hændelse.
+*/ -}}
+{{- with index (partialCached "tidslinje-indeks.html" site) .RelPermalink }}
+<nav class="i-tidslinje" aria-label="Tidslinjen {{ .tidslinje.LinkTitle }}">
+  <p>Del af tidslinjen <a href="{{ .haendelse.anker }}">{{ .tidslinje.LinkTitle }}</a> <span aria-hidden="true">·</span> {{ .n }} af {{ .total }}</p>
+  {{- if or .forrige .naeste }}
+  <div class="i-tidslinje-naboer">
+    {{- with .forrige }}
+    <a href="{{ .href }}" rel="prev" aria-label="Forrige: {{ .titel }}">{{ partial "ikon.html" "pil-venstre" }}<span>Forrige</span></a>
+    {{- end }}
+    {{- with .naeste }}
+    <a class="naeste" href="{{ .href }}" rel="next" aria-label="Næste: {{ .titel }}"><span>Næste</span>{{ partial "ikon.html" "pil-hoejre" }}</a>
+    {{- end }}
+  </div>
+  {{- end }}
+</nav>
+{{- end -}}

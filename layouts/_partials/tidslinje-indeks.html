@@ -1,0 +1,28 @@
+{{- /*
+  Hvilke indlæg der er med i en tidslinje, fundet i hændelsernes `indlaeg`.
+  Kaldes med partialCached og giver et opslag fra indlæggets RelPermalink.
+*/ -}}
+{{- $indeks := dict -}}
+{{- range where site.Pages "Params.tidslinje" true -}}
+  {{- $tl := . -}}
+  {{- $haendelser := slice -}}
+  {{- range .Resources.Match "*.md" -}}
+    {{- if and (or (not .Draft) hugo.IsServer) (not .Date.IsZero) }}{{ $haendelser = $haendelser | append . }}{{ end -}}
+  {{- end -}}
+  {{- $led := slice -}}
+  {{- range sort $haendelser "Date" -}}
+    {{- $anker := printf "%s#%s" $tl.RelPermalink (.File.ContentBaseName | anchorize) -}}
+    {{- $indlaeg := "" -}}
+    {{- with .Params.indlaeg }}{{ $indlaeg = . }}{{ with site.GetPage . }}{{ $indlaeg = .RelPermalink }}{{ end }}{{ end -}}
+    {{- $led = $led | append (dict "titel" .Title "anker" $anker "indlaeg" $indlaeg "href" ($indlaeg | default $anker)) -}}
+  {{- end -}}
+  {{- range $i, $h := $led -}}
+    {{- if and $h.indlaeg (not (index $indeks $h.indlaeg)) -}}
+      {{- $plads := dict "tidslinje" $tl "haendelse" $h "n" (add $i 1) "total" (len $led) -}}
+      {{- if $i }}{{ $plads = merge $plads (dict "forrige" (index $led (sub $i 1))) }}{{ end -}}
+      {{- if lt (add $i 1) (len $led) }}{{ $plads = merge $plads (dict "naeste" (index $led (add $i 1))) }}{{ end -}}
+      {{- $indeks = merge $indeks (dict $h.indlaeg $plads) -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+{{- return $indeks -}}

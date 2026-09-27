@@ -98,7 +98,10 @@ En tidslinje er ét leaf bundle: en mappe med `index.md`, der har
 (en liste af `titel` og `url`) i hovedet og et til tre korte afsnit som tekst.
 Har hændelsen sit eget indlæg, peger `indlaeg: "/blog/<slug>/"` på det: så
 viser kortet et uddrag af teksten med Læs mere og kilderne under, og rubrikken
-linker til indlægget.
+linker til indlægget. Indlægget selv får øverst en boks, "Del af tidslinjen
+… · 5 af 13", med Forrige og Næste; temaet finder den selv ud fra `indlaeg`,
+så indlægget skal intet have i sit hoved. Boksen bruger tidslinjens
+`linkTitle`, hvis den har en, ellers `title`.
 Billeder ligger i samme mappe, uden undermapper. Siden viser indledningen og
 derefter hændelserne i datoorden; hændelserne bliver aldrig sider for sig.
 En ny hændelse: `hugo new content --kind haendelse blog/<tidslinje>/ÅÅÅÅ-MM-DD-slug.md`.
