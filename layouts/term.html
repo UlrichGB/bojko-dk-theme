@@ -1,8 +1,10 @@
 {{ define "main" }}
   {{- /*
     ÉT MÆRKE — alle indlæg under ét emne eller én serie, artikler og noter
-    sammen, efter år og nyeste først, hver med dato og uddrag.
+    sammen, efter år og nyeste først, hver med dato og uddrag. Tidslinjerne
+    står for sig selv øverst, uden for årene.
   */ -}}
+  {{- $tidslinjer := where .Pages "Params.tidslinje" true }}
   <section class="arkiv-side">
     <h1 class="post-h post-h--arkiv">{{ strings.FirstUpper .Title }}</h1>
 
@@ -13,7 +15,34 @@
       {{- with site.GetPage "/tags" }} <a class="arch-mode" href="{{ .RelPermalink }}">Alle emner</a>{{ end }}
     </p>
 
-    {{- range .Pages.ByDate.Reverse.GroupByDate "2006" }}
+    {{- with $tidslinjer }}
+      <div class="arch-gruppe arch-gruppe--tidslinje">
+        <div class="arch-gruppe-hoved">
+          <span>Tidslinje</span>
+        </div>
+        <div class="emne-liste">
+          {{- range sort . "Date" "desc" }}
+          <article class="emne-indlaeg">
+            <h2 class="post-h post-h--note">
+              <a class="title-link" href="{{ .RelPermalink }}">{{ .Title }}</a>
+            </h2>
+            <div class="meta">
+              {{- $n := len (partialCached "tidslinje-led.html" . .RelPermalink) }}
+              <span>{{ $n }} {{ cond (eq $n 1) "hændelse" "hændelser" }}</span>
+            </div>
+            <div class="body-copy">
+              <p class="uddrag uddrag--kort"><span class="uddrag-tekst">{{ .Description | default (partial "uddrag.html" .) | truncate 200 }}</span>
+                <a class="laes-mere" href="{{ .RelPermalink }}"
+                   aria-label="Læs mere: {{ .Title }}"><span data-tekst="Læs mere">Læs mere</span>{{ partial "ikon.html" "pil-hoejre" }}</a>
+              </p>
+            </div>
+          </article>
+          {{- end }}
+        </div>
+      </div>
+    {{- end }}
+
+    {{- range (.Pages | complement $tidslinjer).ByDate.Reverse.GroupByDate "2006" }}
       <div class="arch-gruppe">
         <div class="arch-gruppe-hoved">
           <span>{{ .Key }}</span>
