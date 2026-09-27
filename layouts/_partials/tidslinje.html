@@ -1,7 +1,8 @@
 {{- /*
   Tidslinjen i et leaf bundle med `tidslinje: true`: hver .md ved siden af
   index.md er én hændelse, sorteret efter dato. Uden dato standser bygningen;
-  en kladde vises kun under hugo server.
+  en kladde vises kun under hugo server. Med `indlaeg` viser kortet kun et
+  uddrag og peger på indlægget; uden viser det hele hændelsen.
 */ -}}
 {{- $haendelser := slice -}}
 {{- range .Resources.Match "*.md" -}}
@@ -13,7 +14,9 @@
 {{- with sort $haendelser "Date" }}
 <ol class="tidslinje">
   {{- range . }}
-  <li class="haendelse" id="{{ .File.ContentBaseName | anchorize }}">
+  {{- $indlaeg := "" }}
+  {{- with .Params.indlaeg }}{{ $indlaeg = . }}{{ with site.GetPage . }}{{ $indlaeg = .RelPermalink }}{{ end }}{{ end }}
+  <li class="haendelse{{ if $indlaeg }} haendelse--uddrag{{ end }}" id="{{ .File.ContentBaseName | anchorize }}">
     <div class="haendelse-hoved">
       <time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date | time.Format "2. January 2006" }}</time>
       {{- with .Params.type }}
@@ -21,8 +24,16 @@
       {{- end }}
     </div>
     <div class="haendelse-krop">
+      {{- if $indlaeg }}
+      <h2><a class="title-link" href="{{ $indlaeg }}">{{ .Title }}</a></h2>
+      <p class="uddrag">{{ partial "uddrag.html" . }}
+        <a class="laes-mere" href="{{ $indlaeg }}"
+           aria-label="Læs mere: {{ .Title }}"><span data-tekst="Læs mere">Læs mere</span>{{ partial "ikon.html" "pil-hoejre" }}</a>
+      </p>
+      {{- else }}
       <h2>{{ .Title }}</h2>
       {{ .Content }}
+      {{- end }}
       {{- $kilder := slice }}
       {{- range .Params.kilder }}{{ if .url }}{{ $kilder = $kilder | append . }}{{ end }}{{ end }}
       {{- with $kilder }}

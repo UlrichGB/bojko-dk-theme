@@ -1,7 +1,8 @@
 {{- /*
   {{< haendelse dato="2024-06-18" titel="…" url="…" >}} ... {{< /haendelse >}}
   Én hændelse i en tidslinje. dato er ISO; den danske gengivelse laves her.
-  Uden en læsbar dato standser bygningen og siger hvor.
+  Uden en læsbar dato standser bygningen og siger hvor. Med indlaeg="…"
+  peger rubrikken på indlægget, og teksten bliver et uddrag.
 */ -}}
 {{- $raa := .Get "dato" -}}
 {{- $svar := try (time.AsTime $raa) -}}
@@ -9,12 +10,23 @@
   {{- errorf "{{< haendelse >}} vil have dato=\"ÅÅÅÅ-MM-DD\"; fik %q. %s" $raa $.Position -}}
 {{- end -}}
 {{- $dato := $svar.Value -}}
-<li class="haendelse">
+{{- $indlaeg := "" -}}
+{{- with .Get "indlaeg" }}{{ $indlaeg = . }}{{ with site.GetPage . }}{{ $indlaeg = .RelPermalink }}{{ end }}{{ end -}}
+{{- $tekst := .Page.RenderString (dict "display" "block") .Inner -}}
+<li class="haendelse{{ if $indlaeg }} haendelse--uddrag{{ end }}">
   <div class="haendelse-hoved">
     <time datetime="{{ $dato.Format "2006-01-02" }}">{{ $dato | time.Format "2. January 2006" }}</time>
   </div>
   <div class="haendelse-krop">
+    {{- if $indlaeg }}
+    <h3><a class="title-link" href="{{ $indlaeg }}">{{ .Get "titel" }}</a></h3>
+    <p class="uddrag">{{ replaceRE `(?s)</(p|li)>` " " $tekst | plainify | htmlUnescape | partial "uden-epost.html" | replaceRE `\s+` " " | strings.TrimSpace | truncate 340 }}
+      <a class="laes-mere" href="{{ $indlaeg }}"
+         aria-label="Læs mere: {{ .Get "titel" }}"><span data-tekst="Læs mere">Læs mere</span>{{ partial "ikon.html" "pil-hoejre" }}</a>
+    </p>
+    {{- else }}
     <h3>{{ with .Get "url" }}<a href="{{ . }}">{{ $.Get "titel" }}</a>{{ else }}{{ .Get "titel" }}{{ end }}</h3>
-    {{ .Page.RenderString (dict "display" "block") .Inner }}
+    {{ $tekst }}
+    {{- end }}
   </div>
 </li>
