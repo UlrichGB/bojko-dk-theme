@@ -1,11 +1,11 @@
 {{- /*
   Tidslinjen på en side med `tidslinje: true`: et kort pr. led fra
-  `tidslinje-led.html`. Et indlæg viser sin description og peger på sig selv;
+  `tidslinje-led.html`, nyeste øverst. Et indlæg viser sin description og peger på sig selv;
   en hændelse med `indlaeg` viser et uddrag, en uden viser hele teksten.
 */ -}}
 {{- with partialCached "tidslinje-led.html" . .RelPermalink }}
 <ol class="tidslinje">
-  {{- range . }}
+  {{- range collections.Reverse . }}
   <li class="haendelse{{ if .indlaeg }} haendelse--uddrag{{ end }}" id="{{ .id }}">
     <div class="haendelse-hoved">
       <time datetime="{{ .dato.Format "2006-01-02" }}">{{ .dato | time.Format "2. January 2006" }}</time>
