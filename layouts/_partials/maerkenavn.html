@@ -1,0 +1,9 @@
+{{- /*
+  Et mærkes navn, som det står skrevet: term-filens title ordret, ellers
+  stavemåden fra forsidematerialet med "-" som mellemrum. Aldrig .Title.
+*/ -}}
+{{- $navn := .Params.title -}}
+{{- if not $navn -}}
+  {{- $navn = replace (.Data.Term | default .Title) "-" " " -}}
+{{- end -}}
+{{- return $navn -}}

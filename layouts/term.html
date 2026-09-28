@@ -6,7 +6,7 @@
   */ -}}
   {{- $tidslinjer := where .Pages "Params.tidslinje" true }}
   <section class="arkiv-side">
-    <h1 class="post-h post-h--arkiv">{{ strings.FirstUpper .Title }}</h1>
+    <h1 class="post-h post-h--arkiv">{{ partial "maerkenavn.html" . }}</h1>
 
     {{- with .Content }}<div class="body-copy">{{ . }}</div>{{ end }}
 

@@ -128,10 +128,13 @@ Mørkt tema er bevidst ubygget; `theme.toml` lover det ikke.
   hvert kort spænder to rækker, ulige i kolonne 1, lige i kolonne 2, og kun
   kort nr. 2 får `grid-row: 2 / span 2`. Resten falder selv på plads et
   halvt kort nede. Sæt ikke rækkenumre på de øvrige og intet inline-`style`.
-- **Et mærkes titel vises altid gennem `strings.FirstUpper`** — sitets
-  term-filer skriver dem med småt (`title: "datasuverænitet"`). Aldrig
-  `title`: resten står som skrevet. En ny udgang for et mærkes titel skal
-  gøre det samme.
+- **Et mærkes navn vises altid gennem `_partials/maerkenavn.html`**, aldrig
+  `.Title`/`.LinkTitle` (besluttet 2026-09-28). Hugos `capitalizeListTitles`
+  gør `macOS` til "MacOS" og `getting-things-done` til
+  "Getting-Things-Done"; `.Data.Term` er stavemåden fra forsidematerialet.
+  Partialen tager term-filens `title` ordret, ellers `.Data.Term` med "-"
+  som mellemrum. Ingen `strings.FirstUpper`: forfatteren skriver mærket,
+  som det skal stå. URL'erne rører den ikke.
 - **Byg altid mod et rigtigt site.** Temaet har ingen `exampleSite/`:
   `HUGO_MODULE_REPLACEMENTS="github.com/UlrichGB/bojko-dk-theme -> <sti>" hugo`
   fra `bojko-dk`.

@@ -4,7 +4,7 @@
 */ -}}
 {{- $grupper := dict }}
 {{- range .Pages }}
-  {{- $b := upper (substr .LinkTitle 0 1) }}
+  {{- $b := upper (substr (partial "maerkenavn.html" .) 0 1) }}
   {{- if not (findRE `^\pL$` $b) }}{{ $b = "0-9" }}{{ end }}
   {{- $grupper = merge $grupper (dict $b (index $grupper $b | default slice | append .)) }}
 {{- end }}
@@ -32,7 +32,7 @@
     <ul class="two-col">
       {{- range . }}
       <li>
-        <a class="arch-link" href="{{ .RelPermalink }}">{{ strings.FirstUpper .LinkTitle }}</a>
+        <a class="arch-link" href="{{ .RelPermalink }}">{{ partial "maerkenavn.html" . }}</a>
         <span class="antal">{{ len .Pages }}</span>
       </li>
       {{- end }}

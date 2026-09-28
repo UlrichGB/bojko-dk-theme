@@ -6,7 +6,7 @@
 
 {{- with .GetTerms "tags" -}}
   {{- $t := index . 0 -}}
-  {{- $dele = $dele | append (printf `<a class="quiet" href="%s">%s</a>` $t.RelPermalink (strings.FirstUpper $t.LinkTitle)) -}}
+  {{- $dele = $dele | append (printf `<a class="quiet" href="%s">%s</a>` $t.RelPermalink (partial "maerkenavn.html" $t)) -}}
 {{- end -}}
 
 {{- if not .Date.IsZero -}}
