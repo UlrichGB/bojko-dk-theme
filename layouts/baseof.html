@@ -33,6 +33,8 @@
   <nav class="nav" aria-label="Hovedmenu">
     {{- $maerke := site.Params.maerke | default site.Title }}
     {{- $dele := split $maerke "." }}
+    {{- $undertitel := cond .IsHome .Params.undertitel "" }}
+    {{- if $undertitel }}<div class="nav-brand-blok">{{ end }}
     <a class="nav-brand" href="{{ "/" | relURL }}" aria-label="{{ $maerke }} – forside">
       {{- if gt (len $dele) 1 -}}
         {{ index $dele 0 }}<span aria-hidden="true">.</span>{{ delimit (after 1 $dele) "." }}
@@ -40,6 +42,10 @@
         {{ $maerke }}
       {{- end -}}
     </a>
+    {{- if $undertitel }}
+      <p class="nav-undertitel">{{ $undertitel }}</p>
+    </div>
+    {{- end }}
 
     {{- range site.Menus.main }}
       {{- $aktiv := or ($.IsMenuCurrent "main" .) ($.HasMenuCurrent "main" .) }}

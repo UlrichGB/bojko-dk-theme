@@ -77,6 +77,23 @@ body {
 
 .nav-brand span { opacity: .55; }
 
+.nav-brand-blok {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-right: auto;
+  min-width: 0;
+}
+.nav-brand-blok .nav-brand { margin-right: 0; }
+.nav-undertitel {
+  margin: -0.875rem 0 0.5rem;
+  padding-left: 0.125rem;
+  font-family: var(--font-read);
+  font-size: 0.875rem;
+  line-height: 1.35;
+  color: var(--color-neutral-700);
+}
+
 .nav-item {
   position: relative;
   display: inline-flex;
@@ -168,13 +185,6 @@ main {
 
 .post           { position: relative; padding: 0 0 5rem; }
 .forside-intro  { padding: 0 0 0.5rem; }
-.forside-hoved  { padding: 0 0 var(--space-6); }
-.forside-undertitel {
-  margin: 0;
-  font-size: 1.0625rem;
-  line-height: 1.5;
-  color: var(--color-neutral-700);
-}
 /* Toppolstringen er IKKE pynt: vandmærket sidder absolut placeret oppe i
    den, så skæres den væk, skæres bogstavet af. Bunden er derimod bare
    luft og må gerne være mindre end toppen. */
@@ -476,6 +486,9 @@ a:hover { color: var(--color-accent-600); }
     padding-bottom: 0.25rem;
   }
   .nav-brand { order: 1; min-height: var(--topbar-h); }
+  .nav-brand-blok { order: 1; flex: 1 1 0; }
+  .nav-brand-blok .nav-brand { order: 0; min-height: 0; white-space: nowrap; }
+  .nav-undertitel { margin-top: 0; font-size: 0.8125rem; }
   .nav-icon  { order: 2; }
 
   .nav-sep {

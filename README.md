@@ -55,7 +55,7 @@ et plausibelt gæt ud, som ville se ud som en beslutning.
 | Hvad | Hvor | Uden den |
 |---|---|---|
 | `params.author` | konfiguration | ingen forfatter i `<meta name="author">` og JSON-LD og ingen `dc:creator` i feedet |
-| `undertitel` i forsidens `_index.md` | indhold | forsiden har kun sit skjulte `<h1>` med sitets titel. Er den sat, bliver forsidens `<h1>` forfatterens navn (`params.author`), skjult for øjet men i siden, og linjen står som synlig undertitel. Den er ikke `description`, så forsidens `<meta description>` ikke ændres |
+| `undertitel` i forsidens `_index.md` | indhold | forsiden har kun sit skjulte `<h1>` med sitets titel. Er den sat, bliver forsidens `<h1>` forfatterens navn (`params.author`), skjult for øjet men i siden, og linjen står som synlig undertitel under ordmærket i topbaren, kun på forsiden. Den er ikke `description`, så forsidens `<meta description>` ikke ændres |
 | `params.stilling`, `params.arbejdsgiver`, `params.arbejdsgiverUrl`, `params.arbejdsgiverProfil` | konfiguration | felterne `jobTitle`, `worksFor` (navn + url) og `knowsAbout` (læses fra `faerdigheder` i profilsidens forsidemateriale, liste eller enkelt tekst) i `Person`-JSON-LD'en. `arbejdsgiverProfil` er en hel artikel-URL (arbejdsgiverens side om personen) og kommer i `sameAs` efter LinkedIn. Hvert felt udelades, når dets param mangler; `arbejdsgiverUrl` uden `arbejdsgiver` giver intet `worksFor` |
 | `params.feedTitle` | konfiguration | feedet hedder det samme som sitet |
 | `params.description` | konfiguration | sidste udvej for `<meta name="description">`. Temaet udleder selv en til mærkesider, arkiv og indlæg, så den er sjældent i brug |

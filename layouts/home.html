@@ -1,14 +1,11 @@
 {{ define "main" }}
   {{- /*
     FORSIDEN. Forsidens skjulte overskrift (navnet, hvis forsidens `undertitel`
-    er sat) og den synlige undertitel, forsidens egen tekst, derefter indlæggene — hele eller som
+    er sat; undertitlen selv står under ordmærket i baseof.html), forsidens egen tekst, derefter indlæggene — hele eller som
     resumé, styret af params.fuldeIndlaeg — og sidetallet.
   */ -}}
   {{- with .Params.undertitel }}
-    <header class="col forside-hoved">
-      <h1 class="kun-skaerm">{{ site.Params.author | default site.Title }}</h1>
-      <p class="forside-undertitel">{{ . }}</p>
-    </header>
+  <h1 class="kun-skaerm">{{ site.Params.author | default site.Title }}</h1>
   {{- else }}
   <h1 class="kun-skaerm">{{ site.Title }}</h1>
   {{- end }}
