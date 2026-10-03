@@ -97,6 +97,7 @@
 {{- end -}}
 {{- $same := slice -}}
 {{- with site.Params.social.linkedin }}{{ $same = $same | append (printf "https://www.linkedin.com/in/%s" .) }}{{ end -}}
+{{- with site.Params.arbejdsgiverProfil }}{{ $same = $same | append . }}{{ end -}}
 {{- with $same }}{{ $p = merge $p (dict "sameAs" .) }}{{ end -}}
 {{- with site.Params.kompetencer }}{{ $p = merge $p (dict "knowsAbout" (cond (reflect.IsSlice .) . (slice .))) }}{{ end }}
   <script type="application/ld+json">{{ $p | jsonify (dict "indent" "  ") | safeJS }}</script>
