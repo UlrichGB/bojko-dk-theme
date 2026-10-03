@@ -168,6 +168,13 @@ main {
 
 .post           { position: relative; padding: 0 0 5rem; }
 .forside-intro  { padding: 0 0 0.5rem; }
+.forside-hoved  { padding: 0 0 var(--space-4); }
+.forside-undertitel {
+  margin: 0;
+  font-size: 0.9375rem;
+  line-height: 1.5;
+  color: var(--color-neutral-700);
+}
 /* Toppolstringen er IKKE pynt: vandmærket sidder absolut placeret oppe i
    den, så skæres den væk, skæres bogstavet af. Bunden er derimod bare
    luft og må gerne være mindre end toppen. */

@@ -55,6 +55,8 @@ et plausibelt gæt ud, som ville se ud som en beslutning.
 | Hvad | Hvor | Uden den |
 |---|---|---|
 | `params.author` | konfiguration | ingen forfatter i `<meta name="author">` og JSON-LD og ingen `dc:creator` i feedet |
+| `undertitel` i forsidens `_index.md` | indhold | forsiden har kun sit skjulte `<h1>` med sitets titel. Er den sat, bliver forsidens overskrift forfatterens navn (`params.author`), og linjen står som lille undertitel under. Den er ikke `description`, så forsidens `<meta description>` ikke ændres |
+| `params.stilling`, `params.arbejdsgiver`, `params.arbejdsgiverUrl`, `params.kompetencer` | konfiguration | felterne `jobTitle`, `worksFor` (navn + url) og `knowsAbout` (liste eller enkelt tekst) i `Person`-JSON-LD'en. Hvert felt udelades, når dets param mangler; `arbejdsgiverUrl` uden `arbejdsgiver` giver intet `worksFor` |
 | `params.feedTitle` | konfiguration | feedet hedder det samme som sitet |
 | `params.description` | konfiguration | sidste udvej for `<meta name="description">`. Temaet udleder selv en til mærkesider, arkiv og indlæg, så den er sjældent i brug |
 | `params.licens` (`navn`, `url`) | konfiguration | kolofonen står uden licensled. Det er en gyldig kolofon |
@@ -71,7 +73,7 @@ stadig virker.
 | Hvad | Standard | Hvad den styrer |
 |---|---|---|
 | `params.skrivesektion` | `["blog", "noter"]` | sektionerne i forsidens strøm — som også er hovedfeedet og 404-sidens "Nyeste indlæg". Den FØRSTE af dem er arkivet: "Hele arkivet" peger på den |
-| `params.profilside` | `/om/` | siden bag navnet i kolofonen og i JSON-LD'ens `author.url` |
+| `params.profilside` | `/om/` | siden bag navnet i kolofonen og i JSON-LD'ens `author.url`. Personen har `@id` = denne adresse + `#person`; `Person`-JSON-LD'en står på forsiden (side 1) og her, og hvert indlægs `author` og `publisher` peger på samme `@id`. `sameAs` bygges af `params.social.linkedin` |
 
 `skrivesektion` tager begge former:
 
