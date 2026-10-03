@@ -168,10 +168,10 @@ main {
 
 .post           { position: relative; padding: 0 0 5rem; }
 .forside-intro  { padding: 0 0 0.5rem; }
-.forside-hoved  { padding: 0 0 var(--space-4); }
+.forside-hoved  { padding: 0 0 var(--space-6); }
 .forside-undertitel {
   margin: 0;
-  font-size: 0.9375rem;
+  font-size: 1.0625rem;
   line-height: 1.5;
   color: var(--color-neutral-700);
 }
