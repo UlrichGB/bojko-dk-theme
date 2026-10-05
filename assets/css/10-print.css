@@ -30,6 +30,7 @@
 
   .body-copy .wide,
   .body-copy .wide.bleed,
+  .body-copy :is(h2, h3, h4):has(+ .wide),
   .featured {
     width: auto;
     margin-left: 0;

@@ -231,18 +231,21 @@ main {
 }
 
 .body-copy .wide,
+.body-copy :is(h2, h3, h4):has(+ .wide),
 .featured {
   --sheet-inner: calc(100cqw + 2 * var(--sheet-gutter));
   --col-w: min(var(--col-max), var(--measure), 100cqw);
 }
 
-.body-copy .wide {
+.body-copy .wide,
+.body-copy :is(h2, h3, h4):has(+ .wide) {
   width: calc(var(--sheet-inner) - var(--wide-inset));
   max-width: none;
   margin-left: calc((var(--col-w) - (var(--sheet-inner) - var(--wide-inset))) / 2);
 }
 
-.body-copy .wide.bleed {
+.body-copy .wide.bleed,
+.body-copy :is(h2, h3, h4):has(+ .wide.bleed) {
   width: var(--sheet-inner);
   margin-left: calc((var(--col-w) - var(--sheet-inner)) / 2);
 }
