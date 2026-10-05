@@ -270,6 +270,14 @@
   print-color-adjust: exact;
   transition: background .15s, height .15s;
 }
+.i-tidslinje-forloeb .pil { flex: none; width: 1.25rem; max-width: none; }
+.i-tidslinje-forloeb .pil a {
+  align-items: center;
+  padding: 0;
+  font-weight: 600;
+}
+.i-tidslinje-forloeb .pil a::before { content: none; }
+.i-tidslinje-forloeb .pil svg { flex: none; }
 .i-tidslinje-forloeb .forbi-0 { --streg: var(--color-accent-500); }
 .i-tidslinje-forloeb .forbi-1 { --streg: var(--color-accent-600); }
 .i-tidslinje-forloeb .forbi-2 { --streg: var(--color-accent-700); }
