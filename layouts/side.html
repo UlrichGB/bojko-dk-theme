@@ -17,6 +17,8 @@
       {{- with .Description }}<p class="lede">{{ . | markdownify }}</p>{{ end }}
     </header>
 
+    {{- partial "i-tidslinje.html" . }}
+
     <div class="body-copy">
       {{ .Content }}
     </div>

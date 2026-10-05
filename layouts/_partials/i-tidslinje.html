@@ -1,6 +1,7 @@
 {{- /*
   Boksen øverst i et indlæg, som en hændelse i en tidslinje peger på:
   hvilken tidslinje, én streg pr. hændelse med dette indlægs plads, og naboerne.
+  Over 60 led bliver stregene væk: de ville være under 3 px på en telefon.
 */ -}}
 {{- with index (partialCached "tidslinje-indeks.html" site) .RelPermalink }}
 {{- $n := .n }}
@@ -16,6 +17,7 @@
     {{- end }}
   </div>
   {{- end }}
+  {{- if le (len .led) 60 }}
   <ol class="i-tidslinje-forloeb">
     {{- range $i, $h := .led }}
     {{- $plads := add $i 1 }}
@@ -23,5 +25,6 @@
     <li><a class="{{ if lt $plads $n }}forbi forbi-{{ div (mul $i 3) (sub $n 1) }}{{ else if eq $plads $n }}nu{{ else }}senere{{ end }}" href="{{ $h.href }}" title="{{ $navn }}" aria-label="{{ $navn }}"{{ if eq $plads $n }} aria-current="page"{{ end }}></a></li>
     {{- end }}
   </ol>
+  {{- end }}
 </nav>
 {{- end -}}
