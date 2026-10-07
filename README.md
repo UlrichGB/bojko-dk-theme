@@ -136,7 +136,7 @@ arkets ramme på 1120px, kant i kant med topbaren:
 | Teksten | 805px (omkring 80 tegn pr. linje) | venstre |
 | Mellemrum | 25px | |
 | Sidespalten | 290px | højre, ved siden af hoved og første stykke tekst |
-| Indholdsfortegnelsen | 200px, højrestillet | i margenen uden for rammen, 5px fra teksten |
+| Indholdsfortegnelsen | 200px, venstrestillet med underoverskrifter indrykket | i margenen uden for rammen, 5px fra teksten |
 
 Tabeller, billeder og diagrammer har som standard tekstens bredde og ikke
 arkets. Kun det, der står i `{{< wide >}}`, er bredt (se nedenfor).

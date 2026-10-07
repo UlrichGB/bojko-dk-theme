@@ -74,8 +74,8 @@
 .note-meta ul { display: flex; flex-direction: column; gap: 0.25rem; margin: 0; padding: 0; list-style: none; }
 
 .note-indhold nav ul { margin: 0; padding: 0; list-style: none; }
-.note-indhold nav ul ul { padding: 0; }
-.note-indhold nav li { margin: 0.375rem 0; text-align: right; }
+.note-indhold nav ul ul { padding-left: 0.875rem; }
+.note-indhold nav li { margin: 0.375rem 0; }
 .note-indhold nav a {
   text-decoration: none;
   color: var(--color-neutral-800);
@@ -118,7 +118,6 @@
     margin-right: var(--note-luft);
   }
   .note-indhold-indre {
-    text-align: right;
     position: sticky;
     top: calc(var(--topbar-total) + 1.5rem);
     max-height: calc(100vh - var(--topbar-total) - 3rem);
