@@ -49,13 +49,24 @@
 
 .note-boks > h2,
 .note-indhold h2 {
-  margin: 0 0 0.625rem;
+  margin: 0 0 0.875rem;
   font-family: var(--font-sub);
   font-weight: 600;
-  font-size: var(--bitte);
+  font-size: 1rem;
+  line-height: 1.2;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--color-text);
+}
+
+/* ★ OVERSKRIFTERNES TOP ER VERSALHØJDEN, ikke tekstboksen: skåret til som
+   rubrikken (.post-h i 03), så INDHOLD, OM NOTEN og rubrikken begynder på
+   samme linje. Målt giver afrundingen af den store rubrik og de små
+   overskrifter 2px forskel; top: -1px tager halvdelen, så ingen browser
+   bliver mere end 1px fra. */
+@supports (text-box: trim-both cap alphabetic) {
+  .note-boks > h2,
+  .note-indhold h2 { text-box: trim-both cap alphabetic; position: relative; top: -1px; }
 }
 
 .note-boks ul {
@@ -122,7 +133,6 @@
     top: calc(var(--topbar-total) + 1.5rem);
     max-height: calc(100vh - var(--topbar-total) - 3rem);
     overflow-y: auto;
-    padding-top: calc(var(--x) * 0.5);
   }
 }
 
