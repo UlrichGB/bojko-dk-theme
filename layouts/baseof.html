@@ -61,7 +61,7 @@
            at de to sider er den samme person — det er dét, der binder
            navnet sammen på tværs. */ -}}
     {{- with site.Params.social.linkedin }}
-      <a class="nav-icon" href="https://www.linkedin.com/in/{{ . }}"
+      <a class="nav-icon nav-icon--in" href="https://www.linkedin.com/in/{{ . }}"
          target="_blank" rel="me noopener noreferrer"
          aria-label="{{ site.Params.maerke | default site.Title }} på LinkedIn (åbner i en ny fane)">{{ partial "ikon.html" "linkedin" }}</a>
     {{- end }}

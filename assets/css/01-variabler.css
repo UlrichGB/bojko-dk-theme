@@ -108,13 +108,13 @@
   --measure:      62ch;
   --measure-brod: 48ch;
   --col-max:      42.5rem;
-  --sheet-max:    1120px;
-  --sheet-gutter: clamp(20px, 6vw, 100px);
+  --sheet-max:    70.5rem;
+  --sheet-gutter: clamp(1.25rem, 6vw, 6.25rem);
 
-  --wide-inset: 10px;
+  --wide-inset: 0.625rem;
 
 
-  --topbar-h: 4.5rem;
+  --topbar-h: 5.5rem;
 
   /* ★ BÅNDET ER VÆK. Hovedet er topbaren alene, og arket ligger ikke
      længere op over noget — derfor hverken --band-h eller --overlap. */
@@ -123,14 +123,30 @@
   --topbar-total: var(--topbar-h);
 
 
-  --radius-sm: 8px;
-  --radius-md: 16px;
-  --radius-lg: 28px;
+  /* ★ GITTERET OG AFSTANDSSKALAEN (docs/design-guide.md, afsnit 2 og 3).
+     12 kolonner á 4,5rem med 1,5rem imellem er rammen på 70,5rem.
+     Afstande er multipla af 0,5rem; navnet er værdien i px ved rod 16px. */
+  --rand:    0rem;
+  --kol:     4.5rem;
+  --rende:   1.5rem;
+  --ramme:   70.5rem;
+  --s-8:     0.5rem;
+  --s-16:    1rem;
+  --s-24:    1.5rem;
+  --s-32:    2rem;
+  --s-40:    2.5rem;
+  --s-48:    3rem;
+  --s-64:    4rem;
+  --s-96:    6rem;
 
-  --radius-xs:  3px;
-  --radius-row: 10px;
+  --radius-sm: 0.5rem;
+  --radius-md: 1rem;
+  --radius-lg: 1.75rem;
 
-  --radius-kode: 5px;
+  --radius-xs:  0.1875rem;
+  --radius-row: 0.625rem;
+
+  --radius-kode: 0.3125rem;
 
 
   --space-1: 0.275rem;  --space-2: 0.55rem;  --space-3: 0.825rem;
@@ -138,16 +154,26 @@
 
 
   --shadow-sm: 0 1px 2px   color-mix(in srgb, var(--color-neutral-900) 14%, transparent);
-  --shadow-md: 0 3px 10px  color-mix(in srgb, var(--color-neutral-900) 16%, transparent);
-  --shadow-lg: 0 12px 32px color-mix(in srgb, var(--color-neutral-900) 22%, transparent);
+  --shadow-md: 0 0.1875rem 0.625rem  color-mix(in srgb, var(--color-neutral-900) 16%, transparent);
+  --shadow-lg: 0 0.75rem 2rem color-mix(in srgb, var(--color-neutral-900) 22%, transparent);
 }
 
 
-@media (max-width: 34rem) {
+@media (max-width: 34em) {
   :root {
     --brodtekst: 1.0625rem;
     --x:         1.6875rem;
     --h2:        1.4375rem;
     --ark-top:   2.75rem;
   }
+}
+
+
+/* Rammens sidemargener: ingen, når rammen på 70,5rem kan stå frit; 1,5rem
+   under 73,5em; 1rem på en telefon. Hovedet, noterne og bunden bruger dem. */
+@media (max-width: 73.5em) {
+  :root { --rand: 1.5rem; }
+}
+@media (max-width: 35em) {
+  :root { --rand: 1rem; }
 }

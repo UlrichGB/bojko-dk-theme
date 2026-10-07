@@ -16,7 +16,7 @@
 .post-h {
   font-family: var(--font-display);
   font-weight: 700;
-  line-height: 1.06;
+  line-height: 1.06em;
   letter-spacing: 0.05em;
   /* Sporingen lægger luft EFTER sidste bogstav; den trækkes fra igen, så
      rubrikken flugter med teksten under den. */
@@ -60,7 +60,7 @@
    Er bogstavet en anelse for højt eller lavt, er det --wm-optisk, der
    skal skrues på, ikke --wm-luft. */
 .wm {
-  --wm-luft:   15px;
+  --wm-luft:   0.9375rem;
   --wm-optisk: 0.26em;
 
   /* ★ BOGSTAVET LIGGER BAG ALT ANDET, OG DET GØR DET IKKE AF SIG SELV.
@@ -78,9 +78,9 @@
 
   /* Samme skrift som rubrikken, den står bag — ikke brødtekstens. */
   font-family: var(--font-display);
-  font-size: clamp(110px, 34vw, 220px);
+  font-size: clamp(6.875rem, 34vw, 13.75rem);
   font-weight: 700;
-  line-height: 1;
+  line-height: 1em;
   letter-spacing: -0.03em;
   /* En anelse mørkere end papirets nabotone. Skru på procenten alene:
      0% = den gamle, næsten usynlige; 100% = neutral-300, klart for meget
@@ -111,7 +111,7 @@
   font-family: var(--font-sub);
   font-weight: 400;
   font-size: var(--lede);
-  line-height: 1.4;
+  line-height: 1.4em;
   letter-spacing: -0.015em;
   color: var(--color-text);
 }
@@ -217,7 +217,7 @@
   padding: 0 0 0 1.5rem;
   border-left: 2px solid var(--color-accent);
   font-size: 1.25rem;
-  line-height: 1.5;
+  line-height: 1.5em;
   font-weight: 500;
   letter-spacing: -0.01em;
   color: var(--color-text);
@@ -247,7 +247,7 @@
   color: var(--color-neutral-100);
   font-size: 2.125rem;
   font-weight: 700;
-  line-height: 1;
+  line-height: 1em;
 }
 
 .body-copy .pull blockquote {
@@ -319,7 +319,7 @@
      skal der ikke gættes på en optisk korrektion, og --wm-luft er præcis
      de 15px, den lover. Skønnet ovenfor er kun for de browsere, der
      endnu ikke kan skære. */
-  .wm            { text-box: trim-both cap alphabetic; --wm-optisk: 0px; }
+  .wm            { text-box: trim-both cap alphabetic; --wm-optisk: 0; }
   .body-copy h2  { text-box: trim-both cap alphabetic;
                    margin: var(--x) 0 calc(var(--x) / -2); }
   .body-copy h3  { text-box: trim-both cap alphabetic;

@@ -125,49 +125,35 @@ hændelsen over, så intet står der to gange. Hændelser og indlæg flettes eft
 dato; billeder til dem ligger i samme mappe, uden undermapper. En ny hændelse:
 `hugo new content --kind haendelse blog/<tidslinje>/ÅÅÅÅ-MM-DD-slug.md`.
 
+## Designguiden
+
+Alle mål i temaet — gitter, hoved, lodret rytme, sidespalte, bund, skriftstørrelser og enhedsreglen — står i [`docs/design-guide.md`](docs/design-guide.md), hvert i px og i rem/em. Koden følger guiden; er de uenige, er det koden, der er forkert.
+
 ## Noter
 
-En note (sektionen `noter`, eller `type: noter`) er en wiki-side, ikke en
-artikel. Blog, forside, arkiv og profil er uændrede. Siden er et gitter i
-arkets ramme på 1120px, kant i kant med topbaren:
+En note (sektionen `noter`, eller `type: noter`) er en wiki-side, ikke en artikel. Blog, forside, arkiv og profil beholder deres egen brødtekst og deler kun hoved, bund og ramme med noterne.
 
-| Hvad | Mål | Hvor |
-|---|---|---|
-| Teksten | 805px (omkring 80 tegn pr. linje) | venstre |
-| Mellemrum | 25px | |
-| Sidespalten | 290px | højre, ved siden af hoved og første stykke tekst |
-| Indholdsfortegnelsen | 200px, venstrestillet med underoverskrifter indrykket | i margenen uden for rammen, 5px fra teksten |
-
-Tabeller, billeder og diagrammer har som standard tekstens bredde og ikke
-arkets. Kun det, der står i `{{< wide >}}`, er bredt (se nedenfor).
+Siden står på det samme gitter som resten af sitet: 12 kolonner á 72px (4,5rem) med 24px (1,5rem) imellem er rammen på 1128px (70,5rem). Teksten står i kolonne 1–8 (744px, 46,5rem), sidespalten i 10–12 (264px, 16,5rem), og indholdsfortegnelsen to kolonner uden for rammen (168px, 10,5rem). Tabeller, billeder og diagrammer har som standard tekstens bredde; kun det, der står i `{{< wide >}}`, går over alle 12 kolonner.
 
 | Skærmbredde | Layout |
 |---|---|
-| fra 1568px | tekst + sidespalte, indholdsfortegnelsen i venstre margen. Den følger med, når man ruller, og kræver mindst tre overskrifter |
-| 1024px til 1568px | tekst + sidespalte, ingen indholdsfortegnelse. Under 1140px følger rammen skærmen (10px luft på hver side som topbaren), og teksten bliver smallere end 805px |
-| under 1024px | én spalte, sidespalten under teksten, ingen indholdsfortegnelse. Topbaren er stablet som i dag |
+| fra 97em | tekst, sidespalte og indholdsfortegnelsen i venstre margen. Den følger med, når man ruller, og kræver mindst tre overskrifter |
+| 73,5em til 97em | tekst og sidespalte på rammen; ingen indholdsfortegnelse |
+| under 73,5em | gitteret er 8 kolonner; teksten bruger alle 8, og sidespalten står under teksten og bruger de samme 8 |
 
-Brudpunkterne er målt: 1568px er rammen (1120px) plus indholdsfortegnelsen
-(200px) og luft (5px) i hver side af en centreret ramme, og lidt til
-skærmkanten; 1024px er det, hvor teksten stadig har omkring 680px ved siden
-af en sidespalte på 290px.
+Brudpunkterne er målt: 97em er rammen (70,5rem) plus indholdsfortegnelsen og mellemrummet (10,5 + 1,5rem) i hver side og 1rem til skærmkanten; 73,5em er rammen plus 1,5rem margen i hver side. Mellemrum og margener under 73,5em er et forslag, se guiden.
 
-Sidespalten bygges af det, Hugo og forsidematerialet allerede har. En
-afdeling uden indhold udelades:
-
-Rækkefølgen er den, tabellen har. Alle links i den er understregede som
-links i teksten, også emnerne.
+Sidespalten bygges af det, Hugo og forsidematerialet allerede har. En afdeling uden indhold udelades:
 
 | Afdeling | Kommer fra |
 |---|---|
-| Om noten | `date`, `lastmod`, læsetid og `tags` (emnerne som links til emnesiderne) |
+| Om noten | `date`, `lastmod`, læsetid og `tags` (emnerne som små knapper til emnesiderne) |
 | Henviser til | interne links i notens tekst (`](/…)`) til sider, der findes |
 | Henvist fra | de sider på sitet, hvis tekst linker hertil |
 | Relateret | Hugos `Related` (sitets `related`-opsætning), noter og blogindlæg (sektionerne i `params.skrivesektion`), højst fem |
 | Downloads | bundtets øvrige filer, når de ikke er billeder eller sider |
 
-Der er ingen afdeling for eksterne links: de står allerede i teksten, og
-forsidematerialet har ikke en liste at hente dem fra.
+Der er ingen afdeling for eksterne links: de står allerede i teksten, og forsidematerialet har ikke en liste at hente dem fra. Sidens slutning (skillestreg, Del, linket tilbage) står i kolonne 1–8; Relaterede og Tags står ikke dér, for sidespalten har dem.
 
 ### Bredt: `{{< wide >}}`
 
@@ -177,44 +163,13 @@ forsidematerialet har ikke en liste at hente dem fra.
 {{< /wide >}}
 ```
 
-Et billede, et diagram eller en tabel i `{{< wide >}}` fylder hele rammen:
-teksten plus sidespalten (1120px). Et bredt element ligger aldrig over
-sidespalten. Står det, før sidespalten er slut, begynder det under den, og
-teksten før det står, hvor den er. Under 1024px er der kun én spalte, så
-er bredt det samme som almindeligt.
+Et billede, et diagram eller en tabel i `{{< wide >}}` fylder hele rammen: alle 12 kolonner (1128px). Et bredt element ligger aldrig over sidespalten. Står det, før sidespalten er slut, begynder det under den, og teksten før det står, hvor den er. Under 73,5em er der kun én spalte, så er bredt det samme som almindeligt.
 
-`{{< bred >}}` er det gamle navn og gør det samme. På blogindlæg er begge
-uændret udbruddet ud af læsespalten og ud i arket (`fuld="ja"` går helt ud).
+`{{< bred >}}` er det gamle navn og gør det samme. På blogindlæg er begge uændret udbruddet ud af læsespalten og ud i arket (`fuld="ja"` går helt ud).
 
 ### Tegninger i noter
 
-Tegn, så tegningen vises i den bredde, den er tegnet i. Så er tekstens
-størrelse den, der står i tegningen.
-
-| | Almindelig | `{{< wide >}}` |
-|---|---|---|
-| Tegnebredde (`viewBox`) | 805 | 1120 |
-| Mindste tekst, som den vises | 14px | 14px |
-
-Regler:
-
-- **`viewBox` og `width`/`height` skal passe sammen**, fx `viewBox="0 0 805 330"`
-  med `width="805" height="330"`. Temaet læser `viewBox` og skriver målene på
-  `<img>`, så siden ikke hopper, når tegningen hentes. Et billede, der ikke er
-  tegnet i et af de to mål, bliver ikke skaleret op, kun ned.
-- **Tekst på 14px eller større**, målt i tegningens egne enheder. 14px i en
-  tegning på 805 er 14px på skærmen; tegn aldrig bredere og regn med, at den
-  skrumper.
-- **Skrift: `font-family="system-ui, sans-serif"`.** En SVG, der vises som
-  billede, kan ikke bruge sidens skrifter, så et navn, siden har indlæst, hjælper
-  ikke.
-- **Billeder (png, jpeg, webp)** skaleres ned til 805px (1120px i
-  `{{< wide >}}`) og leveres i flere størrelser; et skærmbillede er ikke et
-  diagram og skal ikke tegnes om.
-- **På smalle skærme** skalerer tegningen med spalten ned til 90 % af
-  tegnebredden (725px for 805, 1008px for 1120). Er spalten smallere, bliver
-  tegningen i de 90 % og kan rulles sidelæns i sit eget afsnit, ligesom en
-  tabel. Teksten i den er derfor aldrig under 12,6px.
+Reglerne for diagrammer (tegnebredde 744px, 1128px i `{{< wide >}}`, mindste tekst 14px, hvad der sker på smalle skærme) står i [`docs/design-guide.md`](docs/design-guide.md), afsnit 12.
 
 ## Links til andre websteder
 

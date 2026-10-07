@@ -71,7 +71,7 @@
   width: var(--tl-maerke);
   height: var(--tl-maerke);
   background: var(--color-accent);
-  box-shadow: 0 0 0 3px var(--color-neutral-100);
+  box-shadow: 0 0 0 0.1875rem var(--color-neutral-100);
 }
 .haendelse:nth-child(even)::before { left: auto; right: 100%; }
 .haendelse:nth-child(even)::after {
@@ -103,7 +103,7 @@
   font-family: var(--font-sub);
   font-weight: 600;
   font-size: 1.0625rem;
-  line-height: 1.3;
+  line-height: 1.3em;
   letter-spacing: -0.01em;
   color: var(--color-text);
 }
@@ -130,7 +130,7 @@
   font-family: var(--font-sub);
   font-weight: 600;
   font-size: 1.1875rem;
-  line-height: 1.3;
+  line-height: 1.3em;
   letter-spacing: -0.01em;
   color: var(--color-text);
 }
@@ -142,7 +142,7 @@
   gap: calc(var(--x) / 2);
 
   font-size: 1rem;
-  line-height: 1.6;
+  line-height: 1.6em;
   color: var(--color-neutral-800);
 }
 .haendelse-krop > * { margin: 0; }
@@ -165,7 +165,7 @@
 
   font-family: var(--font-sub);
   font-size: 0.9375rem;
-  line-height: 1.65;
+  line-height: 1.65em;
   color: var(--color-neutral-800);
 }
 .fakta > *:first-child { margin-top: 0; }
@@ -218,7 +218,7 @@
 
   font-family: var(--font-sub);
   font-size: 0.9375rem;
-  line-height: 1.5;
+  line-height: 1.5em;
   color: var(--color-neutral-800);
   font-variant-numeric: tabular-nums;
 }
@@ -288,11 +288,11 @@
 .i-tidslinje-forloeb .nu:hover::before { height: 2rem; }
 
 
-@media (max-width: 45rem) {
+@media (max-width: 45em) {
   .flow { grid-template-columns: 1fr; }
 }
 
-@media print, (max-width: 52rem) {
+@media print, (max-width: 52em) {
   .body-copy .tidslinje {
     --tl-mellem: 2.5rem;
 
@@ -317,7 +317,7 @@
   }
 }
 
-@media (max-width: 34rem) {
+@media (max-width: 34em) {
   .haendelse { padding-inline: 1rem; }
   .fakta { padding: var(--space-3) var(--space-4); }
 }

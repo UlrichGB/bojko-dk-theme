@@ -92,7 +92,7 @@
 .letter {
   display: inline-grid;
   place-items: center;
-  width: max(44px, 2.75rem); height: max(44px, 2.75rem);
+  width: 2.75rem; height: 2.75rem;
 
   border: 1px solid var(--color-neutral-400);
   border-radius: var(--radius-xs);
@@ -150,7 +150,7 @@
   font-weight: 700;
   font-size: 1.625rem;
   letter-spacing: 0.04em;
-  line-height: 1;
+  line-height: 1em;
   font-variant-numeric: tabular-nums;
 }
 
@@ -159,7 +159,7 @@
   font-size: 0.875rem;
   color: var(--color-neutral-700);
   text-decoration: underline;
-  text-underline-offset: 3px;
+  text-underline-offset: 0.1875rem;
 }
 .totop:hover { color: var(--color-accent-600); }
 
@@ -212,11 +212,11 @@
   font-family: var(--font-sub);
   font-weight: 600;
   font-size: 1rem;
-  line-height: 1.5;
+  line-height: 1.5em;
   color: var(--color-text);
   text-decoration: underline;
   text-decoration-color: var(--color-neutral-400);
-  text-underline-offset: 3px;
+  text-underline-offset: 0.1875rem;
 }
 .arch-link:hover {
   color: var(--color-accent-600);
@@ -335,15 +335,16 @@ a.tag:hover {
 
 
 .foot-grid {
-  columns: 3;
-  column-gap: 3rem;
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  column-gap: var(--rende);
 }
-.foot-grp {
-  break-inside: avoid;
-  margin-bottom: 2.25rem;
-}
+.foot-grp { margin-bottom: var(--s-32); }
+.foot-grp:nth-child(3n + 1) { grid-column: 1 / span 4; }
+.foot-grp:nth-child(3n + 2) { grid-column: 5 / span 4; }
+.foot-grp:nth-child(3n + 3) { grid-column: 9 / span 4; }
 .foot-grid h3 {
-  margin: 0 0 0.875rem;
+  margin: 0 0 var(--s-16);
   font-family: var(--font-sub);
   font-weight: 600;
   font-size: var(--bitte);
@@ -365,10 +366,9 @@ a.tag:hover {
 
 .foot-link {
   display: inline-block;
-  padding: 0.375rem 0;
   color: var(--color-neutral-800);
   font-size: 0.9375rem;
-  line-height: 1.5;
+  line-height: 2rem;
   text-decoration: none;
 }
 .foot-link:hover {
@@ -382,14 +382,14 @@ a.tag:hover {
      kun luften ned til linkspalterne. */
   position: relative;
   height: 1px;
-  margin: 0 0 3rem;
+  margin: 0 0 var(--s-48);
   background: var(--color-neutral-300);
 }
 .foot-skille span {
   position: absolute;
   left: 50%; top: 50%;
   transform: translate(-50%, -50%);
-  width: 10px; height: 10px;
+  width: 0.625rem; height: 0.625rem;
   border-radius: 50%;
   background: var(--color-accent);
   /* Ringen skal have SIDENS farve, så prikken ser ud til at ligge i et
@@ -400,9 +400,9 @@ a.tag:hover {
 
 .foot-bund {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start;
   flex-wrap: wrap;
-  gap: 1rem;
+  gap: var(--s-16);
   font-size: 0.875rem;
   color: var(--color-neutral-700);
 }
@@ -413,19 +413,20 @@ a.tag:hover {
 .foot-bund .sep { color: var(--color-neutral-400); }
 
 
-@media (max-width: 47.5rem) {
+@media (max-width: 47.5em) {
   .two-col { grid-template-columns: 1fr; }
 }
 
-@media (max-width: 45rem) {
-  .foot-grid { columns: 1; }
+@media (max-width: 45em) {
+  .foot-grid { grid-template-columns: minmax(0, 1fr); }
+  .foot-grp:nth-child(n) { grid-column: 1; }
 }
 
-@media (max-width: 34rem) {
+@media (max-width: 34em) {
   .arch-liste,
   .two-col { padding-left: 0; }
   .arch-liste li { grid-template-columns: 3.875rem minmax(0, 1fr); gap: 0.75rem; }
-  .letter { width: max(38px, 2.375rem); height: max(38px, 2.375rem); font-size: 0.875rem; }
+  .letter { width: 2.375rem; height: 2.375rem; font-size: 0.875rem; }
 }
 
 
@@ -444,12 +445,12 @@ a.tag:hover {
   top: calc(var(--topbar-total) + 1.75rem);
 }
 
-.portraet { position: relative; width: 200px; height: 200px; }
+.portraet { position: relative; width: 12.5rem; height: 12.5rem; }
 .portraet img { width: 200px; height: 200px; border-radius: 50%; object-fit: cover; }
 .portraet-prik {
   position: absolute;
-  right: 6px; bottom: 6px;
-  width: 22px; height: 22px;
+  right: 0.375rem; bottom: 0.375rem;
+  width: 1.375rem; height: 1.375rem;
   border-radius: 50%;
   background: var(--color-accent);
   border: 3px solid var(--color-neutral-100);
@@ -458,7 +459,7 @@ a.tag:hover {
 .profil-rolle {
   margin: 0;
   font-size: 0.9375rem;
-  line-height: 1.5;
+  line-height: 1.5em;
   color: var(--color-neutral-700);
 }
 
@@ -484,7 +485,7 @@ a.tag:hover {
   max-width: none;
   font-size: 1.03125rem;
   gap: 1rem;
-  line-height: 1.6;
+  line-height: 1.6em;
 }
 
 .profil-etiket {
@@ -520,9 +521,9 @@ a.tag:hover {
 .profil-cv li > div { display: flex; flex-direction: column; gap: 0.375rem; }
 .profil-cv .rolle { font-weight: 600; font-size: 1.0625rem; letter-spacing: -0.01em; }
 .profil-cv .sted { font-size: 0.90625rem; color: var(--color-neutral-700); }
-.profil-cv p { margin: 0.375rem 0 0; font-size: 0.9375rem; line-height: 1.6; color: var(--color-neutral-800); }
+.profil-cv p { margin: 0.375rem 0 0; font-size: 0.9375rem; line-height: 1.6em; color: var(--color-neutral-800); }
 
-@media (max-width: 47.5rem) {
+@media (max-width: 47.5em) {
   .profile-grid { grid-template-columns: 1fr; }
   .profile-aside { position: static; }
   .profil-krop { gap: 3rem; }

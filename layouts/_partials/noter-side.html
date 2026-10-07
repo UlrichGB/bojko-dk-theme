@@ -37,7 +37,7 @@
       <div><dt>Læsetid:</dt><dd>{{ .ReadingTime }} min.</dd></div>
       {{- end }}
       {{- with .GetTerms "tags" }}
-      <div><dt>Emner:</dt><dd><ul>{{ range . }}<li><a href="{{ .RelPermalink }}">{{ partial "maerkenavn.html" . }}</a></li>{{ end }}</ul></dd></div>
+      <div><dt>Emner:</dt><dd class="note-emner"><ul>{{ range . }}<li><a class="tag-lille" href="{{ .RelPermalink }}">{{ partial "maerkenavn.html" . }}</a></li>{{ end }}</ul></dd></div>
       {{- end }}
     </dl>
   </section>

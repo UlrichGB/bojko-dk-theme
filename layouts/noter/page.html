@@ -60,6 +60,8 @@
     <div class="note-slut">
       <div class="skille skille--slut" aria-hidden="true"><span></span></div>
 
+      {{ partial "del.html" . }}
+
       <p class="noter-tilbage">
         <a class="laes-mere" href="{{ .Parent.RelPermalink }}"
            aria-label="Tilbage til alle noter">{{ partial "ikon.html" "pil-venstre" }}<span data-tekst="Alle noter">Alle noter</span></a>

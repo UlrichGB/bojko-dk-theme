@@ -20,7 +20,7 @@
   <figure class="featured">
     <img src="{{ $vist.RelPermalink }}"
          {{ with $saet }}srcset="{{ delimit . ", " }}"
-         sizes="(min-width: 1120px) 1120px, 100vw"{{ end }}
+         sizes="(min-width: 1128px) 1128px, 100vw"{{ end }}
          width="{{ $vist.Width }}" height="{{ $vist.Height }}"
          alt="{{ $alt }}">
     {{- with $tekst }}<figcaption>{{ . | markdownify }}</figcaption>{{ end }}

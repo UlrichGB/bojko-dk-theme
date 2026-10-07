@@ -82,7 +82,7 @@
   font-family: var(--font-sub);
   font-weight: 600;
   font-size: var(--bitte);
-  line-height: 1.2;
+  line-height: 1.2em;
   letter-spacing: 0.06em;
   text-transform: uppercase;
   text-decoration: none;
@@ -180,7 +180,7 @@
   font-family: var(--font-sub);
   font-weight: 600;
   font-size: 1rem;
-  line-height: 1.35;
+  line-height: 1.35em;
 }
 .related time {
   font-size: var(--lille);
@@ -218,14 +218,26 @@
 .naboer svg { flex: none; }
 
 
-@media (max-width: 45rem) {
+@media (max-width: 45em) {
   .related { grid-template-columns: 1fr; }
 }
 
-@media (max-width: 34rem) {
+@media (max-width: 34em) {
   .featured img { aspect-ratio: 16 / 9; }
   .featured { margin-bottom: var(--x); }
 
   .naboer { flex-direction: column; gap: 0.875rem; }
   .naboer .naeste { text-align: left; margin-left: 0; flex-direction: row-reverse; }
 }
+
+
+/* ★ LINJEHØJDE I EM, IKKE UDEN ENHED. Brødtekstens linjehøjde er en længde i
+   rem (02), som arves som en længde: en mindre skrift, der ikke sætter sin
+   egen, fik derfor brødtekstens 27,9px. Hver af dem sætter nu sin egen, 1,55
+   gange sin egen skrift, som før. */
+.arch-mode, .arch-intro, .letter, .sidetal, .share, .tag, .totop,
+.post-efter > h2, .profil-etiket, .foot-grid h3, .laes-mere, .naboer a,
+.foot-bund, .antal, .arch-type, .related time, .arch-liste time,
+.profil-kontakt { line-height: 1.55em; }
+.post-efter > h2.post-h { line-height: 1.06em; }
+.tabel-ramme thead th { line-height: 1.5em; }

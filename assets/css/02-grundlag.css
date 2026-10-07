@@ -22,7 +22,7 @@ body {
   color: var(--color-text);
   font-family: var(--font-read);
   font-size: var(--brodtekst);
-  line-height: 1.55;
+  line-height: 1.74375rem;
   text-wrap: pretty;
   -webkit-font-smoothing: antialiased;
 }
@@ -90,7 +90,7 @@ body {
   padding-left: 0.125rem;
   font-family: var(--font-read);
   font-size: 0.875rem;
-  line-height: 1.35;
+  line-height: 1.35em;
   color: var(--color-neutral-700);
 }
 
@@ -136,7 +136,7 @@ body {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 44px; height: 44px;
+  width: 2.75rem; height: 2.75rem;
   border-radius: 50%;
   color: inherit;
   transition: background .15s;
@@ -148,8 +148,8 @@ body {
    Stregtykkelsen ensrettes samtidig — rss var tegnet 2.5 og in 2.25, og
    ved 24px kan man se forskel på to ikoner, der står side om side. */
 .nav-icon svg {
-  width: 24px;
-  height: 24px;
+  width: 1.5rem;
+  height: 1.5rem;
   stroke-width: 2;
 }
 
@@ -163,7 +163,7 @@ body {
   background: var(--color-accent);
   color: var(--color-neutral-100);
 }
-.nav-icon:last-child { margin-right: -14px; }
+.nav-icon:last-child { margin-right: -0.875rem; }
 
 .nav a:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 2px; }
 
@@ -263,7 +263,7 @@ body > footer {
   width: 100%;
   max-width: var(--sheet-max);
   margin: 0 auto;
-  padding: 3.5rem var(--sheet-gutter) 2.5rem;
+  padding: var(--s-64) var(--rand) var(--s-48);
   color: var(--color-neutral-800);
   font-family: var(--font-sub);
 }
@@ -274,7 +274,7 @@ figure { margin: 0; }
 
 a {
   color: var(--color-accent-700);
-  text-underline-offset: 3px;
+  text-underline-offset: 0.1875rem;
   text-decoration-thickness: 1px;
   text-decoration-color: var(--color-accent-400);
 }
@@ -439,7 +439,7 @@ a:hover { color: var(--color-accent-600); }
 .skille span {
   position: relative;
   display: block;
-  width: 50px; height: 1px;
+  width: 3.125rem; height: 1px;
   background: var(--color-neutral-400);
 }
 .skille span::after {
@@ -447,7 +447,7 @@ a:hover { color: var(--color-accent-600); }
   position: absolute;
   left: 50%; top: 50%;
   transform: translate(-50%, -50%);
-  width: 5px; height: 5px;
+  width: 0.3125rem; height: 0.3125rem;
   border-radius: 50%;
   background: var(--color-neutral-400);
   outline: 5px solid var(--color-neutral-100);
@@ -467,7 +467,7 @@ a:hover { color: var(--color-accent-600); }
   background: var(--color-neutral-300);
 }
 .skille--slut span::after {
-  width: 7px; height: 7px;
+  width: 0.4375rem; height: 0.4375rem;
   background: var(--color-accent);
   outline: 6px solid var(--color-neutral-100);
 }
@@ -490,18 +490,72 @@ a:hover { color: var(--color-accent-600); }
 }
 
 
-@media (max-width: 71.25rem) {
-  .nav { padding: 0 0.625rem; }
+/* ★ HOVEDET PÅ EN LINJE (docs/design-guide.md, afsnit 5). Hovedet er 5,5rem
+   højt, og logoets bogstavgrundlinje, menuens grundlinje og underkanten af
+   ikonerne står alle 3rem fra toppen. Skrifterne er skåret til versalhøjde
+   og grundlinje (text-box), så en kasses underkant ER grundlinjen, og
+   1cap er den skrifts versalhøjde: derfor regnes alt herunder ud fra 3rem
+   og ikke fra et tal, der er målt for én skrift. Under 35em er hovedet to
+   rækker som før. */
+@media (min-width: 35.0625em) {
+  .nav {
+    align-items: flex-start;
+    height: var(--topbar-h);
+    min-height: 0;
+  }
+
+  .nav-brand {
+    display: block;
+    line-height: 4.0625rem;
+    margin-top: calc(3rem - 1cap);
+  }
+  .nav-brand-blok .nav-brand { margin-top: calc(3rem - 1cap); }
+  .nav-undertitel {
+    margin: 1rem 0 0;
+    font-size: 0.875rem;
+    line-height: 1.1875rem;
+  }
+
+  .nav-item {
+    display: block;
+    align-self: flex-start;
+    height: auto;
+    padding: 1.5rem 1.28em;
+    margin-top: calc(3rem - 1cap - 1.5rem);
+    line-height: 1.3125rem;
+  }
+  .nav-item::after {
+    left: 1.28em; right: 1.28em;
+    top: calc(100% - 1rem);
+    bottom: auto;
+  }
+
+  .nav-sep { align-self: flex-start; margin-top: 2.125rem; }
+
+  .nav-icon { align-self: flex-start; margin-top: 1.0625rem; }
+  .nav-icon--in svg { transform: translateY(0.125rem); }
+}
+
+@supports (text-box: trim-both cap alphabetic) {
+  @media (min-width: 35.0625em) {
+    .nav-brand,
+    .nav-undertitel,
+    .nav-item { text-box: trim-both cap alphabetic; }
+  }
+}
+
+@media (max-width: 73.5em) {
+  .nav { padding: 0 var(--rand); }
   .nav-icon:last-child { margin-right: 0; }
 }
 
-@media (max-width: 35rem) {
+@media (max-width: 35em) {
   .nav {
     flex-wrap: wrap;
     min-height: 0;
     padding-bottom: 0.25rem;
   }
-  .nav-brand { order: 1; min-height: var(--topbar-h); }
+  .nav-brand { order: 1; min-height: 4.5rem; }
   .nav-brand-blok { order: 1; flex: 1 1 0; }
   .nav-brand-blok .nav-brand { order: 0; min-height: 0; white-space: nowrap; }
   .nav-undertitel { margin-top: 0; font-size: 0.8125rem; }
@@ -523,5 +577,5 @@ a:hover { color: var(--color-accent-600); }
   }
   .nav-item::after { left: 0.96em; right: 0.96em; bottom: 0.375rem; }
 
-  :root { --topbar-total: calc(var(--topbar-h) + 2.75rem); }
+  :root { --topbar-total: 7.25rem; }
 }

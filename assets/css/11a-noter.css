@@ -1,9 +1,12 @@
 /* 11a — NOTERNE
-   Wiki-siden: indholdsfortegnelse, tekst og sidespalte. Kun layouts/noter/.
-   Brudpunkter: 98rem (1568px) og op giver indholdsfortegnelsen i
-   margenen, 64rem (1024px) og op giver sidespalten, under 64rem er det én
-   spalte. Teksten er 805px; med sidespalten på 290px og 25px imellem fylder
-   de ark-rammen på 1120px, kant i kant med topbaren.
+   Wiki-siden på gitteret: 12 kolonner á 4,5rem med 1,5rem imellem er rammen
+   på 70,5rem (docs/design-guide.md, afsnit 2 og 6). Teksten står i kolonne
+   1-8, sidespalten i 10-12, og indholdsfortegnelsen to kolonner uden for
+   rammen. Kun layouts/noter/.
+
+   Brudpunkter (em): fra 97em er der indholdsfortegnelse, fra 73,5em er
+   rammen på 12 kolonner, under det er gitteret 8 kolonner med sidespalten
+   under teksten.
 
    Siden er et gitter, hvor hvert {{< wide >}} er en hel række på tværs.
    Sidespalten står i række 1 ved siden af hoved og første stykke tekst,
@@ -11,144 +14,179 @@
    sidespalten. */
 
 .note {
-  --note-side:   290px;
-  --note-gab:    25px;
-  --note-skinne: 200px;
-  --note-luft:   5px;
+  --x: 2rem;
+  --note-ind: var(--rand);
+  --note-gutter: 1rem;
 
+  width: calc(100cqw + 2 * var(--sheet-gutter) - 2 * var(--note-ind));
+  margin-left: calc(var(--note-ind) - var(--sheet-gutter));
   display: grid;
-  grid-template-columns: minmax(0, 1fr);
+  grid-template-columns: repeat(8, minmax(0, 1fr));
+  column-gap: var(--note-gutter);
 }
 
 .note > * { min-width: 0; }
 
-/* Fra manchettens nederste streg til første afsnits øverste: 24px, målt som
-   streg til streg. Står en tidslinjeboks imellem, gælder den gamle luft. */
-.note .post-hoved--indlaeg { margin-bottom: 11px; }
-.note .post-hoved--indlaeg:has(+ .i-tidslinje) { margin-bottom: calc(var(--x) * 1.5); }
+main:has(> .note) { padding-top: var(--s-48); }
+
+.note-venstre,
+.note-udbrud,
+.note-side,
+.note > .body-copy,
+.note-slut { grid-column: 1 / -1; }
 
 .note-udbrud { margin: var(--x) 0; }
-.note > .body-copy { margin-top: 0; }
 
 .note .body-copy { max-width: none; }
 
-.note img.stort { min-width: 725px; }
-.note img.stort-bred { min-width: 1008px; }
+.note .post-h--indlaeg { line-height: calc(var(--h-indlaeg) + 0.25rem); }
+.note .post-hoved { gap: 1.625rem; }
+.note .post-hoved--indlaeg { margin-bottom: var(--s-32); }
+.note .post-hoved--indlaeg:has(+ .i-tidslinje) { margin-bottom: var(--s-32); }
+.note .lede { line-height: calc(var(--lede) + 0.75rem); }
+
+.note img.stort { min-width: 41.85rem; }
+.note img.stort-bred { min-width: 63.45rem; }
 .note p:has(> img.stort) {
   overflow-x: auto;
   overscroll-behavior-x: contain;
 }
 
+/* Slutningen: skillestreg, Del og linket tilbage. */
+.note-slut .post-efter { margin-top: 0; }
+.note-slut .noter-tilbage { margin: var(--s-32) 0 0; }
+
 .note-indhold { display: none; }
 
-.note-side {
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
-  margin-top: calc(var(--x) * 2);
-  min-width: 0;
-  font-family: var(--font-sub);
-  font-size: var(--meta);
-  line-height: 1.4;
-}
-
+/* Sektionsoverskrifterne: INDHOLD, OM NOTEN, HENVISER TIL, RELATERET,
+   DOWNLOADS. Skåret til versalhøjde og grundlinje, så en overskrifts top er
+   bogstavets top, og dens underkant er grundlinjen. */
 .note-boks > h2,
 .note-indhold h2 {
-  margin: 0 0 0.875rem;
+  margin: 0;
   font-family: var(--font-sub);
   font-weight: 600;
-  font-size: 1rem;
-  line-height: 1.2;
+  font-size: 1.125rem;
+  line-height: 1.5rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--color-text);
 }
 
-/* ★ OVERSKRIFTERNES TOP ER VERSALHØJDEN, ikke tekstboksen: skåret til som
-   rubrikken (.post-h i 03), så INDHOLD, OM NOTEN og rubrikken begynder på
-   samme linje. Målt giver afrundingen af den store rubrik og de små
-   overskrifter 2px forskel; top: -1px tager halvdelen, så ingen browser
-   bliver mere end 1px fra. */
+/* ★ ALT, DER SKAL STÅ PÅ EN GRUNDLINJE, ER SKÅRET TIL VERSALHØJDE OG
+   GRUNDLINJE. 1cap er den skrifts versalhøjde, så "24px fra overskriftens
+   grundlinje til første linjes grundlinje" skrives som 1,5rem - 1cap og
+   ikke som et tal, der kun passer til én skrift. */
 @supports (text-box: trim-both cap alphabetic) {
   .note-boks > h2,
-  .note-indhold h2 { text-box: trim-both cap alphabetic; position: relative; top: -1px; }
+  .note-indhold h2,
+  .note-boks > ul > li,
+  .note-indhold nav a,
+  .note-meta dt,
+  .note-meta dd:not(.note-emner),
+  .note .lede,
+  .note-venstre .body-copy > :first-child { text-box: trim-both cap alphabetic; }
 }
 
-/* Mellem to afdelinger står forsidens skillestreg (.skille i 02): halv
-   spaltebredde, og luften kommer fra spaltens gap. -3px er linjens
-   luft under det sidste link, så afstanden er den samme over og under. */
-.note-side .skille { padding: 0; margin-top: -3px; }
-.note-side .skille span { width: 50%; }
+.note-side {
+  margin-top: var(--s-64);
+  min-width: 0;
+  font-family: var(--font-sub);
+  font-size: 0.9375rem;
+  line-height: 1.5rem;
+}
 
 .note-boks ul {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  margin: 0;
+  margin: calc(1.5rem - 1cap) 0 0;
   padding: 0;
   list-style: none;
 }
+.note-boks > ul > li + li { margin-top: calc(2rem - 1cap); }
 
+/* Mellem to afdelinger står forsidens skillestreg (.skille i 02) på halv
+   spaltebredde. 2,5rem fra sidste linjes grundlinje til stregen og fra
+   stregen til næste overskrifts grundlinje. */
+.note-side .skille { padding: 0; margin-top: var(--s-40); }
+.note-side .skille span { width: 50%; }
+.note-side .skille + .note-boks > h2 { margin-top: calc(2.5rem - 1cap); }
+
+/* Om noten: etiketterne med kolon i kolonne 10, værdierne fra kolonne 10's
+   højre kant, rækker på 1,5rem. */
 .note-meta {
   display: grid;
-  grid-template-columns: max-content minmax(0, 1fr);
-  gap: 2px 0.5rem;
-  margin: 0;
-  font-size: calc(var(--meta) - 1px);
+  grid-template-columns: minmax(max-content, 4.5rem) minmax(0, 1fr);
+  align-items: baseline;
+  column-gap: 0;
+  row-gap: calc(1.5rem - 1cap);
+  margin: calc(1.5rem - 1cap) 0 0;
+  font-size: 0.84375rem;
+  line-height: 1.5rem;
 }
 .note-meta > div { display: contents; }
 .note-meta dt { color: var(--color-neutral-700); }
 .note-meta dd { margin: 0; min-width: 0; font-variant-numeric: tabular-nums; }
-.note-meta ul { display: flex; flex-direction: column; gap: 2px; margin: 0; padding: 0; list-style: none; }
+.note-meta li { line-height: 1rem; }
+.note-meta .note-emner { align-self: start; margin: -0.2rem 0 -0.275rem; }
+.note-meta ul { display: flex; flex-direction: column; gap: var(--s-8); margin: 0; padding: 0; list-style: none; }
+.note-meta .tag-lille {
+  display: inline-block;
+  padding: 0 0.5em;
+  border-radius: var(--radius-xs);
+  background: var(--color-neutral-200);
+  color: var(--color-neutral-800);
+  font-size: 0.75rem;
+  line-height: 1rem;
+  text-decoration: none;
+}
+.note-meta a.tag-lille:hover { background: var(--color-accent-100); color: var(--color-accent-700); }
 
+/* Indholdsfortegnelsen (forslag: punkter som sidespaltens links). */
 .note-indhold nav ul { margin: 0; padding: 0; list-style: none; }
-.note-indhold nav ul ul { padding-left: 0.875rem; }
-.note-indhold nav li { margin: 0.375rem 0; }
+.note-indhold nav ul ul { padding-left: var(--s-16); }
+.note-indhold nav a { display: block; margin-top: calc(1.5rem - 1cap); }
 .note-indhold nav a {
   text-decoration: none;
   color: var(--color-neutral-800);
   font-family: var(--font-sub);
-  font-size: var(--meta);
-  line-height: 1.35;
+  font-size: 0.9375rem;
+  line-height: 1.5rem;
 }
 .note-indhold nav a:hover { color: var(--color-accent-600); }
 
 
-@media (min-width: 64rem) {
+@media (min-width: 73.5em) {
   .note {
-    --note-ind: 0px;
-    width: calc(100cqw + 2 * var(--sheet-gutter) - 2 * var(--note-ind));
-    margin-left: calc(var(--note-ind) - var(--sheet-gutter));
-    grid-template-columns: minmax(0, 1fr) var(--note-side);
-    column-gap: var(--note-gab);
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    column-gap: var(--rende);
   }
 
-  .note-venstre { grid-column: 1; grid-row: 1; }
-  .note-side    { grid-column: 2; grid-row: 1; margin-top: 0; }
+  .note-venstre { grid-column: 1 / span 8; grid-row: 1; }
   .note > .body-copy,
-  .note-slut    { grid-column: 1; }
+  .note-slut    { grid-column: 1 / span 8; }
+  .note-side    { grid-column: 10 / span 3; grid-row: 1; margin-top: 0; }
   .note-udbrud  { grid-column: 1 / -1; }
   .note-meta-kort { display: none; }
 }
 
-@media (min-width: 64rem) and (max-width: 71.25rem) {
-  .note { --note-ind: 0.625rem; }
+@media (max-width: 73.5em) {
+  .note { --note-gutter: var(--s-16); }
 }
 
-@media (min-width: 98rem) {
+@media (min-width: 97em) {
   .note-indhold {
     display: block;
     position: absolute;
     top: 0;
     bottom: 0;
     right: 100%;
-    width: var(--note-skinne);
-    margin-right: var(--note-luft);
+    width: 10.5rem;
+    margin-right: var(--rende);
   }
   .note-indhold-indre {
     position: sticky;
-    top: calc(var(--topbar-total) + 1.5rem);
-    max-height: calc(100vh - var(--topbar-total) - 3rem);
+    top: calc(var(--topbar-total) + var(--s-48));
+    max-height: calc(100vh - var(--topbar-total) - 6rem);
+    padding-bottom: 0.75rem;
     overflow-y: auto;
   }
 }
@@ -156,7 +194,7 @@
 
 @media print {
   .note { width: auto; margin-left: 0; grid-template-columns: minmax(0, 1fr); }
-  .note-venstre, .note > .body-copy, .note-slut, .note-udbrud { grid-column: 1; }
+  .note-venstre, .note > .body-copy, .note-slut, .note-udbrud, .note-side { grid-column: 1; grid-row: auto; }
   .note-side,
   .note-indhold { display: none; }
 }
