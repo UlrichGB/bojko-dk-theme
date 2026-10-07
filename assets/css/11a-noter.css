@@ -22,6 +22,11 @@
 
 .note > * { min-width: 0; }
 
+/* Fra manchettens nederste streg til første afsnits øverste: 24px, målt som
+   streg til streg. Står en tidslinjeboks imellem, gælder den gamle luft. */
+.note .post-hoved--indlaeg { margin-bottom: 11px; }
+.note .post-hoved--indlaeg:has(+ .i-tidslinje) { margin-bottom: calc(var(--x) * 1.5); }
+
 .note-udbrud { margin: var(--x) 0; }
 .note > .body-copy { margin-top: 0; }
 
