@@ -39,7 +39,7 @@
 .note-side {
   display: flex;
   flex-direction: column;
-  gap: 1.4rem;
+  gap: 2rem;
   margin-top: calc(var(--x) * 2);
   min-width: 0;
   font-family: var(--font-sub);
@@ -70,8 +70,9 @@
 }
 
 /* Mellem to afdelinger står forsidens skillestreg (.skille i 02): halv
-   spaltebredde, og luften kommer fra spaltens gap. */
-.note-side .skille { padding: 0; }
+   spaltebredde, og luften kommer fra spaltens gap. -3px er linjens
+   luft under det sidste link, så afstanden er den samme over og under. */
+.note-side .skille { padding: 0; margin-top: -3px; }
 .note-side .skille span { width: 50%; }
 
 .note-boks ul {
