@@ -5,9 +5,10 @@
 {{- $alt := .PlainText -}}
 {{- $titel := .Title -}}
 {{- $bred := .Page.Store.Get "i-bred" -}}
+{{- $note := eq .Page.Type "noter" -}}
 {{- $sizes := cond $bred
       "(min-width: 70rem) 1110px, 100vw"
-      "(min-width: 46rem) 680px, 92vw" -}}
+      (cond $note "(min-width: 71.25rem) 805px, 92vw" "(min-width: 46rem) 680px, 92vw") -}}
 
 {{- $r := "" -}}
 {{- if not (urls.Parse .Destination).IsAbs -}}
@@ -22,8 +23,13 @@
   {{- end -}}
 {{- end -}}
 
+{{- $svgmaal := "" -}}
+{{- if and $note $r (eq $r.MediaType.SubType "svg") -}}
+  {{- with findRESubmatch `viewBox="[\d.]+[ ,]+[\d.]+[ ,]+([\d.]+)[ ,]+([\d.]+)"` $r.Content }}{{ $svgmaal = index . 0 }}{{ end -}}
+{{- end -}}
+
 {{- if $kan -}}
-  {{- $maal := cond $bred 1120 680 -}}
+  {{- $maal := cond $bred 1120 (cond $note 805 680) -}}
   {{- $saet := slice -}}
   {{- range (slice 480 800 1200 1600 2000 2400) -}}
     {{- if ge $r.Width . -}}
@@ -36,6 +42,14 @@
        {{ with $saet }}srcset="{{ delimit . ", " }}" sizes="{{ $sizes }}"
        {{ end -}}
        width="{{ $vist.Width }}" height="{{ $vist.Height }}"
+       {{ if and $note (ge $vist.Width 725) }}class="stort{{ if ge $vist.Width 1000 }} stort-bred{{ end }}" {{ end -}}
+       loading="lazy" decoding="async"
+       alt="{{ $alt }}"{{ with $titel }} title="{{ . }}"{{ end }}>
+{{- else if and $note $svgmaal -}}
+  {{- $svgb := int (float (index $svgmaal 1)) -}}
+  <img src="{{ $r.RelPermalink }}"
+       width="{{ $svgb }}" height="{{ int (float (index $svgmaal 2)) }}"
+       {{ if ge $svgb 725 }}class="stort{{ if ge $svgb 1000 }} stort-bred{{ end }}" {{ end -}}
        loading="lazy" decoding="async"
        alt="{{ $alt }}"{{ with $titel }} title="{{ . }}"{{ end }}>
 {{- else -}}

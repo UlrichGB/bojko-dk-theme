@@ -1,0 +1,71 @@
+{{- /*
+  NOTENS SIDESPALTE. Alt, den viser, kommer fra det, Hugo og forsidematerialet
+  allerede har: henvisninger i teksten, relaterede noter, datoer og mærker og
+  bundtets filer. En afdeling uden indhold udelades.
+*/ -}}
+{{- $henv := partialCached "noter-henvisninger.html" site -}}
+{{- $selv := strings.TrimSuffix "/" .RelPermalink -}}
+
+{{- $ud := slice -}}
+{{- range where $henv "fraSti" .RelPermalink -}}
+  {{- with site.GetPage .til -}}
+    {{- if and .IsPage (ne .RelPermalink $.RelPermalink) }}{{ $ud = $ud | append . }}{{ end -}}
+  {{- end -}}
+{{- end -}}
+{{- $ud = $ud | uniq -}}
+
+{{- $ind := slice -}}
+{{- range where $henv "til" $selv -}}
+  {{- if ne .fraSti $.RelPermalink }}{{ $ind = $ind | append .fra }}{{ end -}}
+{{- end -}}
+{{- $ind = $ind | uniq -}}
+
+{{- $rel := first 5 (where (site.RegularPages.Related .) "Type" "noter") -}}
+
+{{- $filer := where (where .Resources "ResourceType" "ne" "image") "ResourceType" "ne" "page" -}}
+
+<aside class="note-side" aria-label="Om noten">
+  {{- with $ud }}
+  <section class="note-boks" aria-labelledby="note-ud">
+    <h2 id="note-ud">Henviser til</h2>
+    <ul>{{ range . }}<li><a href="{{ .RelPermalink }}">{{ .Title }}</a></li>{{ end }}</ul>
+  </section>
+  {{- end }}
+
+  {{- with $ind }}
+  <section class="note-boks" aria-labelledby="note-ind">
+    <h2 id="note-ind">Henvist fra</h2>
+    <ul>{{ range . }}<li><a href="{{ .RelPermalink }}">{{ .Title }}</a></li>{{ end }}</ul>
+  </section>
+  {{- end }}
+
+  {{- with $rel }}
+  <section class="note-boks" aria-labelledby="note-rel">
+    <h2 id="note-rel">Relaterede noter</h2>
+    <ul>{{ range . }}<li><a href="{{ .RelPermalink }}">{{ .Title }}</a></li>{{ end }}</ul>
+  </section>
+  {{- end }}
+
+  <section class="note-boks" aria-labelledby="note-meta">
+    <h2 id="note-meta">Om noten</h2>
+    <dl class="note-meta">
+      {{- if not .Date.IsZero }}
+      <div><dt>Udgivet</dt><dd><time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date | time.Format "2. January 2006" }}</time></dd></div>
+      {{- end }}
+      <div><dt>Opdateret</dt><dd><time datetime="{{ .Lastmod.Format "2006-01-02" }}">{{ .Lastmod | time.Format "2. January 2006" }}</time></dd></div>
+      {{- if and (site.Params.laesetid | default true) .ReadingTime }}
+      <div><dt>Læsetid</dt><dd>{{ .ReadingTime }} min.</dd></div>
+      {{- end }}
+      {{- with .GetTerms "tags" }}
+      <div><dt>Emner</dt><dd><ul class="tags">{{ range . }}<li><a class="tag" href="{{ .RelPermalink }}">{{ partial "maerkenavn.html" . }}</a></li>{{ end }}</ul></dd></div>
+      {{- end }}
+    </dl>
+  </section>
+
+  {{- with $filer }}
+  <section class="note-boks" aria-labelledby="note-filer">
+    <h2 id="note-filer">Filer</h2>
+    <ul>{{ range . }}<li><a href="{{ .RelPermalink }}" download>{{ path.Base .Name }}</a></li>{{ end }}</ul>
+  </section>
+  {{- end }}
+</aside>

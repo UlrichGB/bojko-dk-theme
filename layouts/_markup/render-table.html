@@ -1,9 +1,10 @@
 {{- /*
   TABEL-RENDER-HOOK. Kaldes for hver markdown-tabel og lægger den i
   .tabel-ramme, så den altid kan rulles vandret. Står tabellen allerede i
-  et {{< bred >}}, udelades wide: udbruddet må kun regnes én gang.
+  et {{< bred >}}, udelades wide: udbruddet må kun regnes én gang. I en note udelades
+  det også: tabellen har tekstens bredde.
 */ -}}
-<div class="tabel-ramme{{ if not (.Page.Store.Get "i-bred") }} wide{{ end }}">
+<div class="tabel-ramme{{ if not (or (.Page.Store.Get "i-bred") (eq .Page.Type "noter")) }} wide{{ end }}">
   <table>
     <thead>
       {{- range .THead }}

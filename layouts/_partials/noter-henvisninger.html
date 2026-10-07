@@ -1,0 +1,14 @@
+{{- /*
+  Alle interne henvisninger på sitet som par af fra-side og til-sti: hvert
+  markdown-link, der begynder med "/". Noten læser parrene to veje, ud
+  (henviser til) og ind (henvist fra). Kaldes med
+  partialCached "noter-henvisninger.html" site, så sitet kun skannes én gang.
+*/ -}}
+{{- $par := slice -}}
+{{- range site.RegularPages -}}
+  {{- $fra := . -}}
+  {{- range findRESubmatch `\]\((/[^)\s#"]*)` .RawContent -}}
+    {{- $par = $par | append (dict "fra" $fra "fraSti" $fra.RelPermalink "til" (index . 1 | strings.TrimSuffix "/")) -}}
+  {{- end -}}
+{{- end -}}
+{{- return $par -}}

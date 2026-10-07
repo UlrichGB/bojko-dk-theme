@@ -1,40 +1,71 @@
 {{ define "main" }}
   {{- /*
-    ÉN NOTE. Bevidst magrere end en artikel: intet omslag, intet vandmærke,
-    ingen del-række og ingen relaterede. En note er et opslag, man er kommet
-    til for at slå noget op — ikke et stykke, man er kommet for at læse.
+    ÉN NOTE. Bevidst magrere end en artikel: intet omslag, intet vandmærke
+    og ingen del-række. En note er et opslag, man er kommet til for at slå
+    noget op — ikke et stykke, man er kommet for at læse.
+
+    Siden er en wiki-side: indholdsfortegnelsen i venstre margen uden for
+    arket, teksten i midten og sidespalten til højre. Mål og brudpunkter
+    står i 11a-noter.css.
+
+    {{< wide >}} lægger <wide-start> og <wide-end> om sit indhold, og her
+    deles teksten ved dem: et udbrud er sin egen række i gitteret og kan
+    derfor ikke ligge under sidespalten, kun under den.
 
     Datoen er SIDST ÆNDRET og ikke udgivelsesdato, fordi det er den, der
     afgør om en note stadig er værd at stole på.
   */ -}}
-  <article class="col post">
-
-    <header class="post-hoved post-hoved--indlaeg">
-      <h1 class="post-h post-h--indlaeg">{{ .Title }}</h1>
-      {{- with .Description }}<p class="lede">{{ . | markdownify }}</p>{{ end }}
-
-      <div class="meta">
-        <span>Opdateret <time datetime="{{ .Lastmod.Format "2006-01-02" }}">{{ .Lastmod | time.Format "2. January 2006" }}</time></span>
-        {{- with .GetTerms "tags" }}
-          {{- range . }}<span class="sep" aria-hidden="true">/</span><span><a class="quiet" href="{{ .RelPermalink }}">{{ partial "maerkenavn.html" . }}</a></span>{{ end }}
-        {{- end }}
-        {{- if and (site.Params.laesetid | default true) .ReadingTime }}
-          <span class="sep" aria-hidden="true">/</span><span>{{ .ReadingTime }} min. læsning</span>
-        {{- end }}
+  <article class="post note">
+    {{- if ge (len .Fragments.Identifiers) 3 }}
+    <div class="note-indhold">
+      <div class="note-indhold-indre">
+        <h2>Indhold</h2>
+        {{ .TableOfContents }}
       </div>
-    </header>
+    </div>
+    {{- end }}
 
-    {{- partial "i-tidslinje.html" . }}
+    {{- $dele := split (string .Content) "<wide-start></wide-start>" }}
+    <div class="note-venstre">
+      <header class="post-hoved post-hoved--indlaeg">
+        <h1 class="post-h post-h--indlaeg">{{ .Title }}</h1>
+        {{- with .Description }}<p class="lede">{{ . | markdownify }}</p>{{ end }}
 
-    <div class="body-copy">
-      {{ .Content }}
+        <div class="meta note-meta-kort">
+          <span>Opdateret <time datetime="{{ .Lastmod.Format "2006-01-02" }}">{{ .Lastmod | time.Format "2. January 2006" }}</time></span>
+          {{- with .GetTerms "tags" }}
+            {{- range . }}<span class="sep" aria-hidden="true">/</span><span><a class="quiet" href="{{ .RelPermalink }}">{{ partial "maerkenavn.html" . }}</a></span>{{ end }}
+          {{- end }}
+          {{- if and (site.Params.laesetid | default true) .ReadingTime }}
+            <span class="sep" aria-hidden="true">/</span><span>{{ .ReadingTime }} min. læsning</span>
+          {{- end }}
+        </div>
+      </header>
+
+      {{- partial "i-tidslinje.html" . }}
+
+      <div class="body-copy">
+        {{ index $dele 0 | safeHTML }}
+      </div>
     </div>
 
-    <div class="col skille skille--slut" aria-hidden="true"><span></span></div>
+    {{- range after 1 $dele }}
+      {{- $stykker := split . "<wide-end></wide-end>" }}
+    <div class="note-udbrud">{{ index $stykker 0 | safeHTML }}</div>
+      {{- with index $stykker 1 }}{{ if strings.TrimSpace . }}
+    <div class="body-copy">{{ . | safeHTML }}</div>
+      {{- end }}{{ end }}
+    {{- end }}
 
-    <p class="noter-tilbage">
-      <a class="laes-mere" href="{{ .Parent.RelPermalink }}"
-         aria-label="Tilbage til alle noter">{{ partial "ikon.html" "pil-venstre" }}<span data-tekst="Alle noter">Alle noter</span></a>
-    </p>
+    <div class="note-slut">
+      <div class="skille skille--slut" aria-hidden="true"><span></span></div>
+
+      <p class="noter-tilbage">
+        <a class="laes-mere" href="{{ .Parent.RelPermalink }}"
+           aria-label="Tilbage til alle noter">{{ partial "ikon.html" "pil-venstre" }}<span data-tekst="Alle noter">Alle noter</span></a>
+      </p>
+    </div>
+
+    {{ partial "noter-side.html" . }}
   </article>
 {{ end }}

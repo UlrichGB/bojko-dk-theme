@@ -1,0 +1,18 @@
+{{- /*
+  Ét element ud af læsespalten. Er det i en note, står det i sit eget
+  stykke over spalten og sidespalten sammen (se layouts/noter/page.html,
+  som deler indholdet ved mærkerne); andre steder er det udbruddet
+  i bredden. fuld="ja" går helt ud (kun uden for noter).
+  Kaldes af {{< wide >}} og {{< bred >}}.
+*/ -}}
+{{- .Page.Store.Set "i-bred" true -}}
+{{- if eq .Page.Type "noter" -}}
+<wide-start></wide-start>
+{{ .Page.RenderString (dict "display" "block") .Inner }}
+<wide-end></wide-end>
+{{- else -}}
+<div class="wide{{ if eq (.Get "fuld") "ja" }} bleed{{ end }}">
+{{ .Page.RenderString (dict "display" "block") .Inner }}
+</div>
+{{- end }}
+{{- .Page.Store.Set "i-bred" false -}}

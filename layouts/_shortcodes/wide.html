@@ -1,0 +1,9 @@
+{{- /*
+  {{< wide >}} ... {{< /wide >}}
+  Ét element ud af læsespalten: billede, diagram eller tabel. I en note
+  står det i bredden af teksten og sidespalten sammen, og aldrig over
+  sidespalten. Andre steder er det udbruddet ud i arket.
+  {{< bred >}} er det samme.
+*/ -}}
+{{- $_ := .Inner -}}
+{{- partial "udbrud.html" . -}}

@@ -125,6 +125,94 @@ hændelsen over, så intet står der to gange. Hændelser og indlæg flettes eft
 dato; billeder til dem ligger i samme mappe, uden undermapper. En ny hændelse:
 `hugo new content --kind haendelse blog/<tidslinje>/ÅÅÅÅ-MM-DD-slug.md`.
 
+## Noter
+
+En note (sektionen `noter`, eller `type: noter`) er en wiki-side, ikke en
+artikel. Blog, forside, arkiv og profil er uændrede. Siden er et gitter i
+arkets ramme på 1120px, kant i kant med topbaren:
+
+| Hvad | Mål | Hvor |
+|---|---|---|
+| Teksten | 805px (omkring 80 tegn pr. linje) | venstre |
+| Mellemrum | 15px | |
+| Sidespalten | 300px | højre, ved siden af hoved og første stykke tekst |
+| Indholdsfortegnelsen | 250px | i margenen uden for rammen, til venstre |
+
+Tabeller, billeder og diagrammer har som standard tekstens bredde og ikke
+arkets. Kun det, der står i `{{< wide >}}`, er bredt (se nedenfor).
+
+| Skærmbredde | Layout |
+|---|---|
+| fra 1700px | tekst + sidespalte, indholdsfortegnelsen i venstre margen. Den følger med, når man ruller, og kræver mindst tre overskrifter |
+| 1024px til 1700px | tekst + sidespalte, ingen indholdsfortegnelse. Under 1140px følger rammen skærmen (10px luft på hver side som topbaren), og teksten bliver smallere end 805px |
+| under 1024px | én spalte, sidespalten under teksten, ingen indholdsfortegnelse. Topbaren er stablet som i dag |
+
+Brudpunkterne er målt: 1700px er rammen (1120px) plus indholdsfortegnelsen
+(250px) og luft (24px) i hver side af en centreret ramme og lidt til
+skærmkanten; 1024px er det, hvor teksten stadig har omkring 690px ved siden
+af en sidespalte på 300px.
+
+Sidespalten bygges af det, Hugo og forsidematerialet allerede har. En
+afdeling uden indhold udelades:
+
+| Afdeling | Kommer fra |
+|---|---|
+| Henviser til | interne links i notens tekst (`](/…)`) til sider, der findes |
+| Henvist fra | de sider på sitet, hvis tekst linker hertil |
+| Relaterede noter | Hugos `Related` (sitets `related`-opsætning), kun noter, højst fem |
+| Om noten | `date`, `lastmod`, læsetid og `tags` |
+| Filer | bundtets øvrige filer, når de ikke er billeder eller sider |
+
+Der er ingen afdeling for eksterne links: de står allerede i teksten, og
+forsidematerialet har ikke en liste at hente dem fra.
+
+### Bredt: `{{< wide >}}`
+
+```markdown
+{{< wide >}}
+![Forløbet i seks trin](forlob.svg)
+{{< /wide >}}
+```
+
+Et billede, et diagram eller en tabel i `{{< wide >}}` fylder hele rammen:
+teksten plus sidespalten (1120px). Et bredt element ligger aldrig over
+sidespalten. Står det, før sidespalten er slut, begynder det under den, og
+teksten før det står, hvor den er. Under 1024px er der kun én spalte, så
+er bredt det samme som almindeligt.
+
+`{{< bred >}}` er det gamle navn og gør det samme. På blogindlæg er begge
+uændret udbruddet ud af læsespalten og ud i arket (`fuld="ja"` går helt ud).
+
+### Tegninger i noter
+
+Tegn, så tegningen vises i den bredde, den er tegnet i. Så er tekstens
+størrelse den, der står i tegningen.
+
+| | Almindelig | `{{< wide >}}` |
+|---|---|---|
+| Tegnebredde (`viewBox`) | 805 | 1120 |
+| Mindste tekst, som den vises | 14px | 14px |
+
+Regler:
+
+- **`viewBox` og `width`/`height` skal passe sammen**, fx `viewBox="0 0 805 330"`
+  med `width="805" height="330"`. Temaet læser `viewBox` og skriver målene på
+  `<img>`, så siden ikke hopper, når tegningen hentes. Et billede, der ikke er
+  tegnet i et af de to mål, bliver ikke skaleret op, kun ned.
+- **Tekst på 14px eller større**, målt i tegningens egne enheder. 14px i en
+  tegning på 805 er 14px på skærmen; tegn aldrig bredere og regn med, at den
+  skrumper.
+- **Skrift: `font-family="system-ui, sans-serif"`.** En SVG, der vises som
+  billede, kan ikke bruge sidens skrifter, så et navn, siden har indlæst, hjælper
+  ikke.
+- **Billeder (png, jpeg, webp)** skaleres ned til 805px (1120px i
+  `{{< wide >}}`) og leveres i flere størrelser; et skærmbillede er ikke et
+  diagram og skal ikke tegnes om.
+- **På smalle skærme** skalerer tegningen med spalten ned til 90 % af
+  tegnebredden (725px for 805, 1008px for 1120). Er spalten smallere, bliver
+  tegningen i de 90 % og kan rulles sidelæns i sit eget afsnit, ligesom en
+  tabel. Teksten i den er derfor aldrig under 12,6px.
+
 ## Skrifterne
 
 De tre familier i `assets/fonts/` — Merriweather, Source Sans 3 og Comfortaa —

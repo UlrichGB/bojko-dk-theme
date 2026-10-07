@@ -1,9 +1,7 @@
 {{- /*
   {{< bred >}} ... {{< /bred >}}
-  Ét element ud af læsespalten og ud i arket. fuld="ja" går helt ud.
+  Det gamle navn for {{< wide >}}; samme udbrud, så indlæg, der bruger det,
+  er uændrede.
 */ -}}
-{{- .Page.Store.Set "i-bred" true -}}
-<div class="wide{{ if eq (.Get "fuld") "ja" }} bleed{{ end }}">
-{{ .Page.RenderString (dict "display" "block") .Inner }}
-</div>
-{{- .Page.Store.Set "i-bred" false -}}
+{{- $_ := .Inner -}}
+{{- partial "udbrud.html" . -}}
