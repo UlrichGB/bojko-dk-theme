@@ -1,0 +1,8 @@
+{{- /*
+  Peger adressen til et andet websted? Kun absolutte http(s)-adresser med en
+  anden vært end sitets egen er eksterne; relative adresser, #anker og mailto:
+  er det aldrig. Kaldes med partial "er-ekstern.html" "https://…".
+*/ -}}
+{{- $u := urls.Parse (. | string) -}}
+{{- $egen := strings.TrimPrefix "www." (urls.Parse site.BaseURL).Host -}}
+{{- return (and $u.IsAbs (in (slice "http" "https") $u.Scheme) (ne (strings.TrimPrefix "www." $u.Host) $egen)) -}}

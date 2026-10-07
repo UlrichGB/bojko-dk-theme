@@ -134,33 +134,36 @@ arkets ramme på 1120px, kant i kant med topbaren:
 | Hvad | Mål | Hvor |
 |---|---|---|
 | Teksten | 805px (omkring 80 tegn pr. linje) | venstre |
-| Mellemrum | 15px | |
-| Sidespalten | 300px | højre, ved siden af hoved og første stykke tekst |
-| Indholdsfortegnelsen | 250px | i margenen uden for rammen, til venstre |
+| Mellemrum | 25px | |
+| Sidespalten | 290px | højre, ved siden af hoved og første stykke tekst |
+| Indholdsfortegnelsen | 200px, højrestillet | i margenen uden for rammen, 5px fra teksten |
 
 Tabeller, billeder og diagrammer har som standard tekstens bredde og ikke
 arkets. Kun det, der står i `{{< wide >}}`, er bredt (se nedenfor).
 
 | Skærmbredde | Layout |
 |---|---|
-| fra 1700px | tekst + sidespalte, indholdsfortegnelsen i venstre margen. Den følger med, når man ruller, og kræver mindst tre overskrifter |
-| 1024px til 1700px | tekst + sidespalte, ingen indholdsfortegnelse. Under 1140px følger rammen skærmen (10px luft på hver side som topbaren), og teksten bliver smallere end 805px |
+| fra 1568px | tekst + sidespalte, indholdsfortegnelsen i venstre margen. Den følger med, når man ruller, og kræver mindst tre overskrifter |
+| 1024px til 1568px | tekst + sidespalte, ingen indholdsfortegnelse. Under 1140px følger rammen skærmen (10px luft på hver side som topbaren), og teksten bliver smallere end 805px |
 | under 1024px | én spalte, sidespalten under teksten, ingen indholdsfortegnelse. Topbaren er stablet som i dag |
 
-Brudpunkterne er målt: 1700px er rammen (1120px) plus indholdsfortegnelsen
-(250px) og luft (24px) i hver side af en centreret ramme og lidt til
-skærmkanten; 1024px er det, hvor teksten stadig har omkring 690px ved siden
-af en sidespalte på 300px.
+Brudpunkterne er målt: 1568px er rammen (1120px) plus indholdsfortegnelsen
+(200px) og luft (5px) i hver side af en centreret ramme, og lidt til
+skærmkanten; 1024px er det, hvor teksten stadig har omkring 680px ved siden
+af en sidespalte på 290px.
 
 Sidespalten bygges af det, Hugo og forsidematerialet allerede har. En
 afdeling uden indhold udelades:
 
+Rækkefølgen er den, tabellen har. Alle links i den er understregede som
+links i teksten, også emnerne.
+
 | Afdeling | Kommer fra |
 |---|---|
+| Om noten | `date`, `lastmod`, læsetid og `tags` (emnerne som links til emnesiderne) |
 | Henviser til | interne links i notens tekst (`](/…)`) til sider, der findes |
 | Henvist fra | de sider på sitet, hvis tekst linker hertil |
 | Relaterede noter | Hugos `Related` (sitets `related`-opsætning), kun noter, højst fem |
-| Om noten | `date`, `lastmod`, læsetid og `tags` |
 | Filer | bundtets øvrige filer, når de ikke er billeder eller sider |
 
 Der er ingen afdeling for eksterne links: de står allerede i teksten, og
@@ -212,6 +215,27 @@ Regler:
   tegnebredden (725px for 805, 1008px for 1120). Er spalten smallere, bliver
   tegningen i de 90 % og kan rulles sidelæns i sit eget afsnit, ligesom en
   tabel. Teksten i den er derfor aldrig under 12,6px.
+
+## Links til andre websteder
+
+Et link til et andet websted (en absolut `http(s)`-adresse med en anden
+vært end sitets egen; `www.` tæller ikke) åbner i en ny fane med
+`rel="noopener noreferrer"` og får et lille ikon efter sig. Det gælder
+markdown-links overalt (`_markup/render-link.html`, så noter og blogindlæg
+ens) og de links, temaet selv skriver: bunden, profilens kontaktlinks,
+delerækken og tidslinjens hændelser. Interne links, `mailto:` og `#anker`
+er uændrede, og ikonknappen til LinkedIn i topbaren får kun teksten
+"åbner i en ny fane" i sit `aria-label`, ikke et ikon til.
+
+Ikonet er `span.ekstern` med `aria-label="åbner i en ny fane"`; CSS tegner det
+og binder det til linkets sidste ord, så det ikke står alene på en linje.
+Det står hverken i meta-beskrivelser, JSON-LD, feed eller `llms.txt`
+(`_partials/uden-anker.html` tager det ud) og tæller ikke med i ordtal eller
+læsetid. Rå `<a>` i indholdet røres ikke.
+
+Hooken overtager også det, Hugo ellers selv gør ved et link: et link til en
+side eller en fil i bundtet går til sidens rigtige adresse, ikke til
+mappenavnet i teksten.
 
 ## Skrifterne
 

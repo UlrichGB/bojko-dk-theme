@@ -12,7 +12,8 @@
         <h3>{{ .Name }}</h3>
         <ul>
           {{- range .Children }}
-          <li><a class="foot-link" href="{{ .URL }}"{{ if strings.HasPrefix .URL "http" }} rel="noopener"{{ end }}>{{ .Name }}</a></li>
+          {{- $ekstern := partial "er-ekstern.html" .URL }}
+          <li><a class="foot-link" href="{{ .URL }}"{{ if $ekstern }} target="_blank" rel="noopener noreferrer"{{ end }}>{{ .Name }}{{ if $ekstern }}{{ partial "ekstern-markoer.html" . }}{{ end }}</a></li>
           {{- end }}
         </ul>
       </div>
@@ -45,7 +46,7 @@
         {{ with $navn }}{{ . }} {{ end }}©&nbsp;{{ $aar }}
         {{- with $forfatter }} <a class="foot-link" href="{{ $profil | relURL }}"><strong>{{ . }}</strong></a>{{ end }}
       {{- end }}
-      {{- with site.Params.licens }} <span class="sep" aria-hidden="true">·</span> <a class="foot-link" href="{{ .url }}" rel="license noopener">{{ .navn }}</a>{{ end }}
+      {{- with site.Params.licens }} <span class="sep" aria-hidden="true">·</span> {{ $ekstern := partial "er-ekstern.html" .url }}<a class="foot-link" href="{{ .url }}" rel="license noopener{{ if $ekstern }} noreferrer" target="_blank{{ end }}">{{ .navn }}{{ if $ekstern }}{{ partial "ekstern-markoer.html" . }}{{ end }}</a>{{ end }}
     </span>
   </div>
   {{ partial "bund-ekstra.html" . }}

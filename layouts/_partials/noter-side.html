@@ -25,6 +25,23 @@
 {{- $filer := where (where .Resources "ResourceType" "ne" "image") "ResourceType" "ne" "page" -}}
 
 <aside class="note-side" aria-label="Om noten">
+  <section class="note-boks" aria-labelledby="note-meta">
+    <h2 id="note-meta">Om noten</h2>
+    <dl class="note-meta">
+      {{- if not .Date.IsZero }}
+      <div><dt>Udgivet</dt><dd><time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date | time.Format "2. January 2006" }}</time></dd></div>
+      {{- end }}
+      <div><dt>Opdateret</dt><dd><time datetime="{{ .Lastmod.Format "2006-01-02" }}">{{ .Lastmod | time.Format "2. January 2006" }}</time></dd></div>
+      {{- if and (site.Params.laesetid | default true) .ReadingTime }}
+      <div><dt>Læsetid</dt><dd>{{ .ReadingTime }} min.</dd></div>
+      {{- end }}
+      {{- with .GetTerms "tags" }}
+      <div><dt>Emner</dt><dd><ul>{{ range . }}<li><a href="{{ .RelPermalink }}">{{ partial "maerkenavn.html" . }}</a></li>{{ end }}</ul></dd></div>
+      {{- end }}
+    </dl>
+  </section>
+
+
   {{- with $ud }}
   <section class="note-boks" aria-labelledby="note-ud">
     <h2 id="note-ud">Henviser til</h2>
@@ -45,22 +62,6 @@
     <ul>{{ range . }}<li><a href="{{ .RelPermalink }}">{{ .Title }}</a></li>{{ end }}</ul>
   </section>
   {{- end }}
-
-  <section class="note-boks" aria-labelledby="note-meta">
-    <h2 id="note-meta">Om noten</h2>
-    <dl class="note-meta">
-      {{- if not .Date.IsZero }}
-      <div><dt>Udgivet</dt><dd><time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date | time.Format "2. January 2006" }}</time></dd></div>
-      {{- end }}
-      <div><dt>Opdateret</dt><dd><time datetime="{{ .Lastmod.Format "2006-01-02" }}">{{ .Lastmod | time.Format "2. January 2006" }}</time></dd></div>
-      {{- if and (site.Params.laesetid | default true) .ReadingTime }}
-      <div><dt>Læsetid</dt><dd>{{ .ReadingTime }} min.</dd></div>
-      {{- end }}
-      {{- with .GetTerms "tags" }}
-      <div><dt>Emner</dt><dd><ul class="tags">{{ range . }}<li><a class="tag" href="{{ .RelPermalink }}">{{ partial "maerkenavn.html" . }}</a></li>{{ end }}</ul></dd></div>
-      {{- end }}
-    </dl>
-  </section>
 
   {{- with $filer }}
   <section class="note-boks" aria-labelledby="note-filer">

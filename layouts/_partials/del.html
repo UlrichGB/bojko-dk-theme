@@ -28,7 +28,8 @@
   <h2 id="del">Del</h2>
   <div class="share-raekke">
     {{- range $links }}
-    <a class="share" href="{{ .url }}" rel="noopener">{{ partial "ikon.html" .ikon }}{{ .navn }}</a>
+    {{- $ekstern := partial "er-ekstern.html" .url }}
+    <a class="share" href="{{ .url }}"{{ if $ekstern }} target="_blank" rel="noopener noreferrer"{{ else }} rel="noopener"{{ end }}>{{ partial "ikon.html" .ikon }}{{ .navn }}{{ if $ekstern }}{{ partial "ekstern-markoer.html" . }}{{ end }}</a>
     {{- end }}
   </div>
 </section>

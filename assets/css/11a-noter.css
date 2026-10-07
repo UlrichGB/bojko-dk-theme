@@ -1,8 +1,8 @@
 /* 11a — NOTERNE
    Wiki-siden: indholdsfortegnelse, tekst og sidespalte. Kun layouts/noter/.
-   Brudpunkter: 106,25rem (1700px) og op giver indholdsfortegnelsen i
+   Brudpunkter: 98rem (1568px) og op giver indholdsfortegnelsen i
    margenen, 64rem (1024px) og op giver sidespalten, under 64rem er det én
-   spalte. Teksten er 805px; med sidespalten på 300px og 15px imellem fylder
+   spalte. Teksten er 805px; med sidespalten på 290px og 25px imellem fylder
    de ark-rammen på 1120px, kant i kant med topbaren.
 
    Siden er et gitter, hvor hvert {{< wide >}} er en hel række på tværs.
@@ -11,9 +11,10 @@
    sidespalten. */
 
 .note {
-  --note-side:   300px;
-  --note-gab:    15px;
-  --note-skinne: 250px;
+  --note-side:   290px;
+  --note-gab:    25px;
+  --note-skinne: 200px;
+  --note-luft:   5px;
 
   display: grid;
   grid-template-columns: minmax(0, 1fr);
@@ -65,19 +66,16 @@
   padding: 0;
   list-style: none;
 }
-.note-boks li a { text-decoration: none; color: var(--color-text); font-weight: 600; }
-.note-boks li a:hover { color: var(--color-accent-600); }
 
 .note-meta { display: flex; flex-direction: column; gap: 0.5rem; margin: 0; }
 .note-meta > div { display: flex; flex-wrap: wrap; gap: 0.25rem 0.75rem; }
 .note-meta dt { flex: 0 0 5.5rem; color: var(--color-neutral-700); }
 .note-meta dd { margin: 0; flex: 1 1 0; min-width: 0; font-variant-numeric: tabular-nums; }
-.note-meta .tags { gap: 0.375rem; }
-.note-meta .tag { min-height: 1.75rem; padding: 0 0.75em; }
+.note-meta ul { display: flex; flex-direction: column; gap: 0.25rem; margin: 0; padding: 0; list-style: none; }
 
 .note-indhold nav ul { margin: 0; padding: 0; list-style: none; }
-.note-indhold nav ul ul { padding-left: 0.875rem; }
-.note-indhold nav li { margin: 0.375rem 0; }
+.note-indhold nav ul ul { padding: 0; }
+.note-indhold nav li { margin: 0.375rem 0; text-align: right; }
 .note-indhold nav a {
   text-decoration: none;
   color: var(--color-neutral-800);
@@ -109,7 +107,7 @@
   .note { --note-ind: 0.625rem; }
 }
 
-@media (min-width: 106.25rem) {
+@media (min-width: 98rem) {
   .note-indhold {
     display: block;
     position: absolute;
@@ -117,9 +115,10 @@
     bottom: 0;
     right: 100%;
     width: var(--note-skinne);
-    margin-right: 24px;
+    margin-right: var(--note-luft);
   }
   .note-indhold-indre {
+    text-align: right;
     position: sticky;
     top: calc(var(--topbar-total) + 1.5rem);
     max-height: calc(100vh - var(--topbar-total) - 3rem);

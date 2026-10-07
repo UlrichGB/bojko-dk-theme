@@ -20,12 +20,12 @@
   <div class="haendelse-krop">
     {{- if $indlaeg }}
     <h3><a class="title-link" href="{{ $indlaeg }}">{{ .Get "titel" }}</a></h3>
-    <p class="uddrag">{{ replaceRE `(?s)</(p|li)>` " " $tekst | plainify | htmlUnescape | partial "uden-epost.html" | replaceRE `\s+` " " | strings.TrimSpace | truncate 340 }}
+    <p class="uddrag">{{ replaceRE `(?s)</(p|li)>` " " (partial "uden-anker.html" $tekst) | plainify | htmlUnescape | partial "uden-epost.html" | replaceRE `\s+` " " | strings.TrimSpace | truncate 340 }}
       <a class="laes-mere" href="{{ $indlaeg }}"
          aria-label="Læs mere: {{ .Get "titel" }}"><span data-tekst="Læs mere">Læs mere</span>{{ partial "ikon.html" "pil-hoejre" }}</a>
     </p>
     {{- else }}
-    <h3>{{ with .Get "url" }}<a href="{{ . }}">{{ $.Get "titel" }}</a>{{ else }}{{ .Get "titel" }}{{ end }}</h3>
+    <h3>{{ with .Get "url" }}{{ $ekstern := partial "er-ekstern.html" . }}<a href="{{ . }}"{{ if $ekstern }} target="_blank" rel="noopener noreferrer"{{ end }}>{{ $.Get "titel" }}{{ if $ekstern }}{{ partial "ekstern-markoer.html" . }}{{ end }}</a>{{ else }}{{ .Get "titel" }}{{ end }}</h3>
     {{ $tekst }}
     {{- end }}
   </div>

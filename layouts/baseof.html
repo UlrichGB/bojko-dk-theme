@@ -62,8 +62,8 @@
            navnet sammen på tværs. */ -}}
     {{- with site.Params.social.linkedin }}
       <a class="nav-icon" href="https://www.linkedin.com/in/{{ . }}"
-         target="_blank" rel="me noopener"
-         aria-label="{{ site.Params.maerke | default site.Title }} på LinkedIn">{{ partial "ikon.html" "linkedin" }}</a>
+         target="_blank" rel="me noopener noreferrer"
+         aria-label="{{ site.Params.maerke | default site.Title }} på LinkedIn (åbner i en ny fane)">{{ partial "ikon.html" "linkedin" }}</a>
     {{- end }}
   </nav>
 </header>

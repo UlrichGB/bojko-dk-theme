@@ -1,0 +1,21 @@
+{{- /*
+  LINK-RENDER-HOOK. En hook overtager også det, Hugo ellers selv gør: et link
+  til en side eller en fil i bundtet går til sidens rigtige adresse (slug,
+  url), ikke til mappenavnet i teksten. Et link til et andet websted åbner
+  i en ny fane og får mærket efter sig (ekstern-markoer.html).
+*/ -}}
+{{- $dest := .Destination -}}
+{{- $u := urls.Parse $dest -}}
+{{- if and (not $u.IsAbs) $u.Path -}}
+  {{- $ref := "" -}}
+  {{- with .PageInner.GetPage $u.Path }}{{ $ref = .RelPermalink }}
+  {{- else }}{{ with .PageInner.Resources.GetMatch $u.Path }}{{ $ref = .RelPermalink }}{{ end }}{{ end -}}
+  {{- if $ref -}}
+    {{- $dest = $ref -}}
+    {{- with $u.RawQuery }}{{ $dest = printf "%s?%s" $dest . }}{{ end -}}
+    {{- with $u.Fragment }}{{ $dest = printf "%s#%s" $dest . }}{{ end -}}
+  {{- end -}}
+{{- end -}}
+{{- $ekstern := partial "er-ekstern.html" $dest -}}
+<a href="{{ $dest }}"{{ with .Title }} title="{{ . }}"{{ end }}{{ if $ekstern }} target="_blank" rel="noopener noreferrer"{{ end }}>{{ .Text | safeHTML }}{{ if $ekstern }}{{ partial "ekstern-markoer.html" . }}{{ end }}</a>
+{{- "" -}}

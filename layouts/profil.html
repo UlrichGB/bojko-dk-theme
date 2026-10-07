@@ -35,7 +35,7 @@
       {{- with site.Params.social.bluesky }}{{ $kontakt = $kontakt | append (dict "navn" "Bluesky" "url" (printf "https://bsky.app/profile/%s" .)) }}{{ end }}
       {{- with $kontakt }}
       <ul class="profil-kontakt">
-        {{- range . }}<li>{{ with .html }}{{ . }}{{ else }}<a class="quiet" href="{{ .url }}">{{ .navn }}</a>{{ end }}</li>{{ end }}
+        {{- range . }}<li>{{ with .html }}{{ . }}{{ else }}<a class="quiet" href="{{ .url }}" target="_blank" rel="noopener noreferrer">{{ .navn }}{{ partial "ekstern-markoer.html" . }}</a>{{ end }}</li>{{ end }}
       </ul>
       {{- end }}
 
