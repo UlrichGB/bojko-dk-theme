@@ -20,7 +20,8 @@
 {{- end -}}
 {{- $ind = $ind | uniq -}}
 
-{{- $rel := first 5 (where (site.RegularPages.Related .) "Type" "noter") -}}
+{{- $skriv := partial "skrivesektion.html" . -}}
+{{- $rel := first 5 (where (where (site.RegularPages.Related .) "Section" "in" $skriv.sektioner) "RelPermalink" "ne" .RelPermalink) -}}
 
 {{- $filer := where (where .Resources "ResourceType" "ne" "image") "ResourceType" "ne" "page" -}}
 
@@ -61,15 +62,15 @@
   {{- with $rel }}
   <div class="skille" aria-hidden="true"><span></span></div>
   <section class="note-boks" aria-labelledby="note-rel">
-    <h2 id="note-rel">Relaterede noter</h2>
+    <h2 id="note-rel">Relateret</h2>
     <ul>{{ range . }}<li><a href="{{ .RelPermalink }}">{{ .Title }}</a></li>{{ end }}</ul>
   </section>
   {{- end }}
 
   {{- with $filer }}
   <div class="skille" aria-hidden="true"><span></span></div>
-  <section class="note-boks" aria-labelledby="note-filer">
-    <h2 id="note-filer">Filer</h2>
+  <section class="note-boks" aria-labelledby="note-downloads">
+    <h2 id="note-downloads">Downloads</h2>
     <ul>{{ range . }}<li><a href="{{ .RelPermalink }}" download>{{ path.Base .Name }}</a></li>{{ end }}</ul>
   </section>
   {{- end }}

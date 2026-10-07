@@ -163,8 +163,8 @@ links i teksten, også emnerne.
 | Om noten | `date`, `lastmod`, læsetid og `tags` (emnerne som links til emnesiderne) |
 | Henviser til | interne links i notens tekst (`](/…)`) til sider, der findes |
 | Henvist fra | de sider på sitet, hvis tekst linker hertil |
-| Relaterede noter | Hugos `Related` (sitets `related`-opsætning), kun noter, højst fem |
-| Filer | bundtets øvrige filer, når de ikke er billeder eller sider |
+| Relateret | Hugos `Related` (sitets `related`-opsætning), noter og blogindlæg (sektionerne i `params.skrivesektion`), højst fem |
+| Downloads | bundtets øvrige filer, når de ikke er billeder eller sider |
 
 Der er ingen afdeling for eksterne links: de står allerede i teksten, og
 forsidematerialet har ikke en liste at hente dem fra.
