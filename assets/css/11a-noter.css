@@ -69,12 +69,10 @@
   .note-indhold h2 { text-box: trim-both cap alphabetic; position: relative; top: -1px; }
 }
 
-/* Mellem to afdelinger: en streg i samme farve som linjen under topbaren,
-   med lige meget luft over og under. Ingen streg før den første. */
-.note-boks + .note-boks {
-  padding-top: 1.4rem;
-  border-top: 1px solid var(--color-divider);
-}
+/* Mellem to afdelinger står forsidens skillestreg (.skille i 02): halv
+   spaltebredde, og luften kommer fra spaltens gap. */
+.note-side .skille { padding: 0; }
+.note-side .skille span { width: 50%; }
 
 .note-boks ul {
   display: flex;
