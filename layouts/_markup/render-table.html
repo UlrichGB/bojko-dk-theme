@@ -2,9 +2,10 @@
   TABEL-RENDER-HOOK. Kaldes for hver markdown-tabel og lægger den i
   .tabel-ramme, så den altid kan rulles vandret. Står tabellen allerede i
   et {{< bred >}}, udelades wide: udbruddet må kun regnes én gang. I en note udelades
-  det også: tabellen har tekstens bredde.
+  det også: tabellen har tekstens bredde. En side med timeline: SharePoint
+  Online får .tabel-ramme--fast: første kolonne 30 % i alle dens tabeller.
 */ -}}
-<div class="tabel-ramme{{ if not (or (.Page.Store.Get "i-bred") (eq .Page.Type "noter")) }} wide{{ end }}">
+<div class="tabel-ramme{{ if not (or (.Page.Store.Get "i-bred") (eq .Page.Type "noter")) }} wide{{ end }}{{ if eq .Page.Params.timeline "SharePoint Online" }} tabel-ramme--fast{{ end }}">
   <table>
     <thead>
       {{- range .THead }}

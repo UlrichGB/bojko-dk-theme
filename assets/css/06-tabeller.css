@@ -1,6 +1,7 @@
 /* 06 — TABELLER
    Tabelkomponenten .tabel-ramme: rammen, hovedet, rækkerne og den
-   vandrette rulning. */
+   vandrette rulning. .tabel-ramme--fast låser første kolonne til 30 %
+   over smalle skærme; render-table.html slår den til. */
 
 .tabel-ramme {
   overflow-x: auto;
@@ -54,9 +55,20 @@
 
 .tabel-ramme tbody tr:last-child td { border-bottom: 0; }
 
+.tabel-ramme--fast table { table-layout: fixed; }
+
+.tabel-ramme--fast th:first-child,
+.tabel-ramme--fast td:first-child { width: 30%; }
+
+.tabel-ramme--fast th,
+.tabel-ramme--fast td { overflow-wrap: anywhere; }
+
 
 @media (max-width: 34em) {
   .tabel-ramme table { font-size: 0.9375rem; }
+  .tabel-ramme--fast table { table-layout: auto; }
+  .tabel-ramme--fast th:first-child,
+  .tabel-ramme--fast td:first-child { width: auto; }
   .tabel-ramme th,
   .tabel-ramme td { padding: var(--space-2) var(--space-3); }
 }
