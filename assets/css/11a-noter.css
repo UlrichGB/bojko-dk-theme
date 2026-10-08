@@ -152,6 +152,7 @@ main:has(> .note) { padding-top: var(--s-48); }
   line-height: 1.5rem;
 }
 .note-indhold nav a:hover { color: var(--color-accent-600); }
+.note-indhold nav a.aktiv { color: var(--color-text); font-weight: 700; }
 
 
 @media (min-width: 73.5em) {

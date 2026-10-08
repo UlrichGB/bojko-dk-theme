@@ -510,7 +510,7 @@ a:hover { color: var(--color-accent-600); }
     margin-top: calc(3rem - 1cap);
   }
   .nav-brand-blok .nav-brand { margin-top: calc(3rem - 1cap); }
-  .nav-undertitel {
+  .nav-brand-blok .nav-undertitel {
     margin: 1rem 0 0;
     font-size: 0.875rem;
     line-height: 1.1875rem;
