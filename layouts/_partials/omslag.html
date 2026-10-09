@@ -17,11 +17,13 @@
     {{- end }}
   {{- end }}
   {{- $vist := $org.Resize (printf "%dx webp q82" (cond (gt $org.Width 1600) 1600 $org.Width)) }}
+  {{- $stor := $org.Resize (printf "%dx webp q82" (cond (gt $org.Width 2400) 2400 $org.Width)) }}
   <figure class="featured">
     <img src="{{ $vist.RelPermalink }}"
          {{ with $saet }}srcset="{{ delimit . ", " }}"
          sizes="(min-width: 1128px) 1128px, 100vw"{{ end }}
          width="{{ $vist.Width }}" height="{{ $vist.Height }}"
+         data-stor="{{ $stor.RelPermalink }}" data-stor-b="{{ $stor.Width }}" data-stor-h="{{ $stor.Height }}"
          alt="{{ $alt }}">
     {{- with $tekst }}<figcaption>{{ . | markdownify }}</figcaption>{{ end }}
   </figure>

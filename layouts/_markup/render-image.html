@@ -1,6 +1,7 @@
 {{- /*
   BILLED-RENDER-HOOK. Kaldes for hvert markdown-billede: skalerer til
-  webp og skriver srcset, sizes, mål og loading="lazy".
+  webp og skriver srcset, sizes, mål og loading="lazy". data-stor peger på
+  den største udgave til lightboxen (assets/js/lightbox.js).
 */ -}}
 {{- $alt := .PlainText -}}
 {{- $titel := .Title -}}
@@ -38,10 +39,12 @@
   {{- end -}}
   {{- $vist := $r -}}
   {{- if gt $r.Width $maal }}{{ $vist = $r.Resize (printf "%dx webp q82" $maal) }}{{ end -}}
+  {{- $stor := $r.Resize (printf "%dx webp q82" (cond (gt $r.Width 2400) 2400 $r.Width)) -}}
   <img src="{{ $vist.RelPermalink }}"
        {{ with $saet }}srcset="{{ delimit . ", " }}" sizes="{{ $sizes }}"
        {{ end -}}
        width="{{ $vist.Width }}" height="{{ $vist.Height }}"
+       data-stor="{{ $stor.RelPermalink }}" data-stor-b="{{ $stor.Width }}" data-stor-h="{{ $stor.Height }}"
        {{ if and $note (ge $vist.Width 670) }}class="stort{{ if ge $vist.Width 1000 }} stort-bred{{ end }}" {{ end -}}
        loading="lazy" decoding="async"
        alt="{{ $alt }}"{{ with $titel }} title="{{ . }}"{{ end }}>
@@ -49,6 +52,7 @@
   {{- $svgb := int (float (index $svgmaal 1)) -}}
   <img src="{{ $r.RelPermalink }}"
        width="{{ $svgb }}" height="{{ int (float (index $svgmaal 2)) }}"
+       data-stor="{{ $r.RelPermalink }}" data-stor-b="{{ $svgb }}" data-stor-h="{{ int (float (index $svgmaal 2)) }}"
        {{ if ge $svgb 670 }}class="stort{{ if ge $svgb 1000 }} stort-bred{{ end }}" {{ end -}}
        loading="lazy" decoding="async"
        alt="{{ $alt }}"{{ with $titel }} title="{{ . }}"{{ end }}>

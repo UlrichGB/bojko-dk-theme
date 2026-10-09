@@ -12,6 +12,8 @@
   .laes-mere span,
   .laes-mere svg,
   .kopi-knap,
+  .lightbox,
+  .lightbox::backdrop,
   .share,
   .i-tidslinje-forloeb a::before {
     transition: none;

@@ -1,9 +1,9 @@
 {{- /*
-  SKRIPTET. Samler assets/js/kode-kopi.js og indhold-spion.js til ét script,
+  SKRIPTET. Samler kode-kopi.js, lightbox.js og indhold-spion.js (assets/js/) til ét script,
   minificerer og fingeraftrykker det og sætter det ind med defer.
 */ -}}
 {{- $dele := slice -}}
-{{- range slice "js/kode-kopi.js" "js/indhold-spion.js" }}{{ with resources.Get . }}{{ $dele = $dele | append . }}{{ end }}{{ end -}}
+{{- range slice "js/kode-kopi.js" "js/lightbox.js" "js/indhold-spion.js" }}{{ with resources.Get . }}{{ $dele = $dele | append . }}{{ end }}{{ end -}}
 {{- with $dele -}}
   {{- $bygget := . | resources.Concat "js/alt.js" | minify | fingerprint -}}
   <script src="{{ $bygget.RelPermalink }}" integrity="{{ $bygget.Data.Integrity }}" defer></script>
