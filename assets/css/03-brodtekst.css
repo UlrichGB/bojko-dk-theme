@@ -331,3 +331,4 @@
 .forside-indlaeg > .wm {
   top: calc(var(--indlaeg-top) - var(--wm-luft) - var(--wm-optisk));
 }
+
