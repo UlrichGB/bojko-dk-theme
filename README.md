@@ -179,6 +179,25 @@ Et billede, et diagram eller en tabel i `{{< wide >}}` fylder hele rammen: alle 
 
 Reglerne for diagrammer (tegnebredde 744px, 1128px i `{{< wide >}}`, mindste tekst 14px, hvad der sker på smalle skærme) står i [`docs/design-guide.md`](docs/design-guide.md), afsnit 12.
 
+## Billeder og lightbox
+
+Et billede i en artikel eller note åbner stort i en lightbox, når man klikker på det (`assets/js/lightbox.js`, `assets/css/10a-lightbox.css`). Den lukkes med Esc, krydset eller et klik på baggrunden, og fokus går tilbage til billedet. Pil venstre/højre og knapperne skifter mellem sidens billeder. Et billede, der allerede er et link, beholder sit link. Uden JavaScript er billedet, som det var.
+
+En billedtekst skrives som markdown-titlen:
+
+```markdown
+![Alt-tekst til skærmlæsere](fil.png "Billedteksten, der står under billedet")
+```
+
+Teksten står synligt under billedet (`<figure>` med `<figcaption>`, markdown virker) og i lightboxen: ved siden af billedet fra 56em, under det på smalle skærme. Uden `title` er der kun billedet; alt-teksten er stadig kun alt-tekst. Omslagets `cover.caption` står under omslaget og i lightboxen på samme måde.
+
+Sitet skal slå dette til, ellers lægger Hugo `<p>` om figuren:
+
+```toml
+[markup.goldmark.parser]
+  wrapStandAloneImageWithinParagraph = false
+```
+
 ## Links til andre websteder
 
 Et link til et andet websted (en absolut `http(s)`-adresse med en anden

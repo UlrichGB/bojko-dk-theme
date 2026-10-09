@@ -1,7 +1,9 @@
 {{- /*
   BILLED-RENDER-HOOK. Kaldes for hvert markdown-billede: skalerer til
   webp og skriver srcset, sizes, mål og loading="lazy". data-stor peger på
-  den største udgave til lightboxen (assets/js/lightbox.js).
+  den største udgave til lightboxen (assets/js/lightbox.js). Et blokbillede
+  med title bliver en <figure> med synlig figcaption; kræver sitets
+  markup.goldmark.parser.wrapStandAloneImageWithinParagraph = false.
 */ -}}
 {{- $alt := .PlainText -}}
 {{- $titel := .Title -}}
@@ -29,6 +31,8 @@
   {{- with findRESubmatch `viewBox="[\d.]+[ ,]+[\d.]+[ ,]+([\d.]+)[ ,]+([\d.]+)"` $r.Content }}{{ $svgmaal = index . 0 }}{{ end -}}
 {{- end -}}
 
+{{- $fig := and .IsBlock $titel -}}
+{{- if $fig }}<figure class="billede">{{ end -}}
 {{- if $kan -}}
   {{- $maal := cond $bred 1128 (cond $note 744 680) -}}
   {{- $saet := slice -}}
@@ -47,7 +51,7 @@
        data-stor="{{ $stor.RelPermalink }}" data-stor-b="{{ $stor.Width }}" data-stor-h="{{ $stor.Height }}"
        {{ if and $note (ge $vist.Width 670) }}class="stort{{ if ge $vist.Width 1000 }} stort-bred{{ end }}" {{ end -}}
        loading="lazy" decoding="async"
-       alt="{{ $alt }}"{{ with $titel }} title="{{ . }}"{{ end }}>
+       alt="{{ $alt }}"{{ if not $fig }}{{ with $titel }} title="{{ . }}"{{ end }}{{ end }}>
 {{- else if and $note $svgmaal -}}
   {{- $svgb := int (float (index $svgmaal 1)) -}}
   <img src="{{ $r.RelPermalink }}"
@@ -55,8 +59,9 @@
        data-stor="{{ $r.RelPermalink }}" data-stor-b="{{ $svgb }}" data-stor-h="{{ int (float (index $svgmaal 2)) }}"
        {{ if ge $svgb 670 }}class="stort{{ if ge $svgb 1000 }} stort-bred{{ end }}" {{ end -}}
        loading="lazy" decoding="async"
-       alt="{{ $alt }}"{{ with $titel }} title="{{ . }}"{{ end }}>
+       alt="{{ $alt }}"{{ if not $fig }}{{ with $titel }} title="{{ . }}"{{ end }}{{ end }}>
 {{- else -}}
   <img src="{{ .Destination | safeURL }}" loading="lazy" decoding="async"
-       alt="{{ $alt }}"{{ with $titel }} title="{{ . }}"{{ end }}>
+       alt="{{ $alt }}"{{ if not $fig }}{{ with $titel }} title="{{ . }}"{{ end }}{{ end }}>
 {{- end -}}
+{{- if $fig }}<figcaption>{{ $titel | markdownify }}</figcaption></figure>{{ end -}}

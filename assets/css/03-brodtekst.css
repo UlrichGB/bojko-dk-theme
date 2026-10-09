@@ -332,3 +332,11 @@
   top: calc(var(--indlaeg-top) - var(--wm-luft) - var(--wm-optisk));
 }
 
+
+.body-copy figure.billede figcaption {
+  font-family: var(--font-sub);
+  line-height: 1.5rem;
+}
+
+.body-copy > img,
+.body-copy > .lightbox-knap { align-self: flex-start; }
