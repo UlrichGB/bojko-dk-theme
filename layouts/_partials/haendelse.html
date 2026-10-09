@@ -1,0 +1,17 @@
+{{- /*
+  Én hændelse i en tidslinje: li.haendelse med dato og krop. Deles af
+  {{< haendelse >}} og af tabeller, der begynder med "Dato". Tager dict:
+  iso (datetime=, kan være tom), dato (viste tekst), klasse, maerke (HTML,
+  tom udelader det), krop (HTML).
+*/ -}}
+<li class="haendelse{{ with .klasse }} {{ . }}{{ end }}">
+  <div class="haendelse-hoved">
+    <time{{ with .iso }} datetime="{{ . }}"{{ end }}>{{ .dato }}</time>
+    {{- with .maerke }}
+    <span class="haendelse-maerke">{{ . }}</span>
+    {{- end }}
+  </div>
+  <div class="haendelse-krop">
+    {{- .krop }}
+  </div>
+</li>

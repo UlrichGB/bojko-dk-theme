@@ -125,6 +125,14 @@ hændelsen over, så intet står der to gange. Hændelser og indlæg flettes eft
 dato; billeder til dem ligger i samme mappe, uden undermapper. En ny hændelse:
 `hugo new content --kind haendelse blog/<tidslinje>/ÅÅÅÅ-MM-DD-slug.md`.
 
+En markdown-tabel, hvis første overskrift er `Dato`, bliver en tidslinje midt i
+teksten i stedet for en tabel, i den rækkefølge rækkerne står. Datoen kan være
+`27. november 2023`, `november 2023`, `2024` eller `2023-11-27` og vises, som den
+er skrevet; kan den ikke læses, står teksten alligevel. Anden kolonne er
+begivenheden; `Type`, `Markering`, `Sikkerhed`, `Status` og `Kategori` bliver et
+lille mærke, alle andre kolonner en linje "Overskrift: værdi", og tomme celler
+udelades.
+
 ## Designguiden
 
 Alle mål i temaet — gitter, hoved, lodret rytme, sidespalte, bund, skriftstørrelser og enhedsreglen — står i [`docs/design-guide.md`](docs/design-guide.md), hvert i px og i rem/em. Koden følger guiden; er de uenige, er det koden, der er forkert.

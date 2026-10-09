@@ -1,0 +1,16 @@
+{{- /*
+  Kroppen i en {{< haendelse >}}: rubrik og tekst, eller rubrik og uddrag
+  med Læs mere, når hændelsen peger på et indlæg. Tager dict: sc (shortcoden),
+  tekst (HTML), indlaeg (adresse eller tom).
+*/ -}}
+{{- $sc := .sc -}}{{- $tekst := .tekst -}}{{- $indlaeg := .indlaeg -}}
+  {{- if $indlaeg }}
+  <h3><a class="title-link" href="{{ $indlaeg }}">{{ $sc.Get "titel" }}</a></h3>
+  <p class="uddrag">{{ replaceRE `(?s)</(p|li)>` " " (partial "uden-anker.html" $tekst) | plainify | htmlUnescape | partial "uden-epost.html" | replaceRE `\s+` " " | strings.TrimSpace | truncate 340 }}
+    <a class="laes-mere" href="{{ $indlaeg }}"
+       aria-label="Læs mere: {{ $sc.Get "titel" }}"><span data-tekst="Læs mere">Læs mere</span>{{ partial "ikon.html" "pil-hoejre" }}</a>
+  </p>
+  {{- else }}
+  <h3>{{ with $sc.Get "url" }}{{ $ekstern := partial "er-ekstern.html" . }}<a href="{{ . }}"{{ if $ekstern }} target="_blank" rel="noopener noreferrer"{{ end }}>{{ $sc.Get "titel" }}{{ if $ekstern }}{{ partial "ekstern-markoer.html" . }}{{ end }}</a>{{ else }}{{ $sc.Get "titel" }}{{ end }}</h3>
+  {{ $tekst }}
+  {{- end }}

@@ -4,7 +4,14 @@
   et {{< bred >}}, udelades wide: udbruddet må kun regnes én gang. I en note udelades
   det også: tabellen har tekstens bredde. En side med timeline: SharePoint
   Online får .tabel-ramme--fast: første kolonne 30 % i alle dens tabeller.
+  Begynder første overskrift med netop "Dato", tegnes tabellen som en
+  tidslinje: se _partials/tidslinje-tabel.html.
 */ -}}
+{{- $foerste := "" -}}
+{{- range .THead }}{{ with index . 0 }}{{ $foerste = .Text | plainify | htmlUnescape | strings.TrimSpace }}{{ end }}{{ break }}{{ end -}}
+{{- if eq $foerste "Dato" -}}
+{{- partial "tidslinje-tabel.html" . -}}
+{{- else -}}
 <div class="tabel-ramme{{ if not (or (.Page.Store.Get "i-bred") (eq .Page.Type "noter")) }} wide{{ end }}{{ if eq .Page.Params.timeline "SharePoint Online" }} tabel-ramme--fast{{ end }}">
   <table>
     <thead>
@@ -27,3 +34,4 @@
     </tbody>
   </table>
 </div>
+{{- end -}}

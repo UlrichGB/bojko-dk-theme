@@ -1,0 +1,32 @@
+{{- /*
+  Læser en dato fra en tabelcelle: "27. november 2023", "19. nov. 2024",
+  "november 2023", "2024" eller "2023-11-27". Giver dict med iso (til
+  datetime=, tom hvis datoen ikke kan læses) og tekst (det, der vises:
+  teksten som skrevet, ISO dog på dansk).
+*/ -}}
+{{- $r := . | plainify | htmlUnescape | strings.TrimSpace -}}
+{{- $maaneder := dict "jan" 1 "januar" 1 "feb" 2 "februar" 2 "mar" 3 "marts" 3 "apr" 4 "april" 4 "maj" 5 "jun" 6 "juni" 6 "jul" 7 "juli" 7 "aug" 8 "august" 8 "sep" 9 "sept" 9 "september" 9 "okt" 10 "oktober" 10 "nov" 11 "november" 11 "dec" 12 "december" 12 -}}
+{{- $iso := "" -}}
+{{- $tekst := $r -}}
+{{- with findRESubmatch `^(\d{4})-(\d{2})-(\d{2})$` $r 1 -}}
+  {{- $s := index . 0 -}}
+  {{- $d := try (time.AsTime (index $s 0)) -}}
+  {{- if not $d.Err }}{{ $iso = index $s 0 }}{{ $tekst = $d.Value | time.Format "2. January 2006" }}{{ end -}}
+{{- else -}}
+  {{- with findRESubmatch `^(\d{1,2})\.\s+(\p{L}+)\.?\s+(\d{4})$` $r 1 -}}
+    {{- $s := index . 0 -}}
+    {{- with index $maaneder (lower (index $s 2)) -}}
+      {{- $kandidat := printf "%s-%02d-%02d" (index $s 3) . (int (index $s 1)) -}}
+      {{- $d := try (time.AsTime $kandidat) -}}
+      {{- if and (not $d.Err) (eq ($d.Value.Format "2006-01-02") $kandidat) }}{{ $iso = $kandidat }}{{ end -}}
+    {{- end -}}
+  {{- else -}}
+    {{- with findRESubmatch `^(\p{L}+)\.?\s+(\d{4})$` $r 1 -}}
+      {{- $s := index . 0 -}}
+      {{- with index $maaneder (lower (index $s 1)) }}{{ $iso = printf "%s-%02d" (index $s 2) . }}{{ end -}}
+    {{- else -}}
+      {{- if findRE `^\d{4}$` $r }}{{ $iso = $r }}{{ end -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+{{- return dict "iso" $iso "tekst" $tekst -}}

@@ -158,6 +158,28 @@
 .haendelse-krop li::marker { color: var(--color-accent); font-weight: 600; }
 
 
+.haendelse-maerke {
+  padding: 0.125rem 0.5rem;
+  background: var(--color-neutral-100);
+  border: 1px solid var(--color-neutral-300);
+  border-radius: var(--radius-xs);
+
+  font-family: var(--font-sub);
+  font-weight: 600;
+  font-size: var(--bitte);
+  line-height: 1.25rem;
+  color: var(--color-neutral-700);
+}
+
+.haendelse-felt {
+  font-family: var(--font-sub);
+  font-size: 0.9375rem;
+  line-height: 1.5em;
+  color: var(--color-neutral-700);
+}
+.haendelse-felt-navn { font-weight: 600; }
+
+
 .fakta {
   padding: var(--space-4) var(--space-6);
   background: var(--color-neutral-200);
@@ -286,6 +308,30 @@
 .i-tidslinje-forloeb a:hover::before { height: 1.625rem; }
 .i-tidslinje-forloeb .senere:hover { --streg: var(--color-neutral-600); }
 .i-tidslinje-forloeb .nu:hover::before { height: 2rem; }
+
+
+.body-copy .tidslinje--tabel {
+  --tl-mellem: 2.5rem;
+
+  grid-template-columns: minmax(0, 1fr);
+  width: auto;
+  margin-left: 0;
+  padding-left: var(--tl-mellem);
+}
+.tidslinje--tabel::before { left: calc(var(--tl-mellem) / 2 - var(--tl-streg) / 2); }
+.tidslinje--tabel > .haendelse,
+.tidslinje--tabel > .haendelse:nth-child(even),
+.tidslinje--tabel > .haendelse:nth-child(2) {
+  grid-column: 1;
+  grid-row: auto;
+}
+.tidslinje--tabel > .haendelse::before,
+.tidslinje--tabel > .haendelse:nth-child(even)::before { left: auto; right: 100%; }
+.tidslinje--tabel > .haendelse::after,
+.tidslinje--tabel > .haendelse:nth-child(even)::after {
+  left: auto;
+  right: calc(100% + var(--tl-mellem) / 2 - var(--tl-maerke) / 2);
+}
 
 
 @media (max-width: 45em) {

@@ -13,20 +13,5 @@
 {{- $indlaeg := "" -}}
 {{- with .Get "indlaeg" }}{{ $indlaeg = . }}{{ with site.GetPage . }}{{ $indlaeg = .RelPermalink }}{{ end }}{{ end -}}
 {{- $tekst := .Page.RenderString (dict "display" "block") .Inner -}}
-<li class="haendelse{{ if $indlaeg }} haendelse--uddrag{{ end }}">
-  <div class="haendelse-hoved">
-    <time datetime="{{ $dato.Format "2006-01-02" }}">{{ $dato | time.Format "2. January 2006" }}</time>
-  </div>
-  <div class="haendelse-krop">
-    {{- if $indlaeg }}
-    <h3><a class="title-link" href="{{ $indlaeg }}">{{ .Get "titel" }}</a></h3>
-    <p class="uddrag">{{ replaceRE `(?s)</(p|li)>` " " (partial "uden-anker.html" $tekst) | plainify | htmlUnescape | partial "uden-epost.html" | replaceRE `\s+` " " | strings.TrimSpace | truncate 340 }}
-      <a class="laes-mere" href="{{ $indlaeg }}"
-         aria-label="Læs mere: {{ .Get "titel" }}"><span data-tekst="Læs mere">Læs mere</span>{{ partial "ikon.html" "pil-hoejre" }}</a>
-    </p>
-    {{- else }}
-    <h3>{{ with .Get "url" }}{{ $ekstern := partial "er-ekstern.html" . }}<a href="{{ . }}"{{ if $ekstern }} target="_blank" rel="noopener noreferrer"{{ end }}>{{ $.Get "titel" }}{{ if $ekstern }}{{ partial "ekstern-markoer.html" . }}{{ end }}</a>{{ else }}{{ .Get "titel" }}{{ end }}</h3>
-    {{ $tekst }}
-    {{- end }}
-  </div>
-</li>
+{{- $krop := partial "haendelse-krop.html" (dict "sc" . "tekst" $tekst "indlaeg" $indlaeg) -}}
+{{- partial "haendelse.html" (dict "klasse" (cond (ne $indlaeg "") "haendelse--uddrag" "") "iso" ($dato.Format "2006-01-02") "dato" ($dato | time.Format "2. January 2006") "krop" $krop) -}}

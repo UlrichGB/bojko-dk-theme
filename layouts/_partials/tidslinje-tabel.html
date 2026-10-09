@@ -1,0 +1,30 @@
+{{- /*
+  En tabel, hvis første overskrift er "Dato", som ol.tidslinje med én
+  hændelse pr. række i den rækkefølge, de er skrevet. Anden kolonne er
+  teksten. Kolonner, der hedder Type, Markering, Sikkerhed eller lignende,
+  bliver et lille mærke ved datoen; de øvrige en linje "Overskrift: værdi".
+  Tomme celler udelades.
+*/ -}}
+{{- $maerkenavne := slice "type" "markering" "sikkerhed" "status" "kategori" -}}
+{{- $hoved := index .THead 0 -}}
+<ol class="tidslinje tidslinje--tabel">
+  {{- range .TBody }}
+    {{- $celler := . -}}
+    {{- $dato := partial "tidslinje-dato.html" (index $celler 0).Text -}}
+    {{- $tekst := "" -}}
+    {{- $maerke := "" -}}
+    {{- $felter := slice -}}
+    {{- range $i, $c := $celler }}
+      {{- if and (gt $i 0) (ne ($c.Text | plainify | strings.TrimSpace) "") }}
+        {{- $navn := (index $hoved $i).Text -}}
+        {{- if eq $i 1 }}{{ $tekst = $c.Text }}
+        {{- else if in $maerkenavne (lower ($navn | plainify | htmlUnescape | strings.TrimSpace)) }}{{ $maerke = $c.Text }}
+        {{- else }}{{ $felter = $felter | append (dict "navn" $navn "vaerdi" $c.Text) }}{{ end -}}
+      {{- end }}
+    {{- end }}
+    {{- $krop := "" -}}
+    {{- with $tekst }}{{ $krop = printf "<p>%s</p>" . }}{{ end -}}
+    {{- range $felter }}{{ $krop = printf "%s\n<p class=\"haendelse-felt\"><span class=\"haendelse-felt-navn\">%s:</span> %s</p>" $krop .navn .vaerdi }}{{ end -}}
+    {{- partial "haendelse.html" (dict "iso" $dato.iso "dato" $dato.tekst "maerke" ($maerke | safeHTML) "krop" ($krop | safeHTML)) -}}
+  {{- end }}
+</ol>
