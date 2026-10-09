@@ -1,5 +1,5 @@
 /* LIGHTBOX — klik på et billede i en artikel eller note åbner det stort.
-   Billedets title (eller dets figcaption/kursiv billedtekst) står ved siden
+   Billedets markdown-title (data-tekst, eller dets figcaption/kursiv billedtekst) står ved siden
    af billedet på brede skærme og under det på smalle. Uden script er
    billedet, som det altid har været. */
 
@@ -28,7 +28,7 @@
 
   function tekstFor(knap) {
     var img = knap.querySelector("img");
-    if (img.title) return img.title;
+    if (img.dataset.tekst) return img.dataset.tekst;
     var fig = img.closest("figure");
     var fc = fig && fig.querySelector("figcaption");
     if (fc) return fc.textContent.trim();

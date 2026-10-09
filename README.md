@@ -189,14 +189,7 @@ En billedtekst skrives som markdown-titlen:
 ![Alt-tekst til skærmlæsere](fil.png "Billedteksten, der står under billedet")
 ```
 
-Teksten står synligt under billedet (`<figure>` med `<figcaption>`, markdown virker) og i lightboxen: ved siden af billedet fra 56em, under det på smalle skærme. Uden `title` er der kun billedet; alt-teksten er stadig kun alt-tekst. Omslagets `cover.caption` står under omslaget og i lightboxen på samme måde.
-
-Sitet skal slå dette til, ellers lægger Hugo `<p>` om figuren:
-
-```toml
-[markup.goldmark.parser]
-  wrapStandAloneImageWithinParagraph = false
-```
+Teksten står kun i lightboxen, ikke på siden og ikke som tooltip: ved siden af billedet fra 56em, under det på smalle skærme. Uden `title` er der kun billedet; alt-teksten er stadig kun alt-tekst. Omslagets `cover.caption` står under omslaget, som den altid har gjort, og kommer også med i lightboxen.
 
 ## Links til andre websteder
 
