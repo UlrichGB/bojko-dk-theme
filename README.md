@@ -133,6 +133,10 @@ begivenheden; `Type`, `Markering`, `Sikkerhed`, `Status` og `Kategori` bliver et
 lille mærke, alle andre kolonner en linje "Overskrift: værdi", og tomme celler
 udelades.
 
+En note kan også være en tidslinjeside: `tidslinje: true` i noten og
+hændelsesfilerne i dens bundle (`noter/<note>/ÅÅÅÅ-MM-DD-slug.md`). Kortene står
+efter noteteksten, i tekstens bredde med to kolonner, og én kolonne under 52em.
+
 ## Designguiden
 
 Alle mål i temaet — gitter, hoved, lodret rytme, sidespalte, bund, skriftstørrelser og enhedsreglen — står i [`docs/design-guide.md`](docs/design-guide.md), hvert i px og i rem/em. Koden følger guiden; er de uenige, er det koden, der er forkert.

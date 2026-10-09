@@ -24,6 +24,12 @@
   list-style: none;
 }
 
+.note .body-copy .tidslinje {
+  --tl-bredde: 100%;
+  --tl-col: 100%;
+  --tl-mellem: 2.5rem;
+}
+
 .tidslinje::before {
   content: "";
   position: absolute;

@@ -46,6 +46,7 @@
 
       <div class="body-copy">
         {{ index $dele 0 | safeHTML }}
+        {{- if .Params.tidslinje }}{{ partial "tidslinje.html" . }}{{ end }}
       </div>
     </div>
 
